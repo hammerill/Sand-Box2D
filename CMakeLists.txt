@@ -4,8 +4,6 @@ file(GLOB_RECURSE SOURCES "src/*.cpp")
 
 project(Box2D-test)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -pthread -std=c++11 -Wl,-subsystem,windows")
-
 option(BUILD_WINDOWS "Build Windows .exe" ON) # Default
 option(BUILD_LINUX "Build Linux executable" OFF)
 option(BUILD_VITA "Build Vita .vpk" OFF)
@@ -15,6 +13,8 @@ if(BUILD_WINDOWS)
 	add_definitions(-DWindows)
 
 	set(BUILD_WINDOWS_PKGS "C:/Users/Hamme/pkgs" CACHE STRING "Path to the packages, only for Windows")
+
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -pthread -std=c++11 -Wl,-subsystem,windows")
 
 	set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/icon.rc")
 	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES} ${APP_ICON_RESOURCE_WINDOWS})
@@ -44,6 +44,7 @@ elseif(BUILD_LINUX)
 	message(STATUS "Building for Linux")
 	add_definitions(-DLinux)
 
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -pthread -std=c++11")
 	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
 
 	target_link_libraries(${CMAKE_PROJECT_NAME}
@@ -60,6 +61,7 @@ elseif(BUILD_VITA)
 	message(STATUS "Building for Vita")
 	add_definitions(-DVita)
 
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -pthread -std=c++11")
 	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
 
 	if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
@@ -70,7 +72,7 @@ elseif(BUILD_VITA)
 	  endif()
 	endif()
 
-	include("${VITASDK}/share/vita.cmake" REQUIRED)
+	include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
 
 	set(VITA_APPNAME  "Box2D OBJ")
 	set(VITA_TITLEID  "HMRL00004")
