@@ -47,10 +47,10 @@ const float RAD2DEG = 180 / M_PI;
 
 bool isRunning = true;
 
-void Update(BoxEntity* box, b2World* world, unsigned int a = NULL, unsigned int b = NULL)
+void Update(BoxEntity* box, b2World* world, unsigned int* a = NULL, unsigned int* b = NULL)
 {
     if (isLinux)
-        b = a;
+        *b = *a;
 
     Ctrl::Check();
     if (Ctrl::getIsExit())
@@ -166,7 +166,7 @@ int main(int argv, char** args)
 
             if (delta > 1000/60.0)
             {
-                Update(box, world, a, b);
+                Update(box, world, &a, &b);
                 Render(box, renderer, edgeShape);
             }
         }

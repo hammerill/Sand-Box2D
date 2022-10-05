@@ -44,10 +44,10 @@ elseif(BUILD_LINUX)
 	message(STATUS "Building for Linux")
 	add_definitions(-DLinux)
 
+	project(Box2D-test)
+
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -pthread -std=c++11")
 	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
-
-	project(Box2D-test)
 
 	target_link_libraries(${CMAKE_PROJECT_NAME}
 		SDL2_image
