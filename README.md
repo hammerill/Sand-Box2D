@@ -1,5 +1,5 @@
 # Box2D Test with Objects
-An organized cross-platform (Windows, Linux, PS Vita) sample project of using Box2D with SDL2.
+An organized (divided by classes separated per files) cross-platform (Windows, Linux, PS Vita) sample project of using Box2D with SDL2.
 
 ## Controls
 ### For Desktops

@@ -13,11 +13,11 @@ if(BUILD_WINDOWS)
 	set(BUILD_WINDOWS_PKGS "C:/Users/Hamme/pkgs" CACHE STRING "Path to the packages, only for Windows")
 
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -pthread -std=c++11 -Wl,-subsystem,windows")
+	
+	project(Box2D-test)
 
 	set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/icon.rc")
 	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES} ${APP_ICON_RESOURCE_WINDOWS})
-
-	project(Box2D-test)
 
 	target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE 
 		"${BUILD_WINDOWS_PKGS}/include"
