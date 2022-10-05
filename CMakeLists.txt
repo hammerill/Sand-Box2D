@@ -14,17 +14,17 @@ if(BUILD_WINDOWS)
 	message(STATUS "Building for Windows")
 	add_definitions(-DWindows)
 
-	set(PKGS "C:/Users/Hamme/pkgs" CACHE STRING "Path to the packages, only for Windows")
+	set(BUILD_WINDOWS_PKGS "C:/Users/Hamme/pkgs" CACHE STRING "Path to the packages, only for Windows")
 
 	set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/icon.rc")
 	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES} ${APP_ICON_RESOURCE_WINDOWS})
 
 	target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE 
-		"${PKGS}/include"
+		"${BUILD_WINDOWS_PKGS}/include"
 	)
 
 	target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
-    	"${PKGS}/lib"
+    	"${BUILD_WINDOWS_PKGS}/lib"
 	)
 
 	target_link_libraries(${CMAKE_PROJECT_NAME}
