@@ -9,6 +9,12 @@
 #include "Controls.h"
 #include "BoxEntity.h"
 
+#ifdef Linux
+const bool isLinux = true;
+#else
+const bool isLinux = false;
+#endif
+
 class WorldEntity
 {
 private:
@@ -38,6 +44,40 @@ const int SCALED_HEIGHT = HEIGHT / MET2PIX;
 //1 rad × 180/π = 57,296°
 const float RAD2DEG = 180 / M_PI;
 /////////////////////
+
+bool isRunning = true;
+
+void Update(BoxEntity* box, b2World* world, unsigned int a = NULL, unsigned int b = NULL)
+{
+    if (isLinux)
+        b = a;
+
+    Ctrl::Check();
+    if (Ctrl::getIsExit())
+    {
+        isRunning = false;
+    }                        
+
+    box->Step();
+    world->Step(1.0f / 60.0f, 6.0f, 2.0f);
+}
+void Render(BoxEntity* box, SDL_Renderer *renderer, b2EdgeShape edgeShape)
+{
+    SDL_SetRenderDrawColor(renderer, 0x32, 0x32, 0x32, 0);
+    SDL_RenderClear(renderer);
+
+    if (Ctrl::getIsReset())
+    {
+        box->Reset();
+    }
+
+    box->Render();
+
+    SDL_SetRenderDrawColor(renderer, 255, 255, 0, 0);
+    SDL_RenderDrawLine(renderer, ((SCALED_WIDTH / 2.0f) + edgeShape.m_vertex1.x) * MET2PIX, ((SCALED_HEIGHT / 2.0f) + edgeShape.m_vertex1.y) * MET2PIX, ((SCALED_WIDTH / 2.0f) + edgeShape.m_vertex2.x) * MET2PIX, ((SCALED_HEIGHT / 2.0f) + edgeShape.m_vertex2.y) * MET2PIX);
+    
+    SDL_RenderPresent(renderer);
+}
 
 int main(int argv, char** args)
 {
@@ -117,44 +157,24 @@ int main(int argv, char** args)
     unsigned int a, b = 0;
     double delta = 0;
 
-    bool isRunning = true;
     while (isRunning)
     {
-        a = SDL_GetTicks();
-        delta = a-b;
-
-        if (delta > 1000/60.0)
+        if (isLinux)
         {
-            b = a;
+            a = SDL_GetTicks();
+            delta = a - b;
 
-            Ctrl::Check();
-            if (Ctrl::getIsExit())
+            if (delta > 1000/60.0)
             {
-                isRunning = false;
-                break;
-            }                        
-
-            box->Step();
-            world->Step(1.0f / 60.0f, 6.0f, 2.0f);
-
-            SDL_SetRenderDrawColor(renderer, 0x32, 0x32, 0x32, 0);
-            SDL_RenderClear(renderer);
-
-            if (Ctrl::getIsReset())
-            {
-                box->Reset();
+                Update(box, world, a, b);
+                Render(box, renderer, edgeShape);
             }
-
-            box->Render();
-
-            SDL_SetRenderDrawColor(renderer, 255, 255, 0, 0);
-            SDL_RenderDrawLine(renderer, ((SCALED_WIDTH / 2.0f) + edgeShape.m_vertex1.x) * MET2PIX, ((SCALED_HEIGHT / 2.0f) + edgeShape.m_vertex1.y) * MET2PIX, ((SCALED_WIDTH / 2.0f) + edgeShape.m_vertex2.x) * MET2PIX, ((SCALED_HEIGHT / 2.0f) + edgeShape.m_vertex2.y) * MET2PIX);
-            
-            SDL_RenderPresent(renderer);
-            
         }
-        
+        else
+        {
+            Update(box, world);
+            Render(box, renderer, edgeShape);
+        }
     }
-
     return 0;
 }
