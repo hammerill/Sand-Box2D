@@ -3,7 +3,7 @@ An organized cross-platform (Windows, Linux, PS Vita) sample project of using Bo
 
 ## Controls
 ### For Desktops
-<kbd>R</kbd> - reset box position
+<kbd>R</kbd> - reset box position.
 
 ### For PS Vita
-<kbd>Cross</kbd> - reset box position
+<kbd>Cross</kbd> - reset box position.

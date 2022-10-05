@@ -14,7 +14,7 @@ if(BUILD_WINDOWS)
 	message(STATUS "Building for Windows")
 	add_definitions(-DWindows)
 
-	set(PKGS "C:/Users/Hamme/pkgs")	#CHANGE PATH TO PACKAGES HERE
+	set(PKGS "C:/Users/Hamme/pkgs" CACHE STRING "Path to the packages, only for Windows")
 
 	set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/icon.rc")
 	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES} ${APP_ICON_RESOURCE_WINDOWS})
@@ -122,4 +122,5 @@ elseif(BUILD_VITA)
 
 		FILE assets assets
 	)
+
 endif()
