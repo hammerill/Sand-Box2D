@@ -32,8 +32,10 @@ void Ctrl::Check()
     Ctrl::left = ctrl.buttons & SCE_CTRL_LEFT ||
     (ctrl.lx < stickCenter - stickDeadZone);
 
-    Ctrl::plus = ctrl.buttons & SCE_CTRL_RTRIGGER;
-    Ctrl::minus = ctrl.buttons & SCE_CTRL_LTRIGGER;
+    Ctrl::plus = ctrl.buttons & SCE_CTRL_RTRIGGER ||
+    (ctrl.ry > stickCenter + stickDeadZone);
+    Ctrl::minus = ctrl.buttons & SCE_CTRL_LTRIGGER ||
+    (ctrl.ry < stickCenter - stickDeadZone);
 }
 #else
 void Ctrl::Check()

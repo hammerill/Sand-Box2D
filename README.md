@@ -5,9 +5,9 @@ An organized (divided by classes separated per files) cross-platform (Windows, L
 ### For Desktops
 - <kbd>R</kbd> - reset box position.
 - <kbd>WASD</kbd> or <kbd>Arrows</kbd> - move camera.
-- <kbd>Q</kbd> and <kbd>E</kbd> - adjust zoom.
+- <kbd>Q</kbd>/<kbd>E</kbd> - adjust zoom.
 
 ### For PS Vita
 - <kbd>Cross</kbd> - reset box position.
 - <kbd>Left Stick</kbd> or <kbd>DPAD</kbd> - move camera.
-- <kbd>L</kbd> and <kbd>R</kbd> - adjust zoom.
+- <kbd>L</kbd>/<kbd>R</kbd> or <kbd>Right Stick</kbd> - adjust zoom.
