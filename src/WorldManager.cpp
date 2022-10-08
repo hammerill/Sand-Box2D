@@ -6,7 +6,7 @@ WorldManager::WorldManager(int SCREEN_WIDTH, int SCREEN_HEIGHT, bool fpsCorrecti
     WorldManager::SCREEN_WIDTH = SCREEN_WIDTH;
     WorldManager::SCREEN_HEIGHT = SCREEN_HEIGHT;
 
-    WorldManager::fpsCorrection = fpsCorrection;
+    WorldManager::speedCorrection = fpsCorrection;
 
     WorldManager::move_speed = move_speed;
     WorldManager::zoom_speed = zoom_speed;
@@ -50,7 +50,7 @@ void WorldManager::deleteObject(int index)
 
 bool WorldManager::Step()
 {
-    if (WorldManager::fpsCorrection)
+    if (WorldManager::speedCorrection)
         WorldManager::b = WorldManager::a;
 
     Ctrl::Check();
@@ -58,13 +58,6 @@ bool WorldManager::Step()
     if (Ctrl::getExit())
     {
         return false;
-    }
-    if (Ctrl::getReset())
-    {
-        for (size_t i = 0; i < WorldManager::objects.size(); i++)
-        {
-            WorldManager::objects[i]->Reset();
-        }
     }
 
     if (Ctrl::getUp())      { WorldManager::y_offset += WorldManager::move_speed; }
@@ -77,6 +70,14 @@ bool WorldManager::Step()
         && WorldManager::zoom > 0)  { WorldManager::zoom -= WorldManager::zoom_speed; }
 
     WorldManager::world->Step(1.0f / 60.0f, 6.0f, 2.0f);
+
+    if (Ctrl::getReset())
+    {
+        for (size_t i = 0; i < WorldManager::objects.size(); i++)
+        {
+            WorldManager::objects[i]->Reset();
+        }
+    }
 
     return true;
 }
@@ -101,7 +102,7 @@ void WorldManager::Cycle()
 {
     bool isRunning = true;
 
-    if (WorldManager::fpsCorrection)
+    if (WorldManager::speedCorrection)
     {
         while (isRunning)
         {

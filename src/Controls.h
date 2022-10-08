@@ -6,6 +6,7 @@
 #include <psp2/ctrl.h>
 #endif
 
+/// @brief Static class for accessing pressed keys and/or buttons
 class Ctrl
 {
 private:
@@ -25,6 +26,8 @@ public:
     Ctrl();
     ~Ctrl();
 
+    /// @brief Checks currently pressed buttons and writes their status to private
+    /// variables which can be accessed through getters functions of this class.
     static void Check();
 
     static bool getExit();

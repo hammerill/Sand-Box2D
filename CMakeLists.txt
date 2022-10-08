@@ -38,7 +38,7 @@ if(BUILD_WINDOWS)
 		box2d
 	)
 
-	file(COPY src/assets DESTINATION .)
+	file(COPY assets DESTINATION .)
 
 elseif(BUILD_LINUX)
 	message(STATUS "Building for Linux")
@@ -57,7 +57,7 @@ elseif(BUILD_LINUX)
 		box2d
 	)
 
-	file(COPY src/assets DESTINATION .)
+	file(COPY assets DESTINATION .)
 
 elseif(BUILD_VITA)
 	message(STATUS "Building for Vita")
@@ -126,7 +126,7 @@ elseif(BUILD_VITA)
 		VERSION ${VITA_VERSION}
 		NAME ${VITA_APPNAME}
 
-		FILE src/assets assets
+		FILE assets assets
 	)
 
 endif()

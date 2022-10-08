@@ -9,8 +9,8 @@ BoxEntity::BoxEntity(b2World* world, SDL_Renderer* renderer, const char* path_to
     BoxEntity::h = h_box;
     BoxEntity::angle = angle_box;
 
-    BoxEntity::SetSprite(renderer, path_to_texture);
-
+    BoxEntity::LoadTexture(renderer, path_to_texture);
+    
     BoxEntity::bodyDef.type = b2_dynamicBody;
     BoxEntity::bodyDef.angle = BoxEntity::angle; 
     BoxEntity::bodyDef.position.Set(BoxEntity::x, BoxEntity::y);
@@ -37,12 +37,13 @@ void BoxEntity::Reset()
 void BoxEntity::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom)
 {
     b2Vec2 pos = BoxEntity::body->GetPosition();
+    SDL_Rect box;
 
-    BoxEntity::box.x = (pos.x * zoom) + x_offset;
-    BoxEntity::box.y = (pos.y * zoom) + y_offset;
+    box.x = (pos.x * zoom) + x_offset;
+    box.y = (pos.y * zoom) + y_offset;
     
-    BoxEntity::box.w = BoxEntity::w * zoom;
-    BoxEntity::box.h = BoxEntity::h * zoom;
+    box.w = BoxEntity::w * zoom;
+    box.h = BoxEntity::h * zoom;
 
-    SDL_RenderCopyEx(renderer, BoxEntity::texture, NULL, &(BoxEntity::box), BoxEntity::body->GetAngle() * BoxEntity::RAD2DEG, NULL, SDL_FLIP_NONE);
+    SDL_RenderCopyEx(renderer, BoxEntity::texture, NULL, &box, BoxEntity::body->GetAngle() * BoxEntity::RAD2DEG, NULL, SDL_FLIP_NONE);
 }
