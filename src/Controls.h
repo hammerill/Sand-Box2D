@@ -9,13 +9,14 @@
 class Ctrl
 {
 private:
-    static bool isExit;
-    static bool isReset;
+    static bool exit;
+    static bool reset;
 
     static bool up;
     static bool right;
     static bool down;
     static bool left;
+
     static bool plus;
     static bool minus;
 
@@ -26,13 +27,14 @@ public:
 
     static void Check();
 
-    static bool getIsExit();
-    static bool getIsReset();
+    static bool getExit();
+    static bool getReset();
 
     static bool getUp();
     static bool getRight();
     static bool getDown();
     static bool getLeft();
+    
     static bool getPlus();
     static bool getMinus();
 };

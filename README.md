@@ -9,5 +9,5 @@ An organized (divided by classes separated per files) cross-platform (Windows, L
 
 ### For PS Vita
 - <kbd>Cross</kbd> - reset box position.
-- <kbd>DPAD</kbd> - move camera.
+- <kbd>Left Stick</kbd> or <kbd>DPAD</kbd> - move camera.
 - <kbd>L</kbd> and <kbd>R</kbd> - adjust zoom.

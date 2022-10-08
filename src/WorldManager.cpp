@@ -55,11 +55,11 @@ bool WorldManager::Step()
 
     Ctrl::Check();
 
-    if (Ctrl::getIsExit())
+    if (Ctrl::getExit())
     {
         return false;
     }
-    if (Ctrl::getIsReset())
+    if (Ctrl::getReset())
     {
         for (size_t i = 0; i < WorldManager::objects.size(); i++)
         {
