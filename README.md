@@ -11,6 +11,3 @@ An organized (divided by classes separated per files) cross-platform (Windows, L
 - <kbd>Cross</kbd> - reset box position.
 - <kbd>Left Stick</kbd> or <kbd>DPAD</kbd> - move camera.
 - <kbd>L</kbd>/<kbd>R</kbd> or <kbd>Right Stick</kbd> - adjust zoom.
-
-## Known issues
-All the program itself is behaving strange at this time. In future it's necessary to resolve the physics calculations and\or rendering problems, because right now this program can't be taken seriously.
