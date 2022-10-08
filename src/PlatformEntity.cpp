@@ -11,10 +11,6 @@ PlatformEntity::PlatformEntity(b2World* world, float x1_plat, float y1_plat, flo
     b2Vec2 start_point = b2Vec2(PlatformEntity::x1, PlatformEntity::y1);
     b2Vec2 end_point = b2Vec2(PlatformEntity::x2, PlatformEntity::y2);
 
-    PlatformEntity::bodyDef.type = b2_staticBody;
-    PlatformEntity::bodyDef.angle = 0; 
-    PlatformEntity::bodyDef.position.Set(PlatformEntity::x1, PlatformEntity::y1);
-
     PlatformEntity::body = PlatformEntity::world->CreateBody(&bodyDef);
     
     PlatformEntity::platformShape.SetTwoSided(start_point, end_point);

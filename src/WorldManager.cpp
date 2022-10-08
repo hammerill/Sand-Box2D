@@ -69,7 +69,7 @@ bool WorldManager::Step()
     if (Ctrl::getMinus()
         && WorldManager::zoom > 0)  { WorldManager::zoom -= WorldManager::zoom_speed; }
 
-    WorldManager::world->Step(1.0f / 60.0f, 6.0f, 2.0f);
+    WorldManager::world->Step(1.0f / 60.0f, 12, 4);
 
     if (Ctrl::getReset())
     {

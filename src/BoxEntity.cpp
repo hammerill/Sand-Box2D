@@ -3,8 +3,8 @@
 BoxEntity::BoxEntity(b2World* world, SDL_Renderer* renderer, const char* path_to_texture, float x_box, float y_box, float w_box, float h_box, float angle_box)
 {
     BoxEntity::world = world;
-    BoxEntity::x = x_box;
-    BoxEntity::y = y_box;
+    BoxEntity::x = x_box + (w_box / 2);
+    BoxEntity::y = y_box + (h_box / 2);
     BoxEntity::w = w_box;
     BoxEntity::h = h_box;
     BoxEntity::angle = angle_box;
@@ -38,12 +38,12 @@ void BoxEntity::Render(SDL_Renderer* renderer, float x_offset, float y_offset, f
 {
     b2Vec2 pos = BoxEntity::body->GetPosition();
     SDL_Rect box;
-
-    box.x = (pos.x * zoom) + x_offset;
-    box.y = (pos.y * zoom) + y_offset;
     
     box.w = BoxEntity::w * zoom;
     box.h = BoxEntity::h * zoom;
+
+    box.x = (pos.x * zoom) + x_offset - (box.w / 2.0f);
+    box.y = (pos.y * zoom) + y_offset - (box.h / 2.0f);
 
     SDL_RenderCopyEx(renderer, BoxEntity::texture, NULL, &box, BoxEntity::body->GetAngle() * BoxEntity::RAD2DEG, NULL, SDL_FLIP_NONE);
 }
