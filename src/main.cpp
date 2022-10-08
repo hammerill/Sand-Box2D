@@ -1,5 +1,3 @@
-#include <SDL2/SDL_image.h>
-
 #include "Controls.h"
 #include "BoxEntity.h"
 #include "PlatformEntity.h"
@@ -23,10 +21,10 @@ int main(int argv, char** args)
 {
     WorldManager* wm = new WorldManager(SCREEN_WIDTH, SCREEN_HEIGHT, isLinux);
 
-    wm->addObject(new BoxEntity(wm->world, wm->renderer, IMG_Load("assets/img/box.png"), 0, 0, 2, 2, 0));
-    wm->addObject(new BoxEntity(wm->world, wm->renderer, IMG_Load("assets/img/box.png"), 2, 0, 1, 1, 45.0f));
-    wm->addObject(new BoxEntity(wm->world, wm->renderer, IMG_Load("assets/img/box.png"), 4, 0, 0.5, 0.5, 45.0f));
-    wm->addObject(new BoxEntity(wm->world, wm->renderer, IMG_Load("assets/img/box.png"), 4.5, 0, 0.25, 0.25, 45.0f));
+    wm->addObject(new BoxEntity(wm->world, wm->renderer, "assets/img/box.png", 0, 0, 2, 2, 0));
+    wm->addObject(new BoxEntity(wm->world, wm->renderer, "assets/img/box.png", 2, 0, 1, 1, 45.0f));
+    wm->addObject(new BoxEntity(wm->world, wm->renderer, "assets/img/box.png", 4, 0, 0.5, 0.5, 45.0f));
+    wm->addObject(new BoxEntity(wm->world, wm->renderer, "assets/img/box.png", 4.5, 0, 0.25, 0.25, 45.0f));
     wm->addObject(new PlatformEntity(wm->world, 0, 3, 8, 3));
 
     wm->Cycle();

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <box2d/box2d.h>
 
 #ifndef M_PI
@@ -22,7 +23,9 @@ protected:
     b2FixtureDef fixtureDef;
 
 public:
-    void SetSprite(SDL_Renderer* renderer, SDL_Surface* tmp_sprites);
+    ~PhysicsObj();
+
+    void SetSprite(SDL_Renderer* renderer, const char* path_to_texture);
     b2Body* getBody();
 
     virtual void Reset() = 0;

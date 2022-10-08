@@ -1,6 +1,6 @@
 #include "BoxEntity.h"
 
-BoxEntity::BoxEntity(b2World* world, SDL_Renderer* renderer, SDL_Surface* tmp_sprites, float x_box, float y_box, float w_box, float h_box, float angle_box)
+BoxEntity::BoxEntity(b2World* world, SDL_Renderer* renderer, const char* path_to_texture, float x_box, float y_box, float w_box, float h_box, float angle_box)
 {
     BoxEntity::world = world;
     BoxEntity::x = x_box;
@@ -9,7 +9,7 @@ BoxEntity::BoxEntity(b2World* world, SDL_Renderer* renderer, SDL_Surface* tmp_sp
     BoxEntity::h = h_box;
     BoxEntity::angle = angle_box;
 
-    SetSprite(renderer, tmp_sprites);
+    BoxEntity::SetSprite(renderer, path_to_texture);
 
     BoxEntity::bodyDef.type = b2_dynamicBody;
     BoxEntity::bodyDef.angle = BoxEntity::angle; 
@@ -27,10 +27,6 @@ BoxEntity::BoxEntity(b2World* world, SDL_Renderer* renderer, SDL_Surface* tmp_sp
     BoxEntity::fixtureDef.friction = 0.3f;
     BoxEntity::fixtureDef.restitution = 0.5f;
     BoxEntity::body->CreateFixture(&(BoxEntity::fixtureDef));
-}
-BoxEntity::~BoxEntity()
-{
-    SDL_DestroyTexture(BoxEntity::texture);
 }
 
 void BoxEntity::Reset()

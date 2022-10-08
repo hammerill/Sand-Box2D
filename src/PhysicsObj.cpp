@@ -1,9 +1,13 @@
 #include "PhysicsObj.h"
 
-void PhysicsObj::SetSprite(SDL_Renderer* renderer, SDL_Surface* tmp_sprites)
+PhysicsObj::~PhysicsObj()
 {
-    PhysicsObj::texture = SDL_CreateTextureFromSurface(renderer, tmp_sprites);
-    SDL_FreeSurface(tmp_sprites);
+    SDL_DestroyTexture(PhysicsObj::texture);
+}
+
+void PhysicsObj::SetSprite(SDL_Renderer* renderer, const char* path_to_texture)
+{
+    PhysicsObj::texture = SDL_CreateTextureFromSurface(renderer, IMG_Load(path_to_texture));
 }
 
 b2Body* PhysicsObj::getBody()

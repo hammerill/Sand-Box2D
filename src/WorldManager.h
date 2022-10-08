@@ -32,6 +32,7 @@ public:
 
     // Returns running status (true - still running; false - stop)
     bool Step();
+    
     void Render();
     void Cycle();
     

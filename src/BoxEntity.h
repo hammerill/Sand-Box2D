@@ -11,7 +11,7 @@ private:
     b2PolygonShape boxShape;
 
 public:
-    BoxEntity(b2World* world, SDL_Renderer* renderer, SDL_Surface* tmp_sprites, float x_box, float y_box, float w_box, float h_box, float angle_box);
+    BoxEntity(b2World* world, SDL_Renderer* renderer, const char* path_to_texture, float x_box, float y_box, float w_box, float h_box, float angle_box);
     ~BoxEntity();
 
     void Reset();
