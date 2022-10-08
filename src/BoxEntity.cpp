@@ -3,59 +3,50 @@
 BoxEntity::BoxEntity(b2World* world, SDL_Renderer* renderer, SDL_Surface* tmp_sprites, float x_box, float y_box, float w_box, float h_box, float angle_box)
 {
     BoxEntity::world = world;
-    BoxEntity::renderer = renderer;
-    BoxEntity::x_box = x_box;
-    BoxEntity::y_box = y_box;
-    BoxEntity::w_box = w_box;
-    BoxEntity::h_box = h_box;
-    BoxEntity::angle_box = angle_box;
+    BoxEntity::x = x_box;
+    BoxEntity::y = y_box;
+    BoxEntity::w = w_box;
+    BoxEntity::h = h_box;
+    BoxEntity::angle = angle_box;
 
-    SetSprite(tmp_sprites);
+    SetSprite(renderer, tmp_sprites);
 
-    BoxEntity::boxBodyDef.type = b2_dynamicBody;
-    BoxEntity::boxBodyDef.angle = BoxEntity::angle_box; 
-    BoxEntity::boxBodyDef.position.Set(BoxEntity::x_box, BoxEntity::y_box);
+    BoxEntity::bodyDef.type = b2_dynamicBody;
+    BoxEntity::bodyDef.angle = BoxEntity::angle; 
+    BoxEntity::bodyDef.position.Set(BoxEntity::x, BoxEntity::y);
 
     BoxEntity::vel.Set(0, 0.2f);
 
-    BoxEntity::Body = BoxEntity::world->CreateBody(&boxBodyDef);
-    BoxEntity::Body->SetLinearVelocity(BoxEntity::vel);
+    BoxEntity::body = BoxEntity::world->CreateBody(&bodyDef);
+    BoxEntity::body->SetLinearVelocity(BoxEntity::vel);
     
-    BoxEntity::dynamicBox.SetAsBox((BoxEntity::w_box / 2.0f) - BoxEntity::dynamicBox.m_radius, (BoxEntity::h_box / 2.0f) - BoxEntity::dynamicBox.m_radius);
+    BoxEntity::boxShape.SetAsBox(BoxEntity::w / 2.0f, BoxEntity::h / 2.0f);
     
-    BoxEntity::fixtureDef.shape = &(BoxEntity::dynamicBox);
+    BoxEntity::fixtureDef.shape = &(BoxEntity::boxShape);
     BoxEntity::fixtureDef.density = 1;
     BoxEntity::fixtureDef.friction = 0.3f;
     BoxEntity::fixtureDef.restitution = 0.5f;
-    BoxEntity::Body->CreateFixture(&(BoxEntity::fixtureDef));
-
-    BoxEntity::box.w = BoxEntity::w_box * BoxEntity::MET2PIX;
-    BoxEntity::box.h = BoxEntity::h_box * BoxEntity::MET2PIX;
+    BoxEntity::body->CreateFixture(&(BoxEntity::fixtureDef));
 }
 BoxEntity::~BoxEntity()
 {
-    SDL_DestroyTexture(BoxEntity::texture_box);
-}
-
-void BoxEntity::SetSprite(SDL_Surface* tmp_sprites)
-{
-    BoxEntity::texture_box = SDL_CreateTextureFromSurface(BoxEntity::renderer, tmp_sprites);
-    SDL_FreeSurface(tmp_sprites);
+    SDL_DestroyTexture(BoxEntity::texture);
 }
 
 void BoxEntity::Reset()
 {
-    BoxEntity::Body->SetTransform(b2Vec2(BoxEntity::x_box, BoxEntity::y_box), BoxEntity::angle_box);
-    BoxEntity::Body->SetLinearVelocity(BoxEntity::vel);
+    BoxEntity::body->SetTransform(b2Vec2(BoxEntity::x, BoxEntity::y), BoxEntity::angle);
+    BoxEntity::body->SetLinearVelocity(BoxEntity::vel);
 }
-void BoxEntity::Step()
+void BoxEntity::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom)
 {
-    b2Vec2 pos = BoxEntity::Body->GetPosition();
+    b2Vec2 pos = BoxEntity::body->GetPosition();
 
-    BoxEntity::box.x = pos.x * BoxEntity::MET2PIX - BoxEntity::box.w / 2;
-    BoxEntity::box.y = pos.y * BoxEntity::MET2PIX - BoxEntity::box.h / 2;
-}
-void BoxEntity::Render()
-{    
-    SDL_RenderCopyEx(BoxEntity::renderer, BoxEntity::texture_box, NULL, &(BoxEntity::box), BoxEntity::Body->GetAngle() * BoxEntity::RAD2DEG, NULL, SDL_FLIP_NONE);
+    BoxEntity::box.x = (pos.x * zoom) + x_offset;
+    BoxEntity::box.y = (pos.y * zoom) + y_offset;
+    
+    BoxEntity::box.w = BoxEntity::w * zoom;
+    BoxEntity::box.h = BoxEntity::h * zoom;
+
+    SDL_RenderCopyEx(renderer, BoxEntity::texture, NULL, &(BoxEntity::box), BoxEntity::body->GetAngle() * BoxEntity::RAD2DEG, NULL, SDL_FLIP_NONE);
 }

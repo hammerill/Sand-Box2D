@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.82)
 
-file(GLOB_RECURSE SOURCES "src/*.cpp")
+file(GLOB_RECURSE SOURCES "src/*[.cpp|.h]")
 
 option(BUILD_WINDOWS "Build Windows .exe" ON) # Default
 option(BUILD_LINUX "Build Linux executable" OFF)
@@ -12,7 +12,7 @@ if(BUILD_WINDOWS)
 
 	set(BUILD_WINDOWS_PKGS "C:/Users/Hamme/pkgs" CACHE STRING "Path to the packages, only for Windows")
 
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -pthread -std=c++11 -Wl,-subsystem,windows")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -pthread -std=c++11 -Wl,-subsystem,windows")
 	
 	project(Box2D-test)
 
@@ -46,7 +46,7 @@ elseif(BUILD_LINUX)
 
 	project(Box2D-test)
 
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -pthread -std=c++11")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -pthread -std=c++11")
 	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
 
 	target_link_libraries(${CMAKE_PROJECT_NAME}
@@ -80,7 +80,7 @@ elseif(BUILD_VITA)
 	set(VITA_TITLEID  "HMRL00004")
 	set(VITA_VERSION  "01.00")
 
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -pthread -std=c++11")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -pthread -std=c++11")
 	set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
 
 	target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
