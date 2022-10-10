@@ -3,18 +3,21 @@
 bool Ctrl::exit = false;
 bool Ctrl::reset = false;
 
-bool Ctrl::up = false;
-bool Ctrl::right = false;
-bool Ctrl::down = false;
-bool Ctrl::left = false;
-bool Ctrl::plus = false;
-bool Ctrl::minus = false;
+double Ctrl::moveUp = 0;
+double Ctrl::moveRight = 0;
+double Ctrl::moveDown = 0;
+double Ctrl::moveLeft = 0;
+
+double Ctrl::zoomIn = 0;
+double Ctrl::zoomOut = 0;
 
 SDL_Event Ctrl::e;
 
 #ifdef Vita
-const int stickDeadZone = 50;
-const int stickCenter = 128;
+const double stickDeadZone = 10;
+const double stickCenter = 128;
+
+// sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG);
 
 void Ctrl::Check()
 {
@@ -23,19 +26,48 @@ void Ctrl::Check()
 
     Ctrl::reset = ctrl.buttons & SCE_CTRL_CROSS;
 
-    Ctrl::up = ctrl.buttons & SCE_CTRL_UP ||
-    (ctrl.ly < stickCenter - stickDeadZone);
-    Ctrl::right = ctrl.buttons & SCE_CTRL_RIGHT ||
-    (ctrl.lx > stickCenter + stickDeadZone);
-    Ctrl::down = ctrl.buttons & SCE_CTRL_DOWN ||
-    (ctrl.ly > stickCenter + stickDeadZone);
-    Ctrl::left = ctrl.buttons & SCE_CTRL_LEFT ||
-    (ctrl.lx < stickCenter - stickDeadZone);
+    if (ctrl.buttons & SCE_CTRL_UP) /////////////////////////////////// UP
+        Ctrl::moveUp = 1;
+    else if (ctrl.ly < stickCenter - stickDeadZone)
+        Ctrl::moveUp = (stickCenter - ctrl.ly) / stickCenter;
+    else
+        Ctrl::moveUp = 0;
+    
+    if (ctrl.buttons & SCE_CTRL_RIGHT) /////////////////////////////////// RIGHT
+        Ctrl::moveRight = 1;
+    else if (ctrl.lx > stickCenter + stickDeadZone)
+        Ctrl::moveRight = (ctrl.lx - stickCenter) / stickCenter;
+    else
+        Ctrl::moveRight = 0;
 
-    Ctrl::plus = ctrl.buttons & SCE_CTRL_RTRIGGER ||
-    (ctrl.ry > stickCenter + stickDeadZone);
-    Ctrl::minus = ctrl.buttons & SCE_CTRL_LTRIGGER ||
-    (ctrl.ry < stickCenter - stickDeadZone);
+    if (ctrl.buttons & SCE_CTRL_DOWN) /////////////////////////////////// DOWN
+        Ctrl::moveDown = 1;
+    else if (ctrl.ly > stickCenter + stickDeadZone)
+        Ctrl::moveDown = (ctrl.ly - stickCenter) / stickCenter;
+    else
+        Ctrl::moveDown = 0;
+    
+    if (ctrl.buttons & SCE_CTRL_LEFT) /////////////////////////////////// LEFT
+        Ctrl::moveLeft = 1;
+    else if (ctrl.lx < stickCenter - stickDeadZone)
+        Ctrl::moveLeft = (stickCenter - ctrl.lx) / stickCenter;
+    else
+        Ctrl::moveLeft = 0;
+
+
+    if (ctrl.buttons & SCE_CTRL_RTRIGGER) /////////////////////////////////// ZOOMIN
+        Ctrl::zoomIn = 1;
+    else if (ctrl.ry > stickCenter + stickDeadZone)
+        Ctrl::zoomIn = (ctrl.ry - stickCenter) / stickCenter;
+    else
+        Ctrl::zoomIn = 0;
+
+    if (ctrl.buttons & SCE_CTRL_LTRIGGER) /////////////////////////////////// ZOOMOUT
+        Ctrl::zoomOut = 1;
+    else if (ctrl.ry < stickCenter - stickDeadZone)
+        Ctrl::zoomOut = (stickCenter - ctrl.ry) / stickCenter;
+    else
+        Ctrl::zoomOut = 0;
 }
 #else
 void Ctrl::Check()
@@ -53,22 +85,22 @@ void Ctrl::Check()
                 break;
 
             case SDLK_UP: case SDLK_w:
-                Ctrl::up = e.type == SDL_KEYDOWN;
+                Ctrl::moveUp = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
             case SDLK_RIGHT: case SDLK_d:
-                Ctrl::right = e.type == SDL_KEYDOWN;
+                Ctrl::moveRight = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
             case SDLK_DOWN: case SDLK_s:
-                Ctrl::down = e.type == SDL_KEYDOWN;
+                Ctrl::moveDown = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
             case SDLK_LEFT: case SDLK_a:
-                Ctrl::left = e.type == SDL_KEYDOWN;
+                Ctrl::moveLeft = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
             case SDLK_e:
-                Ctrl::plus = e.type == SDL_KEYDOWN;
+                Ctrl::zoomIn = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
             case SDLK_q:
-                Ctrl::minus = e.type == SDL_KEYDOWN;
+                Ctrl::zoomOut = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
 
             default:
@@ -79,13 +111,13 @@ void Ctrl::Check()
 }
 #endif
 
-bool Ctrl::getExit() { return Ctrl::exit; }
-bool Ctrl::getReset() { return Ctrl::reset; }
+bool Ctrl::getExit()    { return Ctrl::exit; }
+bool Ctrl::getReset()   { return Ctrl::reset; }
 
-bool Ctrl::getUp() { return Ctrl::up; }
-bool Ctrl::getRight() { return Ctrl::right; }
-bool Ctrl::getDown() { return Ctrl::down; }
-bool Ctrl::getLeft() { return Ctrl::left; }
+double Ctrl::getMoveUp()     { return Ctrl::moveUp; }
+double Ctrl::getMoveRight()  { return Ctrl::moveRight; }
+double Ctrl::getMoveDown()   { return Ctrl::moveDown; }
+double Ctrl::getMoveLeft()   { return Ctrl::moveLeft; }
 
-bool Ctrl::getPlus() { return Ctrl::plus; }
-bool Ctrl::getMinus() { return Ctrl::minus; }
+double Ctrl::getZoomIn()   { return Ctrl::zoomIn; }
+double Ctrl::getZoomOut()  { return Ctrl::zoomOut; }

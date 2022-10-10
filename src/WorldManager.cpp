@@ -60,14 +60,14 @@ bool WorldManager::Step()
         return false;
     }
 
-    if (Ctrl::getUp())      { WorldManager::y_offset += WorldManager::move_speed; }
-    if (Ctrl::getRight())   { WorldManager::x_offset -= WorldManager::move_speed; }
-    if (Ctrl::getDown())    { WorldManager::y_offset -= WorldManager::move_speed; }
-    if (Ctrl::getLeft())    { WorldManager::x_offset += WorldManager::move_speed; }
-    
-    if (Ctrl::getPlus())            { WorldManager::zoom += WorldManager::zoom_speed; }
-    if (Ctrl::getMinus()
-        && WorldManager::zoom > 0)  { WorldManager::zoom -= WorldManager::zoom_speed; }
+    WorldManager::y_offset += Ctrl::getMoveUp() * WorldManager::move_speed;
+    WorldManager::x_offset -= Ctrl::getMoveRight() * WorldManager::move_speed;
+    WorldManager::y_offset -= Ctrl::getMoveDown() * WorldManager::move_speed;
+    WorldManager::x_offset += Ctrl::getMoveLeft() * WorldManager::move_speed;
+
+    WorldManager::zoom += Ctrl::getZoomIn() * WorldManager::zoom_speed;
+    if (WorldManager::zoom > 0)    
+        WorldManager::zoom -= Ctrl::getZoomOut() * WorldManager::zoom_speed;
 
     WorldManager::world->Step(1.0f / 60.0f, 12, 4);
 
