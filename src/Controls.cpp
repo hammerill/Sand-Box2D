@@ -18,8 +18,6 @@ SDL_Event Ctrl::e;
 const double stickDeadZone = 10;
 const double stickCenter = 128;
 
-// sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG);
-
 void Ctrl::Check()
 {
     SceCtrlData ctrl;

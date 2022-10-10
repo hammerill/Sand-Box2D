@@ -3,8 +3,6 @@
 #include "PlatformEntity.h"
 #include "WorldManager.h"
 
-#include <iostream>
-
 #ifdef Linux
 const bool isLinux = true;
 #else
