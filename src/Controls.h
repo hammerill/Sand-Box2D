@@ -4,7 +4,6 @@
 
 #ifdef Vita
 #include <psp2/ctrl.h>
-#include <psp2/touch.h>
 #endif
 
 /// @brief Static class for accessing pressed keys and/or buttons
