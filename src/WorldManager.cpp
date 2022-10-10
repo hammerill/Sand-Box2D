@@ -30,6 +30,15 @@ void WorldManager::initVideo()
 {
     SDL_Init(SDL_INIT_EVERYTHING);
 
+    if (WorldManager::SCREEN_WIDTH == 0 || WorldManager::SCREEN_HEIGHT == 0)
+    {
+        SDL_DisplayMode dm;
+        SDL_GetCurrentDisplayMode(0, &dm);
+
+        WorldManager::SCREEN_WIDTH = dm.w / 1.5;
+        WorldManager::SCREEN_HEIGHT = dm.h / 1.5;
+    }
+
     WorldManager::window = SDL_CreateWindow("Box2D", SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED, WorldManager::SCREEN_WIDTH, WorldManager::SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     
@@ -59,6 +68,29 @@ bool WorldManager::Step()
     {
         return false;
     }
+
+    if (Ctrl::getFullscreen())
+    {
+        if (WorldManager::holdingFullscreenButton == false)
+        {
+            if (WorldManager::isFullscreen)
+            {
+                SDL_SetWindowFullscreen(WorldManager::window, 0);
+                SDL_ShowCursor(SDL_ENABLE);
+            }
+            else
+            {            
+                SDL_SetWindowFullscreen(WorldManager::window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+                SDL_ShowCursor(SDL_DISABLE);
+            }
+
+            WorldManager::isFullscreen = !WorldManager::isFullscreen;
+            WorldManager::holdingFullscreenButton = true;
+        }        
+    }
+    else    
+        WorldManager::holdingFullscreenButton = false;
+    
 
     WorldManager::y_offset += Ctrl::getMoveUp() * WorldManager::move_speed;
     WorldManager::x_offset -= Ctrl::getMoveRight() * WorldManager::move_speed;

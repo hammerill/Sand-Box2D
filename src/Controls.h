@@ -13,6 +13,7 @@ class Ctrl
 private:
     static bool exit;
     static bool reset;
+    static bool fullscreen;
 
     static double moveUp;
     static double moveRight;
@@ -35,6 +36,8 @@ public:
     static bool getExit();
     /// @brief Is user does want to reset the position and/or angles of ph. objects?
     static bool getReset();
+    /// @brief Is user does want to go/exit fullscreen mode?
+    static bool getFullscreen();
 
     /// @brief Is user does want to move camera up?
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).

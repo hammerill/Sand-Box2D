@@ -28,6 +28,9 @@ private:
     float x_offset = 0, y_offset = 0, zoom = 80;
     float move_speed, zoom_speed;
 
+    bool holdingFullscreenButton = false;
+    bool isFullscreen = false;
+
 public:
     /// @brief Init video, Box2D world and create WorldManager instance.
     /// @param SCREEN_WIDTH resolution of the window width in pixels.
