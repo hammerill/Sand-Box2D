@@ -29,7 +29,10 @@ An organized (divided by classes separated per files) cross-platform (Windows, L
   cmake .. -DBUILD_WINDOWS_PKGS=C:/path/to/pkgs
   make
   ```
-5. .exe file should appear, you can now launch this program.
+5. .exe file should appear, you can now launch this program:
+  ```
+  Box2D-test.exe
+  ```
 
 ### On Linux
 1. Install libraries SDL2, SDL2_image, SDL2_mixer and Box2D somehow with your package manager.
@@ -44,7 +47,10 @@ An organized (divided by classes separated per files) cross-platform (Windows, L
   cmake .. -DBUILD_WINDOWS=OFF -DBUILD_LINUX=ON
   make -j4
   ```
-4. Executable should appear, you can now launch this program.
+4. Executable should appear, you can now launch this program:
+  ```
+  ./Box2D-test
+  ```
 
 ### For PS Vita
 Build for PS Vita should be performed in Linux environment (or in MSYS2 in Windows, see step 1).
@@ -58,6 +64,7 @@ Build for PS Vita should be performed in Linux environment (or in MSYS2 in Windo
   mkdir build
   cd build
   cmake .. -DBUILD_WINDOWS=OFF -DBUILD_VITA=ON
+  cmake ..
   make -j4
   ```
 4. .vpk file should appear. Copy this file to your hacked PS Vita and install via VitaShell.
