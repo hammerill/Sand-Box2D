@@ -1,10 +1,10 @@
 #include "WorldManager.h"
 #include "Controls.h"
 
-WorldManager::WorldManager(int SCREEN_WIDTH, int SCREEN_HEIGHT, bool fpsCorrection, float move_speed, float zoom_speed)
+WorldManager::WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, bool fpsCorrection, float move_speed, float zoom_speed)
 {
-    WorldManager::SCREEN_WIDTH = SCREEN_WIDTH;
-    WorldManager::SCREEN_HEIGHT = SCREEN_HEIGHT;
+    WorldManager::WINDOW_WIDTH = WINDOW_WIDTH;
+    WorldManager::WINDOW_HEIGHT = WINDOW_HEIGHT;
 
     WorldManager::speedCorrection = fpsCorrection;
 
@@ -30,26 +30,26 @@ void WorldManager::initVideo()
 {
     SDL_Init(SDL_INIT_EVERYTHING);
 
-    if (WorldManager::SCREEN_WIDTH == 0 || WorldManager::SCREEN_HEIGHT == 0)
+    if (WorldManager::WINDOW_WIDTH == 0 || WorldManager::WINDOW_HEIGHT == 0)
     {
         SDL_DisplayMode dm;
         SDL_GetCurrentDisplayMode(0, &dm);
 
-        WorldManager::SCREEN_WIDTH = dm.w / 1.5;
-        WorldManager::SCREEN_HEIGHT = dm.h / 1.5;
+        WorldManager::WINDOW_WIDTH = dm.w / 1.5;
+        WorldManager::WINDOW_HEIGHT = dm.h / 1.5;
     }
 
     WorldManager::window = SDL_CreateWindow("Box2D", SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED, WorldManager::SCREEN_WIDTH, WorldManager::SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+        SDL_WINDOWPOS_CENTERED, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
     
     WorldManager::renderer = SDL_CreateRenderer(WorldManager::window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-    SDL_RenderSetLogicalSize(WorldManager::renderer, WorldManager::SCREEN_WIDTH, WorldManager::SCREEN_HEIGHT);
+    SDL_RenderSetLogicalSize(WorldManager::renderer, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT);
 }
 
 void WorldManager::addObject(PhysicsObj* obj)
 {
-    WorldManager::objects.push_back(obj);
+    WorldManager::order.push_back(obj);
 }
 void WorldManager::deleteObject(int index)
 {
@@ -59,6 +59,13 @@ void WorldManager::deleteObject(int index)
 
 bool WorldManager::Step()
 {
+    for (int i = WorldManager::order.size() - 1; i >= 0; i--)
+    {
+        WorldManager::objects.push_back(WorldManager::order[i]);
+        WorldManager::objects[WorldManager::objects.size() - 1]->Register(WorldManager::world, WorldManager::renderer);
+        WorldManager::order.pop_back();
+    }
+        
     if (WorldManager::speedCorrection)
         WorldManager::b = WorldManager::a;
 

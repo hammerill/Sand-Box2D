@@ -1,15 +1,14 @@
 #include "BoxEntity.h"
 
-BoxEntity::BoxEntity(b2World* world, SDL_Renderer* renderer, const char* path_to_texture, float x_box, float y_box, float w_box, float h_box, float angle_box)
+BoxEntity::BoxEntity(const char* path_to_texture, float x_box, float y_box, float w_box, float h_box, float angle_box)
 {
-    BoxEntity::world = world;
     BoxEntity::x = x_box + (w_box / 2);
     BoxEntity::y = y_box + (h_box / 2);
     BoxEntity::w = w_box;
     BoxEntity::h = h_box;
     BoxEntity::angle = angle_box;
 
-    BoxEntity::LoadTexture(renderer, path_to_texture);
+    BoxEntity::pathToTexture = path_to_texture;
     
     BoxEntity::bodyDef.type = b2_dynamicBody;
     BoxEntity::bodyDef.angle = BoxEntity::angle; 
@@ -17,16 +16,21 @@ BoxEntity::BoxEntity(b2World* world, SDL_Renderer* renderer, const char* path_to
 
     BoxEntity::vel.Set(0, 0.2f);
 
-    BoxEntity::body = BoxEntity::world->CreateBody(&bodyDef);
-    BoxEntity::body->SetLinearVelocity(BoxEntity::vel);
-    
     BoxEntity::boxShape.SetAsBox(BoxEntity::w / 2.0f, BoxEntity::h / 2.0f);
     
     BoxEntity::fixtureDef.shape = &(BoxEntity::boxShape);
     BoxEntity::fixtureDef.density = 1;
     BoxEntity::fixtureDef.friction = 0.3f;
     BoxEntity::fixtureDef.restitution = 0.5f;
+}
+
+void BoxEntity::Register(b2World* world, SDL_Renderer* renderer)
+{
+    BoxEntity::body = world->CreateBody(&(BoxEntity::bodyDef));
+    BoxEntity::body->SetLinearVelocity(BoxEntity::vel);
     BoxEntity::body->CreateFixture(&(BoxEntity::fixtureDef));
+    
+    BoxEntity::LoadTexture(renderer);
 }
 
 void BoxEntity::Reset()

@@ -6,7 +6,7 @@ An organized (divided by classes separated per files) cross-platform (Windows, L
 - <kbd>R</kbd> - reset box position.
 - <kbd>WASD</kbd> or <kbd>Arrows</kbd> - move camera.
 - <kbd>Q</kbd>/<kbd>E</kbd> - adjust zoom.
-- <kbd>F</kbd> - go/exit fullscreen.
+- <kbd>F</kbd> - go/exit fullscreen (may not work properly on Linux).
 
 ### For PS Vita
 - <kbd>Cross</kbd> - reset box position.

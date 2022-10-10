@@ -33,13 +33,21 @@ protected:
     /// @brief Fixture definition of the physics object.
     b2FixtureDef fixtureDef;
 
+    /// @brief Path to the image file of texture.
+    const char* pathToTexture;
+
 public:
     ~PhysicsObj();
+    
+    /// Register this ph. obj. in the world and set its texture. Should be 
+    /// called only when no world calculations are performing.
+    /// @param world link to the world where ph. obj. should be registered.
+    /// @param renderer the rendering context.
+    virtual void Register(b2World* world, SDL_Renderer* renderer) = 0;
 
     /// @brief Load a texture for physics object.
-    /// @param renderer the rendering context, necessary in order to set texture.
-    /// @param path_to_texture path to the image file of texture.
-    void LoadTexture(SDL_Renderer* renderer, const char* path_to_texture);
+    /// @param renderer the rendering context.
+    void LoadTexture(SDL_Renderer* renderer);
 
     b2Body* getBody();
 

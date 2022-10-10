@@ -16,16 +16,20 @@ private:
 
 public:
     /// @brief Create a new box entity.
-    /// @param world the world where box exists.
-    /// @param renderer the rendering context.
     /// @param path_to_texture path to the image file of texture.
     /// @param x_box position X of upper left corner of the box in Box2D meters.
     /// @param y_box position Y of upper left corner of the box in Box2D meters.
     /// @param w_box width of the box in Box2D meters.
     /// @param h_box height of the box in Box2D meters.
     /// @param angle_box angle of the box in radians.
-    BoxEntity(b2World* world, SDL_Renderer* renderer, const char* path_to_texture, float x_box, float y_box, float w_box, float h_box, float angle_box);
+    BoxEntity(const char* path_to_texture, float x_box, float y_box, float w_box, float h_box, float angle_box);
     
+    /// Register this box in the world and set its texture. Should be 
+    /// called only when no world calculations are performing.
+    /// @param world link to the world where box should be registered.
+    /// @param renderer the rendering context.
+    void Register(b2World* world, SDL_Renderer* renderer);
+
     /// @brief Set default position and angle of the box.
     void Reset();
 
