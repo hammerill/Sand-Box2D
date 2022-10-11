@@ -2,8 +2,8 @@
 
 BoxEntity::BoxEntity(const char* path_to_texture, float x_box, float y_box, float w_box, float h_box, float angle_box, float vel_x, float vel_y)
 {
-    BoxEntity::x = x_box + (w_box / 2);
-    BoxEntity::y = y_box + (h_box / 2);
+    BoxEntity::x = x_box;
+    BoxEntity::y = y_box;
     BoxEntity::w = w_box;
     BoxEntity::h = h_box;
     BoxEntity::angle = angle_box;
@@ -26,8 +26,8 @@ BoxEntity::BoxEntity(const char* path_to_texture, float x_box, float y_box, floa
 
 BoxEntity::BoxEntity(SDL_Texture* texture, float x_box, float y_box, float w_box, float h_box, float angle_box, float vel_x, float vel_y)
 {
-    BoxEntity::x = x_box + (w_box / 2);
-    BoxEntity::y = y_box + (h_box / 2);
+    BoxEntity::x = x_box;
+    BoxEntity::y = y_box;
     BoxEntity::w = w_box;
     BoxEntity::h = h_box;
     BoxEntity::angle = angle_box;
@@ -47,16 +47,6 @@ BoxEntity::BoxEntity(SDL_Texture* texture, float x_box, float y_box, float w_box
     BoxEntity::fixtureDef.density = 1;
     BoxEntity::fixtureDef.friction = 0.3f;
     BoxEntity::fixtureDef.restitution = 0.5f;
-}
-
-void BoxEntity::Register(b2World* world, SDL_Renderer* renderer)
-{
-    BoxEntity::body = world->CreateBody(&(BoxEntity::bodyDef));
-    BoxEntity::body->SetLinearVelocity(BoxEntity::vel);
-    BoxEntity::body->CreateFixture(&(BoxEntity::fixtureDef));
-    
-    if (BoxEntity::pathToTexture != nullptr)
-        BoxEntity::LoadTexture(renderer);
 }
 
 void BoxEntity::Reset()

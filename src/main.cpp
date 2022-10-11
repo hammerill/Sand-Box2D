@@ -1,6 +1,7 @@
 #include "Controls.h"
 #include "BoxEntity.h"
 #include "PlatformEntity.h"
+#include "CircleEntity.h"
 #include "WorldManager.h"
 
 #include <chrono>
@@ -26,9 +27,10 @@ void objCreateCycle(WorldManager* wm, SDL_Texture* texture)
 {
     while (isRunning)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(50)); //100ms delay. 10Hz (10 times per second).
-        wm->addObject(new BoxEntity(texture, 6, 0, 0.25, 0.25, 0, 10, 10));
-        wm->addObject(new BoxEntity(texture, 5.75, 0, 0.25, 0.25, 0, -10, 10));
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+
+        wm->addObject(new BoxEntity(texture, 6 + 0.125, 0, 0.25, 0.25, 0, 10, 10));
+        wm->addObject(new BoxEntity(texture, 6 - 0.125, 0, 0.25, 0.25, 0, -10, 10));
     }
 }
 
@@ -42,6 +44,8 @@ int main(int argv, char** args)
 
     wm->addObject(new PlatformEntity(1, 1, 2, 7)); // LEFT \ /
     wm->addObject(new PlatformEntity(10, 7, 11, 1)); // RIGHT / /
+
+    wm->addObject(new CircleEntity(6, 2, 0.5, 5, 5));
 
     std::thread creater(objCreateCycle, wm, texture);
 

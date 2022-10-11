@@ -30,6 +30,7 @@ if(BUILD_WINDOWS)
 	target_link_libraries(${CMAKE_PROJECT_NAME}
 		SDL2_image
 		SDL2_mixer
+		SDL2_gfx
 
 		mingw32
 		SDL2main
@@ -52,6 +53,7 @@ elseif(BUILD_LINUX)
 	target_link_libraries(${CMAKE_PROJECT_NAME}
 		SDL2_image
 		SDL2_mixer
+		SDL2_gfx
 		SDL2
 
 		box2d
@@ -92,6 +94,7 @@ elseif(BUILD_VITA)
 	target_link_libraries(${CMAKE_PROJECT_NAME}
 		SDL2_image
 		SDL2_mixer
+		SDL2_gfx
 		SDL2
 
 		vorbisfile

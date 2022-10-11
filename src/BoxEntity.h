@@ -17,8 +17,8 @@ private:
 public:
     /// @brief Create a new box entity.
     /// @param path_to_texture path to the image file of texture.
-    /// @param x_box position X of upper left corner of the box in Box2D meters.
-    /// @param y_box position Y of upper left corner of the box in Box2D meters.
+    /// @param x_box position X of the center of the box in Box2D meters.
+    /// @param y_box position Y of the center of the box in Box2D meters.
     /// @param w_box width of the box in Box2D meters.
     /// @param h_box height of the box in Box2D meters.
     /// @param angle_box angle of the box in radians.
@@ -28,8 +28,8 @@ public:
     
     /// @brief Create a new box entity.
     /// @param texture link to the texture. Can be used in order to improve perfomance with many boxes with same texture.
-    /// @param x_box position X of upper left corner of the box in Box2D meters.
-    /// @param y_box position Y of upper left corner of the box in Box2D meters.
+    /// @param x_box position X of the center of the box in Box2D meters.
+    /// @param y_box position Y of the center of the box in Box2D meters.
     /// @param w_box width of the box in Box2D meters.
     /// @param h_box height of the box in Box2D meters.
     /// @param angle_box angle of the box in radians.

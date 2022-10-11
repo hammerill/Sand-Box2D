@@ -16,12 +16,6 @@ PlatformEntity::PlatformEntity(float x1_plat, float y1_plat, float x2_plat, floa
     PlatformEntity::fixtureDef.shape = &(PlatformEntity::platformShape);
 }
 
-void PlatformEntity::Register(b2World* world, SDL_Renderer* renderer)
-{
-    PlatformEntity::body = world->CreateBody(&(PlatformEntity::bodyDef));
-    PlatformEntity::body->CreateFixture(&(PlatformEntity::fixtureDef));
-}
-
 void PlatformEntity::Reset() {}
 void PlatformEntity::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom)
 {

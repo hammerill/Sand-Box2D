@@ -16,7 +16,7 @@ An organized (divided by classes separated per files) cross-platform (Windows, L
 ## Build 
 ### On Windows
 1. Ensure you have all necessaire tools installed and wrote to your PATH variable (cmake, make, mingw (g++), git, etc.).
-2. Install [SDL2](https://github.com/libsdl-org/SDL/releases/tag/release-2.24.0) (put contents of SDL2-devel...mingw.zip/x86-64... somewhere). As well as [SDL_Image](https://github.com/libsdl-org/SDL_image/releases/tag/release-2.6.2), [SDL_Mixer](https://github.com/libsdl-org/SDL_mixer/releases/tag/release-2.6.2) (put contents to the same directory as for SDL2) and [Box2D](https://github.com/erincatto/box2d). Or simply just unpack contents of this [archive](https://github.com/Hammerill/box2d-test-obj/releases/download/v1.0.0/packages-win64-sdl2-sdl2_image-sdl2_mixer-box2d.zip) somewhere. Also, you have to add "bin" directory (located where the packages are installed) to your PATH variable, or copy its contents (*.dll) to the same directory where .exe file should be (build).
+2. Install [SDL2](https://github.com/libsdl-org/SDL/releases/tag/release-2.24.0) (put contents of SDL2-devel...mingw.zip/x86-64... somewhere). As well as [SDL_Image](https://github.com/libsdl-org/SDL_image/releases/tag/release-2.6.2), [SDL_Mixer](https://github.com/libsdl-org/SDL_mixer/releases/tag/release-2.6.2) (put contents to the same directory as for SDL2), [SDL2_gfx](https://www.ferzkopp.net/wordpress/2016/01/02/sdl_gfx-sdl2_gfx/) and [Box2D](https://github.com/erincatto/box2d). Or simply just unpack contents of this [archive](https://github.com/Hammerill/box2d-test-obj/releases/download/v1.0.0/packages-win64-sdl2-sdl2_image-sdl2_mixer-sdl2_gfx-box2d.zip) somewhere. Also, you have to add "bin" directory (located where the packages are installed) to your PATH variable, or copy its contents (*.dll) to the same directory where .exe file should be (build).
 3. Clone repo:
   ```
   git clone https://github.com/Hammerill/box2d-test-obj && cd box2d-test-obj
@@ -35,7 +35,7 @@ An organized (divided by classes separated per files) cross-platform (Windows, L
   ```
 
 ### On Linux
-1. Install libraries SDL2, SDL2_image, SDL2_mixer and Box2D somehow with your package manager.
+1. Install libraries SDL2, SDL2_image, SDL2_mixer, SDL2_gfx and Box2D somehow with your package manager.
 2. Clone repo:
   ```
   git clone https://github.com/Hammerill/box2d-test-obj && cd box2d-test-obj

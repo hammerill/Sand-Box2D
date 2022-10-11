@@ -34,7 +34,7 @@ protected:
     b2FixtureDef fixtureDef;
 
     /// @brief Path to the image file of texture.
-    const char* pathToTexture;
+    const char* pathToTexture = nullptr;
 
 public:
     ~PhysicsObj();
@@ -43,7 +43,7 @@ public:
     /// called only when no world calculations are performing.
     /// @param world link to the world where ph. obj. should be registered.
     /// @param renderer the rendering context.
-    virtual void Register(b2World* world, SDL_Renderer* renderer) = 0;
+    void Register(b2World* world, SDL_Renderer* renderer = nullptr);
 
     /// @brief Load a texture for physics object.
     /// @param renderer the rendering context.
