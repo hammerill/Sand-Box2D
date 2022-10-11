@@ -51,37 +51,13 @@ void WorldManager::initVideo()
     SDL_RenderSetLogicalSize(WorldManager::renderer, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT);
 }
 
-void WorldManager::addObject(PhysicsObj* obj)
-{
-    WorldManager::order.push_back(obj);
-}
-void WorldManager::deleteObject(int index)
-{
-    WorldManager::objects.erase(WorldManager::objects.begin() + index);
-}
+void WorldManager::addObject(PhysicsObj* obj) { WorldManager::order.push_back(obj); }
+void WorldManager::deleteObject(int index) { WorldManager::objects.erase(WorldManager::objects.begin() + index); }
 
 bool WorldManager::Step()
 {
-    for (int i = WorldManager::order.size() - 1; i >= 0; i--)
-    {
-        WorldManager::objects.push_back(WorldManager::order[i]);
-        WorldManager::objects[WorldManager::objects.size() - 1]->Register(WorldManager::world, WorldManager::renderer);
-        WorldManager::order.pop_back();
-    }
-        
     if (WorldManager::speedCorrection)
         WorldManager::b = WorldManager::a;
-
-    for (size_t i = 0; i < WorldManager::objects.size(); i++)
-    {
-        if (WorldManager::objects[i]->getBody()->GetPosition().x > 100 ||
-            WorldManager::objects[i]->getBody()->GetPosition().y > 100 ||
-            WorldManager::objects[i]->getBody()->GetPosition().x < -100 ||
-            WorldManager::objects[i]->getBody()->GetPosition().y < -100 )
-        {
-            WorldManager::deleteObject(i);
-        }
-    }
 
     Ctrl::Check();
 
@@ -94,18 +70,10 @@ bool WorldManager::Step()
     {
         if (WorldManager::holdingFullscreenButton == false)
         {
-            if (WorldManager::isFullscreen)
-            {
-                SDL_SetWindowFullscreen(WorldManager::window, 0);
-                SDL_ShowCursor(SDL_ENABLE);
-            }
-            else
-            {            
-                SDL_SetWindowFullscreen(WorldManager::window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-                SDL_ShowCursor(SDL_DISABLE);
-            }
-
             WorldManager::isFullscreen = !WorldManager::isFullscreen;
+
+            WorldManager::goFullscreen(WorldManager::isFullscreen);
+            
             WorldManager::holdingFullscreenButton = true;
         }        
     }
@@ -122,13 +90,31 @@ bool WorldManager::Step()
     if (WorldManager::zoom > 0)    
         WorldManager::zoom -= Ctrl::getZoomOut() * WorldManager::zoom_speed;
 
-    WorldManager::world->Step(1.0f / 60.0f, 12, 4);
+    WorldManager::world->Step(1.0f / 60.0f, 6, 2);
 
     if (Ctrl::getReset())
     {
         for (size_t i = 0; i < WorldManager::objects.size(); i++)
         {
             WorldManager::objects[i]->Reset();
+        }
+    }
+
+    for (int i = WorldManager::order.size() - 1; i >= 0; i--)
+    {
+        WorldManager::objects.push_back(WorldManager::order[i]);
+        WorldManager::objects[WorldManager::objects.size() - 1]->Register(WorldManager::world, WorldManager::renderer);
+        WorldManager::order.pop_back();
+    }
+
+    for (size_t i = 0; i < WorldManager::objects.size(); i++)
+    {
+        if (WorldManager::objects[i]->getBody()->GetPosition().x > 100 ||
+            WorldManager::objects[i]->getBody()->GetPosition().y > 100 ||
+            WorldManager::objects[i]->getBody()->GetPosition().x < -100 ||
+            WorldManager::objects[i]->getBody()->GetPosition().y < -100 )
+        {
+            WorldManager::deleteObject(i);
         }
     }
 
@@ -180,3 +166,17 @@ void WorldManager::Cycle()
 }
 
 SDL_Renderer* WorldManager::getRenderer() { return WorldManager::renderer; }
+
+void WorldManager::goFullscreen(bool isToFullscreen)
+{
+    if (isToFullscreen)
+    {
+        SDL_SetWindowFullscreen(WorldManager::window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+        SDL_ShowCursor(SDL_DISABLE);
+    }
+    else
+    {
+        SDL_SetWindowFullscreen(WorldManager::window, 0);
+        SDL_ShowCursor(SDL_ENABLE);
+    }
+}

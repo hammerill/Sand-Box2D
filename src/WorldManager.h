@@ -41,6 +41,10 @@ private:
     bool holdingFullscreenButton = false;
     bool isFullscreen = false;
 
+    /// @brief Set fullscreen or disable it.
+    /// @param isToFullscreen should this command go fullscreen or disable it?
+    void goFullscreen(bool isToFullscreen);
+
 public:
     /// @brief Init video, Box2D world and create WorldManager instance.
     /// @param WINDOW_WIDTH resolution of the window width in pixels. If 0, width would be adjusted automatically.
