@@ -53,7 +53,6 @@ void WorldManager::addObject(PhysicsObj* obj)
 }
 void WorldManager::deleteObject(int index)
 {
-    WorldManager::world->DestroyBody(WorldManager::objects[index]->getBody());
     WorldManager::objects.erase(WorldManager::objects.begin() + index);
 }
 

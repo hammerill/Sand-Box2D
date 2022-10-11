@@ -2,7 +2,15 @@
 
 PhysicsObj::~PhysicsObj()
 {
-    SDL_DestroyTexture(PhysicsObj::texture);
+    if (PhysicsObj::pathToTexture != nullptr)
+    {
+        SDL_DestroyTexture(PhysicsObj::texture);
+        delete[] PhysicsObj::pathToTexture;
+    }
+
+    PhysicsObj::world->DestroyBody(PhysicsObj::body);
+
+    delete[] PhysicsObj::world;
 }
 
 void PhysicsObj::LoadTexture(SDL_Renderer* renderer)
