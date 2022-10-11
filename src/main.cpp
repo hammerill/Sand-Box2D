@@ -3,6 +3,7 @@
 #include "PlatformEntity.h"
 #include "WorldManager.h"
 
+#include <chrono>
 #include <thread>
 
 #ifdef Linux
@@ -25,7 +26,7 @@ void objCreateCycle(WorldManager* wm, SDL_Texture* texture)
 {
     while (isRunning)
     {
-        _sleep(100); //100ms delay. 10Hz (10 times per second).
+        std::this_thread::sleep_for(std::chrono::milliseconds(100)); //100ms delay. 10Hz (10 times per second).
         wm->addObject(new BoxEntity(texture, 6, 0, 0.25, 0.25, 0));
     }
 }
