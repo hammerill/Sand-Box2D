@@ -54,7 +54,7 @@ void WorldManager::addObject(PhysicsObj* obj)
 void WorldManager::deleteObject(int index)
 {
     WorldManager::world->DestroyBody(WorldManager::objects[index]->getBody());
-    delete[] &WorldManager::objects[index];
+    WorldManager::objects.erase(WorldManager::objects.begin() + index);
 }
 
 bool WorldManager::Step()
@@ -68,6 +68,17 @@ bool WorldManager::Step()
         
     if (WorldManager::speedCorrection)
         WorldManager::b = WorldManager::a;
+
+    for (size_t i = 0; i < WorldManager::objects.size(); i++)
+    {
+        if (WorldManager::objects[i]->getBody()->GetPosition().x > 100 ||
+            WorldManager::objects[i]->getBody()->GetPosition().y > 100 ||
+            WorldManager::objects[i]->getBody()->GetPosition().x < -100 ||
+            WorldManager::objects[i]->getBody()->GetPosition().y < -100 )
+        {
+            WorldManager::deleteObject(i);
+        }
+    }
 
     Ctrl::Check();
 
@@ -164,3 +175,5 @@ void WorldManager::Cycle()
         }
     }
 }
+
+SDL_Renderer* WorldManager::getRenderer() { return WorldManager::renderer; }

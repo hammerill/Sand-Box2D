@@ -68,4 +68,8 @@ public:
 
     /// @brief Run main cycle of the program, exit only by initiative of user.
     void Cycle();
+
+    /// @brief Get rendering context.
+    /// @return link to the rendering context.
+    SDL_Renderer* getRenderer();
 };

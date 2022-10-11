@@ -24,6 +24,15 @@ public:
     /// @param angle_box angle of the box in radians.
     BoxEntity(const char* path_to_texture, float x_box, float y_box, float w_box, float h_box, float angle_box);
     
+    /// @brief Create a new box entity.
+    /// @param texture link to the texture. Can be used in order to improve perfomance with many boxes with same texture.
+    /// @param x_box position X of upper left corner of the box in Box2D meters.
+    /// @param y_box position Y of upper left corner of the box in Box2D meters.
+    /// @param w_box width of the box in Box2D meters.
+    /// @param h_box height of the box in Box2D meters.
+    /// @param angle_box angle of the box in radians.
+    BoxEntity(SDL_Texture* texture, float x_box, float y_box, float w_box, float h_box, float angle_box);
+    
     /// Register this box in the world and set its texture. Should be 
     /// called only when no world calculations are performing.
     /// @param world link to the world where box should be registered.
