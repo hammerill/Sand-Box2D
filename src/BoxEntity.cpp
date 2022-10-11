@@ -39,7 +39,7 @@ BoxEntity::BoxEntity(SDL_Texture* texture, float x_box, float y_box, float w_box
     BoxEntity::bodyDef.angle = BoxEntity::angle; 
     BoxEntity::bodyDef.position.Set(BoxEntity::x, BoxEntity::y);
 
-    BoxEntity::vel.Set(0, 0.2f);
+    BoxEntity::vel.Set(5, 10);
 
     BoxEntity::boxShape.SetAsBox(BoxEntity::w / 2.0f, BoxEntity::h / 2.0f);
     

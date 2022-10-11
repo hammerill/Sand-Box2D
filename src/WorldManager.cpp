@@ -24,6 +24,10 @@ WorldManager::~WorldManager()
     {
         WorldManager::deleteObject(i);
     }
+
+    SDL_DestroyRenderer(WorldManager::renderer);
+	SDL_DestroyWindow(WorldManager::window);
+    delete[] WorldManager::world;
 }
 
 void WorldManager::initVideo()
