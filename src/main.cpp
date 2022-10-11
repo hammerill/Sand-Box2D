@@ -27,7 +27,7 @@ void objCreateCycle(WorldManager* wm, SDL_Texture* texture)
     while (isRunning)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(100)); //100ms delay. 10Hz (10 times per second).
-        wm->addObject(new BoxEntity(texture, 6, 0, 0.25, 0.25, 0));
+        wm->addObject(new BoxEntity(texture, 6, 0, 0.25, 0.25, 0, 10, 10));
     }
 }
 

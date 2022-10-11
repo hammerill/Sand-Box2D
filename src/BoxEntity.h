@@ -9,7 +9,7 @@ class BoxEntity: public PhysicsObj
 private:
     /// Default values of position and angle of box entity.
     /// Used while creating a box or resetting it to default.
-    float x, y, w, h, angle;
+    float x, y, w, h, angle, vel_x, vel_y;
 
     /// @brief Shape of the box entity.
     b2PolygonShape boxShape;
@@ -22,7 +22,9 @@ public:
     /// @param w_box width of the box in Box2D meters.
     /// @param h_box height of the box in Box2D meters.
     /// @param angle_box angle of the box in radians.
-    BoxEntity(const char* path_to_texture, float x_box, float y_box, float w_box, float h_box, float angle_box);
+    /// @param vel_x velocity on X of the box.
+    /// @param vel_y velocity on Y of the box.
+    BoxEntity(const char* path_to_texture, float x_box, float y_box, float w_box, float h_box, float angle_box, float vel_x = 0, float vel_y = 0);
     
     /// @brief Create a new box entity.
     /// @param texture link to the texture. Can be used in order to improve perfomance with many boxes with same texture.
@@ -31,7 +33,9 @@ public:
     /// @param w_box width of the box in Box2D meters.
     /// @param h_box height of the box in Box2D meters.
     /// @param angle_box angle of the box in radians.
-    BoxEntity(SDL_Texture* texture, float x_box, float y_box, float w_box, float h_box, float angle_box);
+    /// @param vel_x velocity on X of the box.
+    /// @param vel_y velocity on Y of the box.
+    BoxEntity(SDL_Texture* texture, float x_box, float y_box, float w_box, float h_box, float angle_box, float vel_x = 0, float vel_y = 0);
     
     /// Register this box in the world and set its texture. Should be 
     /// called only when no world calculations are performing.

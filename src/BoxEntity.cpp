@@ -1,6 +1,6 @@
 #include "BoxEntity.h"
 
-BoxEntity::BoxEntity(const char* path_to_texture, float x_box, float y_box, float w_box, float h_box, float angle_box)
+BoxEntity::BoxEntity(const char* path_to_texture, float x_box, float y_box, float w_box, float h_box, float angle_box, float vel_x, float vel_y)
 {
     BoxEntity::x = x_box + (w_box / 2);
     BoxEntity::y = y_box + (h_box / 2);
@@ -14,7 +14,7 @@ BoxEntity::BoxEntity(const char* path_to_texture, float x_box, float y_box, floa
     BoxEntity::bodyDef.angle = BoxEntity::angle; 
     BoxEntity::bodyDef.position.Set(BoxEntity::x, BoxEntity::y);
 
-    BoxEntity::vel.Set(0, 0.2f);
+    BoxEntity::vel.Set(vel_x, vel_y);
 
     BoxEntity::boxShape.SetAsBox(BoxEntity::w / 2.0f, BoxEntity::h / 2.0f);
     
@@ -24,7 +24,7 @@ BoxEntity::BoxEntity(const char* path_to_texture, float x_box, float y_box, floa
     BoxEntity::fixtureDef.restitution = 0.5f;
 }
 
-BoxEntity::BoxEntity(SDL_Texture* texture, float x_box, float y_box, float w_box, float h_box, float angle_box)
+BoxEntity::BoxEntity(SDL_Texture* texture, float x_box, float y_box, float w_box, float h_box, float angle_box, float vel_x, float vel_y)
 {
     BoxEntity::x = x_box + (w_box / 2);
     BoxEntity::y = y_box + (h_box / 2);
@@ -39,7 +39,7 @@ BoxEntity::BoxEntity(SDL_Texture* texture, float x_box, float y_box, float w_box
     BoxEntity::bodyDef.angle = BoxEntity::angle; 
     BoxEntity::bodyDef.position.Set(BoxEntity::x, BoxEntity::y);
 
-    BoxEntity::vel.Set(5, 10);
+    BoxEntity::vel.Set(vel_x, vel_y);
 
     BoxEntity::boxShape.SetAsBox(BoxEntity::w / 2.0f, BoxEntity::h / 2.0f);
     
