@@ -23,7 +23,14 @@ private:
     static double zoomIn;
     static double zoomOut;
 
+    static bool moving;
+    static int deltaX;
+    static int deltaY;
+
+    static float wheel;
+
     static SDL_Event e;
+
 public:
     Ctrl();
     ~Ctrl();
@@ -66,4 +73,23 @@ public:
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).
     /// Otherwise analog value with minimum at 0 and maximum at 1.
     static double getZoomOut();
+    
+    /// @brief Is user pressing mouse button or touchscreen right now?
+    /// @return true if yes. False if no.
+    static bool getMoving();
+    
+    /// @brief Get delta X.
+    /// @return amount of pixels that user moved with mouse (or swiped) on X relatively to previous frame.
+    /// @example Users mouse speed 3 pixels/frame. This function will return 3 if they also move mouse 
+    /// strictly horizontally right or -3 if strictly horizontally left.
+    static int getDeltaX();
+    /// @brief Get delta Y.
+    /// @return amount of pixels that user moved with mouse (or swiped) on Y relatively to previous frame.
+    /// @example Users mouse speed 3 pixels/frame. This function will return 3 if they also move mouse 
+    /// strictly vertically down or -3 if strictly vertically up.
+    static int getDeltaY();
+
+    /// @brief Is user woving a wheel right now?
+    /// @return 0 if no. Otherwise amount of scrolled pixels on Y.
+    static float getWheel();
 };

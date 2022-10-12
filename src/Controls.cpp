@@ -13,6 +13,12 @@ double Ctrl::moveLeft = 0;
 double Ctrl::zoomIn = 0;
 double Ctrl::zoomOut = 0;
 
+bool Ctrl::moving = false;
+int Ctrl::deltaX = 0;
+int Ctrl::deltaY = 0;
+
+float Ctrl::wheel = 0;
+
 SDL_Event Ctrl::e;
 
 #ifdef Vita
@@ -73,12 +79,43 @@ void Ctrl::Check()
 #else
 void Ctrl::Check()
 {
+    Ctrl::deltaX = 0; 
+    Ctrl::deltaY = 0;
+    Ctrl::wheel = 0;
+
+    Ctrl::fullscreen = false;
+
     while(SDL_PollEvent(&e))
     {
-        if (e.type == SDL_QUIT)
-            Ctrl::exit = true;
-        else 
+        switch (e.type)
         {
+        case SDL_QUIT:
+            Ctrl::exit = true;
+            break;
+
+        case SDL_MOUSEBUTTONDOWN:
+            if (e.button.button == SDL_BUTTON_LEFT)
+            {
+                Ctrl::moving = true;
+                
+                if (e.button.clicks == 2)
+                    Ctrl::fullscreen = true;
+            }
+            
+            break;
+        case SDL_MOUSEBUTTONUP:
+            Ctrl::moving = false;
+            break;
+        case SDL_MOUSEMOTION:
+            Ctrl::deltaX = e.motion.xrel;
+            Ctrl::deltaY = e.motion.yrel;
+            break;
+
+        case SDL_MOUSEWHEEL:
+            Ctrl::wheel = e.wheel.preciseY;
+            break;
+
+        case SDL_KEYDOWN: case SDL_KEYUP:
             switch (e.key.keysym.sym)
             {
             case SDLK_r:
@@ -103,6 +140,7 @@ void Ctrl::Check()
             case SDLK_LEFT: case SDLK_a:
                 Ctrl::moveLeft = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
+
             case SDLK_e:
                 Ctrl::zoomIn = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
@@ -113,6 +151,10 @@ void Ctrl::Check()
             default:
                 break;
             }
+            break;
+            
+        default:
+            break; // COMBO: QUADRO BREAKS
         }
     }
 }
@@ -130,3 +172,9 @@ double Ctrl::getMoveLeft()   { return Ctrl::moveLeft; }
 
 double Ctrl::getZoomIn()   { return Ctrl::zoomIn; }
 double Ctrl::getZoomOut()  { return Ctrl::zoomOut; }
+
+bool Ctrl::getMoving()  { return Ctrl::moving; }
+int Ctrl::getDeltaX()   { return Ctrl::deltaX; }
+int Ctrl::getDeltaY()   { return Ctrl::deltaY; }
+
+float Ctrl::getWheel()    { return Ctrl::wheel; }

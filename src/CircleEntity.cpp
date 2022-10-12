@@ -36,4 +36,12 @@ void CircleEntity::Render(SDL_Renderer* renderer, float x_offset, float y_offset
 {
     b2Vec2 pos = CircleEntity::body->GetPosition();
     filledCircleColor(renderer, (pos.x * zoom) + x_offset, (pos.y * zoom) + y_offset, CircleEntity::radius * zoom, CircleEntity::color);
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+
+    SDL_RenderDrawLine(renderer, 
+    (pos.x * zoom) + x_offset, 
+    (pos.y * zoom) + y_offset, 
+    ((pos.x * zoom) + x_offset) + (cos(CircleEntity::body->GetAngle()) * CircleEntity::radius * zoom), 
+    ((pos.y * zoom) + y_offset) + (sin(CircleEntity::body->GetAngle()) * CircleEntity::radius * zoom));
 }

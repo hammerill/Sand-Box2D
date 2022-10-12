@@ -8,6 +8,7 @@ An organized (divided by classes separated per files) cross-platform (Windows, L
 - <kbd>Q</kbd>/<kbd>E</kbd> - adjust zoom.
 - <kbd>F</kbd> - go/exit fullscreen (may not work properly on Linux).
 - <kbd>X</kbd> - delete marked objects (marking happens in the code).
+Also, you can consider using mouse for camera controls and to go/exit fullscreen mode.
 
 ### For PS Vita
 - <kbd>Cross</kbd> - reset box position.

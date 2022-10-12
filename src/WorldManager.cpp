@@ -98,9 +98,21 @@ bool WorldManager::Step()
     WorldManager::y_offset -= Ctrl::getMoveDown() * WorldManager::move_speed;
     WorldManager::x_offset += Ctrl::getMoveLeft() * WorldManager::move_speed;
 
+    if (Ctrl::getMoving())
+    {
+        WorldManager::x_offset += Ctrl::getDeltaX();
+        WorldManager::y_offset += Ctrl::getDeltaY();
+    }
+
     WorldManager::zoom += Ctrl::getZoomIn() * WorldManager::zoom_speed;
-    if (WorldManager::zoom > 0)    
+    if (WorldManager::zoom > 1)    
         WorldManager::zoom -= Ctrl::getZoomOut() * WorldManager::zoom_speed;
+
+    if (!(WorldManager::zoom <= 1 && Ctrl::getWheel() > 0))
+        WorldManager::zoom -= Ctrl::getWheel();
+
+    if (WorldManager::zoom <= 1)
+        WorldManager::zoom = 1;
 
     WorldManager::world->Step(1.0f / 60.0f, 6, 2);
 
@@ -184,11 +196,9 @@ void WorldManager::goFullscreen(bool isToFullscreen)
     if (isToFullscreen)
     {
         SDL_SetWindowFullscreen(WorldManager::window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-        SDL_ShowCursor(SDL_DISABLE);
     }
     else
     {
         SDL_SetWindowFullscreen(WorldManager::window, 0);
-        SDL_ShowCursor(SDL_ENABLE);
     }
 }
