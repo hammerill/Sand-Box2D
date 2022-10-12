@@ -37,6 +37,8 @@ public:
     /// @param vel_y velocity on Y of the box.
     BoxEntity(SDL_Texture* texture, float x_box, float y_box, float w_box, float h_box, float angle_box, float vel_x = 0, float vel_y = 0);
     
+    ~BoxEntity();
+
     /// Register this box in the world and set its texture. Should be 
     /// called only when no world calculations are performing.
     /// @param world link to the world where box should be registered.

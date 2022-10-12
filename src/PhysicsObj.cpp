@@ -1,18 +1,5 @@
 #include "PhysicsObj.h"
 
-PhysicsObj::~PhysicsObj()
-{
-    if (PhysicsObj::pathToTexture != nullptr)
-    {
-        SDL_DestroyTexture(PhysicsObj::texture);
-        delete[] PhysicsObj::pathToTexture;
-    }
-
-    PhysicsObj::world->DestroyBody(PhysicsObj::body);
-
-    delete[] PhysicsObj::world;
-}
-
 void PhysicsObj::Register(b2World* world, SDL_Renderer* renderer)
 {
     PhysicsObj::body = world->CreateBody(&(PhysicsObj::bodyDef));

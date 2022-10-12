@@ -3,6 +3,7 @@
 bool Ctrl::exit = false;
 bool Ctrl::reset = false;
 bool Ctrl::fullscreen = false;
+bool Ctrl::deleteObjs = false;
 
 double Ctrl::moveUp = 0;
 double Ctrl::moveRight = 0;
@@ -24,6 +25,7 @@ void Ctrl::Check()
     sceCtrlPeekBufferPositive(0, &ctrl, 1);
 
     Ctrl::reset = ctrl.buttons & SCE_CTRL_CROSS;
+    Ctrl::deleteObjs = ctrl.buttons & SCE_CTRL_CIRCLE;
 
     if (ctrl.buttons & SCE_CTRL_UP) /////////////////////////////////// UP
         Ctrl::moveUp = 1;
@@ -85,6 +87,9 @@ void Ctrl::Check()
             case SDLK_f:
                 Ctrl::fullscreen = e.type == SDL_KEYDOWN; 
                 break;
+            case SDLK_x:
+                Ctrl::deleteObjs = e.type == SDL_KEYDOWN; 
+                break;
 
             case SDLK_UP: case SDLK_w:
                 Ctrl::moveUp = e.type == SDL_KEYDOWN ? 1 : 0;
@@ -116,6 +121,7 @@ void Ctrl::Check()
 bool Ctrl::getExit()        { return Ctrl::exit; }
 bool Ctrl::getReset()       { return Ctrl::reset; }
 bool Ctrl::getFullscreen()  { return Ctrl::fullscreen; }
+bool Ctrl::getDeleteObjs()  { return Ctrl::deleteObjs; }
 
 double Ctrl::getMoveUp()     { return Ctrl::moveUp; }
 double Ctrl::getMoveRight()  { return Ctrl::moveRight; }

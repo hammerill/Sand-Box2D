@@ -7,11 +7,13 @@ An organized (divided by classes separated per files) cross-platform (Windows, L
 - <kbd>WASD</kbd> or <kbd>Arrows</kbd> - move camera.
 - <kbd>Q</kbd>/<kbd>E</kbd> - adjust zoom.
 - <kbd>F</kbd> - go/exit fullscreen (may not work properly on Linux).
+- <kbd>X</kbd> - delete marked objects (marking happens in the code).
 
 ### For PS Vita
 - <kbd>Cross</kbd> - reset box position.
 - <kbd>Left Stick</kbd> or <kbd>DPAD</kbd> - move camera.
 - <kbd>L</kbd>/<kbd>R</kbd> or <kbd>Right Stick</kbd> - adjust zoom.
+- <kbd>Circle</kbd> - delete marked objects (marking happens in the code).
 
 ## Build 
 ### On Windows

@@ -28,6 +28,8 @@ public:
     /// @param vel_y velocity on Y of the circle.
     /// @param color color of the circle. Format - 0xRRGGBBAA.
     CircleEntity(float x, float y, float radius, float vel_x = 0, float vel_y = 0, Uint32 color = 0xFFFF80FF);
+
+    ~CircleEntity();
     
     /// Register this circle in the world. Should be 
     /// called only when no world calculations are performing.

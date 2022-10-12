@@ -20,6 +20,12 @@ CircleEntity::CircleEntity(float x, float y, float radius, float vel_x, float ve
     CircleEntity::fixtureDef.friction = 0.3f;
     CircleEntity::fixtureDef.restitution = 0.5f;
 }
+CircleEntity::~CircleEntity()
+{
+    delete[] CircleEntity::pathToTexture;
+
+    CircleEntity::body->GetWorld()->DestroyBody(CircleEntity::body);
+}
 
 void CircleEntity::Reset()
 {

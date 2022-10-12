@@ -20,7 +20,7 @@ WorldManager::WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, bool fpsCorrecti
 }
 WorldManager::~WorldManager()
 {
-    for (int i = objects.size() - 1; i >= 0; i--)
+    for (int i = WorldManager::objects.size() - 1; i >= 0; i--)
     {
         WorldManager::deleteObject(i);
     }
@@ -52,7 +52,11 @@ void WorldManager::initVideo()
 }
 
 void WorldManager::addObject(PhysicsObj* obj) { WorldManager::order.push_back(obj); }
-void WorldManager::deleteObject(int index) { WorldManager::objects.erase(WorldManager::objects.begin() + index); }
+void WorldManager::deleteObject(int index)
+{
+    delete WorldManager::objects[index]; // Call a destructor.
+    WorldManager::objects.erase(WorldManager::objects.begin() + index); // Remove from vector.
+}
 
 bool WorldManager::Step()
 {
@@ -79,7 +83,15 @@ bool WorldManager::Step()
     }
     else    
         WorldManager::holdingFullscreenButton = false;
-    
+
+    if (Ctrl::getDeleteObjs())
+    {
+        for (int i = WorldManager::objects.size() - 1; i >= 0; i--)
+        {
+            if (WorldManager::objects[i]->isMarkedToDelete)
+                WorldManager::deleteObject(i);        
+        }
+    }
 
     WorldManager::y_offset += Ctrl::getMoveUp() * WorldManager::move_speed;
     WorldManager::x_offset -= Ctrl::getMoveRight() * WorldManager::move_speed;
@@ -104,7 +116,7 @@ bool WorldManager::Step()
     {
         WorldManager::objects.push_back(WorldManager::order[i]);
         WorldManager::objects[WorldManager::objects.size() - 1]->Register(WorldManager::world, WorldManager::renderer);
-        WorldManager::order.pop_back();
+        WorldManager::order.pop_back();        
     }
 
     for (size_t i = 0; i < WorldManager::objects.size(); i++)

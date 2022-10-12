@@ -2,7 +2,6 @@
 
 PlatformEntity::PlatformEntity(float x1_plat, float y1_plat, float x2_plat, float y2_plat)
 {
-    PlatformEntity::world = world;
     PlatformEntity::x1 = x1_plat;
     PlatformEntity::y1 = y1_plat;
     PlatformEntity::x2 = x2_plat;
@@ -14,6 +13,12 @@ PlatformEntity::PlatformEntity(float x1_plat, float y1_plat, float x2_plat, floa
     PlatformEntity::platformShape.SetTwoSided(start_point, end_point);
 
     PlatformEntity::fixtureDef.shape = &(PlatformEntity::platformShape);
+}
+PlatformEntity::~PlatformEntity()
+{
+    delete[] PlatformEntity::pathToTexture;
+
+    PlatformEntity::body->GetWorld()->DestroyBody(PlatformEntity::body);
 }
 
 void PlatformEntity::Reset() {}

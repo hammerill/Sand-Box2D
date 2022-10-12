@@ -21,10 +21,7 @@ protected:
     /// @brief Texture of the physics object.
     SDL_Texture* texture;
 
-    /// @brief The world where physics object exists.
-    b2World* world;
-
-    /// @brief Main body of the physics object.
+    /// @brief Link to the main body of the physics object.
     b2Body* body;
     /// @brief Body definition of the physics object.
     b2BodyDef bodyDef;
@@ -37,7 +34,7 @@ protected:
     const char* pathToTexture = nullptr;
 
 public:
-    ~PhysicsObj();
+    virtual ~PhysicsObj() {};
     
     /// Register this ph. obj. in the world and set its texture. Should be 
     /// called only when no world calculations are performing.
@@ -60,4 +57,7 @@ public:
     /// @param y_offset camera Y offset in pixels.
     /// @param zoom camera zoom coefficient.
     virtual void Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom) = 0;
+
+    /// @brief If this is true, object can be deleted when user does want it.
+    bool isMarkedToDelete = false;
 };

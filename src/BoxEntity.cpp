@@ -48,6 +48,15 @@ BoxEntity::BoxEntity(SDL_Texture* texture, float x_box, float y_box, float w_box
     BoxEntity::fixtureDef.friction = 0.3f;
     BoxEntity::fixtureDef.restitution = 0.5f;
 }
+BoxEntity::~BoxEntity()
+{   
+    if (BoxEntity::pathToTexture != nullptr) 
+        SDL_DestroyTexture(BoxEntity::texture);
+
+    delete[] BoxEntity::pathToTexture;
+
+    BoxEntity::body->GetWorld()->DestroyBody(BoxEntity::body);
+}
 
 void BoxEntity::Reset()
 {

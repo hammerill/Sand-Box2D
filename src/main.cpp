@@ -21,14 +21,24 @@ int WINDOW_WIDTH = 0;
 int WINDOW_HEIGHT = 0;
 #endif
 
+float randFloat(float min, float max) { return min + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(max-min))); }
+
 void objCreateCycle(WorldManager* wm, SDL_Texture* texture)
 {
     while (true)
     {
-        wm->addObject(new BoxEntity(texture, 6 + 0.125, 0, 0.25, 0.25, 0, 10, 10));
-        wm->addObject(new BoxEntity(texture, 6 - 0.125, 0, 0.25, 0.25, 0, -10, 10));
+        float min = 0.1;
+        float max = 2.0;
 
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        BoxEntity* box = new BoxEntity(texture, 7, 0, randFloat(min, max), randFloat(min, max), 0, 10, 10);
+        box->isMarkedToDelete = true;
+        wm->addObject(box);
+        
+        CircleEntity* circle = new CircleEntity(5, 0, randFloat(min, max) / 3.0, -10, 10);
+        circle->isMarkedToDelete = true;
+        wm->addObject(circle);
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(100 + std::rand() % 2000));
     }
 }
 
@@ -42,8 +52,6 @@ int main(int argv, char** args)
 
     wm->addObject(new PlatformEntity(1, 1, 2, 7)); // LEFT \ /
     wm->addObject(new PlatformEntity(10, 7, 11, 1)); // RIGHT / /
-
-    wm->addObject(new CircleEntity(6, 2, 0.5, 5, 5));
 
     std::thread creater(objCreateCycle, wm, texture);
 

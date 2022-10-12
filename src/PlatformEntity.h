@@ -20,6 +20,8 @@ public:
     /// @param x2_plat position X of the end point of the platform.
     /// @param y2_plat position Y of the end point of the platform.
     PlatformEntity(float x1_plat, float y1_plat, float x2_plat, float y2_plat);
+    
+    ~PlatformEntity();
 
     void Reset();
 
