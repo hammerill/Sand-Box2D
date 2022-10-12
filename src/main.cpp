@@ -21,16 +21,14 @@ int WINDOW_WIDTH = 0;
 int WINDOW_HEIGHT = 0;
 #endif
 
-bool isRunning = true;
-
 void objCreateCycle(WorldManager* wm, SDL_Texture* texture)
 {
-    while (isRunning)
+    while (true)
     {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-
         wm->addObject(new BoxEntity(texture, 6 + 0.125, 0, 0.25, 0.25, 0, 10, 10));
         wm->addObject(new BoxEntity(texture, 6 - 0.125, 0, 0.25, 0.25, 0, -10, 10));
+
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 }
 
@@ -51,7 +49,7 @@ int main(int argv, char** args)
 
     wm->Cycle();
 
-    isRunning = false;
+    creater.detach();
 
     return 0;
 }
