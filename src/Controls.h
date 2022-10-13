@@ -13,6 +13,7 @@ private:
     static bool exit;
     static bool reset;
     static bool fullscreen;
+    static bool debug;
     static bool deleteObjs;
 
     static double moveUp;
@@ -28,6 +29,8 @@ private:
     static int deltaY;
 
     static float wheel;
+
+    static SDL_Point mouse;
 
     static SDL_Event e;
 
@@ -45,6 +48,8 @@ public:
     static bool getReset();
     /// @brief Is user does want to go/exit fullscreen mode?
     static bool getFullscreen();
+    /// @brief Is user does want to activate/deactivate debug mode?
+    static bool getDebug();
     /// @brief Is user does want to delete marked objects?
     static bool getDeleteObjs();
 
@@ -75,7 +80,6 @@ public:
     static double getZoomOut();
     
     /// @brief Is user pressing mouse button or touchscreen right now?
-    /// @return true if yes. False if no.
     static bool getMoving();
     
     /// @brief Get delta X.
@@ -92,4 +96,8 @@ public:
     /// @brief Is user woving a wheel right now?
     /// @return 0 if no. Otherwise amount of scrolled pixels on Y.
     static float getWheel();
+
+    /// @brief Get current mouse position.
+    /// @return SDL_Point object with fields X and Y.
+    static SDL_Point getMouse();
 };

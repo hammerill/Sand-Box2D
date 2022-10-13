@@ -3,6 +3,7 @@
 bool Ctrl::exit = false;
 bool Ctrl::reset = false;
 bool Ctrl::fullscreen = false;
+bool Ctrl::debug = false;
 bool Ctrl::deleteObjs = false;
 
 double Ctrl::moveUp = 0;
@@ -19,6 +20,8 @@ int Ctrl::deltaY = 0;
 
 float Ctrl::wheel = 0;
 
+SDL_Point Ctrl::mouse;
+
 SDL_Event Ctrl::e;
 
 #ifdef Vita
@@ -31,6 +34,7 @@ void Ctrl::Check()
     sceCtrlPeekBufferPositive(0, &ctrl, 1);
 
     Ctrl::reset = ctrl.buttons & SCE_CTRL_CROSS;
+    Ctrl::debug = ctrl.buttons & SCE_CTRL_TRIANGLE;
     Ctrl::deleteObjs = ctrl.buttons & SCE_CTRL_CIRCLE;
 
     if (ctrl.buttons & SCE_CTRL_UP) /////////////////////////////////// UP
@@ -113,6 +117,7 @@ void Ctrl::Check()
 
         case SDL_MOUSEWHEEL:
             Ctrl::wheel = e.wheel.preciseY;
+            Ctrl::mouse = {e.button.x, e.button.y};
             break;
 
         case SDL_KEYDOWN: case SDL_KEYUP:
@@ -123,6 +128,9 @@ void Ctrl::Check()
                 break;
             case SDLK_f:
                 Ctrl::fullscreen = e.type == SDL_KEYDOWN; 
+                break;
+            case SDLK_TAB:
+                Ctrl::debug = e.type == SDL_KEYDOWN; 
                 break;
             case SDLK_x:
                 Ctrl::deleteObjs = e.type == SDL_KEYDOWN; 
@@ -163,6 +171,7 @@ void Ctrl::Check()
 bool Ctrl::getExit()        { return Ctrl::exit; }
 bool Ctrl::getReset()       { return Ctrl::reset; }
 bool Ctrl::getFullscreen()  { return Ctrl::fullscreen; }
+bool Ctrl::getDebug()       { return Ctrl::debug; }
 bool Ctrl::getDeleteObjs()  { return Ctrl::deleteObjs; }
 
 double Ctrl::getMoveUp()     { return Ctrl::moveUp; }
@@ -178,3 +187,5 @@ int Ctrl::getDeltaX()   { return Ctrl::deltaX; }
 int Ctrl::getDeltaY()   { return Ctrl::deltaY; }
 
 float Ctrl::getWheel()    { return Ctrl::wheel; }
+
+SDL_Point Ctrl::getMouse()  { return Ctrl::mouse; }

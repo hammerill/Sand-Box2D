@@ -1,7 +1,6 @@
 #include "WorldManager.h"
-#include "Controls.h"
 
-WorldManager::WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, bool fpsCorrection, float move_speed, float zoom_speed)
+WorldManager::WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, const char* path_to_font, bool fpsCorrection, float move_speed, float zoom_speed)
 {
     WorldManager::WINDOW_WIDTH = WINDOW_WIDTH;
     WorldManager::WINDOW_HEIGHT = WINDOW_HEIGHT;
@@ -16,6 +15,9 @@ WorldManager::WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, bool fpsCorrecti
 
     WorldManager::objects = std::vector<PhysicsObj*>();
 
+    if (path_to_font != nullptr)
+        Font::LoadFont(path_to_font);
+    
     WorldManager::initVideo();
 }
 WorldManager::~WorldManager()
@@ -84,6 +86,17 @@ bool WorldManager::Step()
     else    
         WorldManager::holdingFullscreenButton = false;
 
+    if (Ctrl::getDebug())
+    {
+        if (WorldManager::holdingDebugButton == false)
+        {
+            WorldManager::isDebug = !WorldManager::isDebug;            
+            WorldManager::holdingDebugButton = true;
+        }        
+    }
+    else    
+        WorldManager::holdingDebugButton = false;
+
     if (Ctrl::getDeleteObjs())
     {
         for (int i = WorldManager::objects.size() - 1; i >= 0; i--)
@@ -125,14 +138,14 @@ bool WorldManager::Step()
     }
 
     for (int i = WorldManager::order.size() - 1; i >= 0; i--)
-    {
+    { // Load order.
         WorldManager::objects.push_back(WorldManager::order[i]);
         WorldManager::objects[WorldManager::objects.size() - 1]->Register(WorldManager::world, WorldManager::renderer);
         WorldManager::order.pop_back();        
     }
 
     for (size_t i = 0; i < WorldManager::objects.size(); i++)
-    {
+    { // Out of bounds check.
         if (WorldManager::objects[i]->getBody()->GetPosition().x > 100 ||
             WorldManager::objects[i]->getBody()->GetPosition().y > 100 ||
             WorldManager::objects[i]->getBody()->GetPosition().x < -100 ||
@@ -147,6 +160,7 @@ bool WorldManager::Step()
 
 void WorldManager::Render()
 {
+    SDL_SetRenderDrawBlendMode(WorldManager::renderer, SDL_BLENDMODE_NONE);
     SDL_SetRenderDrawColor(WorldManager::renderer, 0x32, 0x32, 0x32, 0);
     SDL_RenderClear(WorldManager::renderer);
 
@@ -158,7 +172,19 @@ void WorldManager::Render()
                                             WorldManager::zoom);
     }
 
-    SDL_RenderPresent(renderer);
+    if (WorldManager::isDebug && Font::getLoaded())
+    {
+        SDL_Rect debugBg {0, 0, 200, 400};
+
+        SDL_SetRenderDrawBlendMode(WorldManager::renderer, SDL_BLENDMODE_BLEND);
+        SDL_SetRenderDrawColor(WorldManager::renderer, 4, 4, 4, 0x80);
+
+        SDL_RenderFillRect(WorldManager::renderer, &debugBg);
+
+        Font::Render(WorldManager::renderer, "DEBUG", 8, 8);
+    }
+
+    SDL_RenderPresent(WorldManager::renderer);
 }
 
 void WorldManager::Cycle()

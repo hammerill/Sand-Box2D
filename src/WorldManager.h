@@ -4,6 +4,8 @@
 #include <vector>
 
 #include "PhysicsObj.h"
+#include "Controls.h"
+#include "FontManager.h"
 
 /// @brief Class for managing either SDL2 window, renderer and Box2D world with physics objects within it.
 class WorldManager
@@ -40,19 +42,26 @@ private:
 
     bool holdingFullscreenButton = false;
     bool isFullscreen = false;
+    bool holdingDebugButton = false;
+    bool isDebug = false;
 
     /// @brief Set fullscreen or disable it.
     /// @param isToFullscreen should this command go fullscreen or disable it?
     void goFullscreen(bool isToFullscreen);
 
+    /// @brief This function will correct offset for X and Y when zooming.
+    /// @param mouse current mouse position.
+    void correctOffset(SDL_Point mouse);
+
 public:
     /// @brief Init video, Box2D world and create WorldManager instance.
     /// @param WINDOW_WIDTH resolution of the window width in pixels. If 0, width would be adjusted automatically.
     /// @param WINDOW_HEIGHT resolution of the window height in pixels. If 0, height would be adjusted automatically.
+    /// @param path_to_font filepath to the font (*.ttf) file. If leave nullptr, WM wouldn't render any text.
     /// @param fpsCorrection is WorldManager should adjust speed/FPS? Should be used only when there's need in this.
     /// @param move_speed amount of pixels added to camera offset variable in one frame when pressed relevant button.
     /// @param zoom_speed amount of coefficiency added to camera zoom variable in one frame when pressed relevant button.
-    WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, bool fpsCorrection = false, float move_speed = 10, float zoom_speed = 1);
+    WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, const char* path_to_font = nullptr, bool fpsCorrection = false, float move_speed = 10, float zoom_speed = 1);
     ~WorldManager();
 
     /// @brief Add physics object realization into the PhysicsObj array.
