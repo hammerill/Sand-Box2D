@@ -51,6 +51,11 @@ void WorldManager::initVideo()
         WorldManager::WINDOW_WIDTH = START_WINDOW_WIDTH;
         WorldManager::WINDOW_HEIGHT = START_WINDOW_HEIGHT;
     }
+    else
+    {
+        WorldManager::WINDOW_WIDTH = START_WINDOW_WIDTH;
+        WorldManager::WINDOW_HEIGHT = START_WINDOW_HEIGHT;
+    }
 
     WorldManager::window = SDL_CreateWindow("Box2D", SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
