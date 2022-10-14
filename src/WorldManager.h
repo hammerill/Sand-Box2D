@@ -26,6 +26,7 @@ private:
     /// no world calculations are performing.
     std::vector<PhysicsObj*> order;
 
+    int START_WINDOW_WIDTH, START_WINDOW_HEIGHT;
     int WINDOW_WIDTH, WINDOW_HEIGHT;
     int SCREEN_WIDTH, SCREEN_HEIGHT;
 

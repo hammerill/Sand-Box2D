@@ -2,8 +2,8 @@
 
 WorldManager::WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, const char* path_to_font, bool fpsCorrection, int fullscreenScale, float move_speed, float zoom_speed)
 {
-    WorldManager::WINDOW_WIDTH = WINDOW_WIDTH;
-    WorldManager::WINDOW_HEIGHT = WINDOW_HEIGHT;
+    WorldManager::START_WINDOW_WIDTH = WINDOW_WIDTH;
+    WorldManager::START_WINDOW_HEIGHT = WINDOW_HEIGHT;
 
     WorldManager::speedCorrection = fpsCorrection;
 
@@ -37,17 +37,19 @@ WorldManager::~WorldManager()
 void WorldManager::initVideo()
 {
     SDL_Init(SDL_INIT_EVERYTHING);
+    
+    SDL_DisplayMode dm;
+    SDL_GetCurrentDisplayMode(0, &dm);
+    WorldManager::SCREEN_WIDTH = dm.w;
+    WorldManager::SCREEN_HEIGHT = dm.h;
 
-    if (WorldManager::WINDOW_WIDTH == 0 || WorldManager::WINDOW_HEIGHT == 0)
+    if (WorldManager::START_WINDOW_WIDTH == 0 || WorldManager::START_WINDOW_WIDTH == 0)
     {
-        SDL_DisplayMode dm;
-        SDL_GetCurrentDisplayMode(0, &dm);
+        WorldManager::START_WINDOW_WIDTH = WorldManager::SCREEN_WIDTH / 1.5;
+        WorldManager::START_WINDOW_HEIGHT = WorldManager::SCREEN_HEIGHT / 1.5;
 
-        WorldManager::SCREEN_WIDTH = dm.w;
-        WorldManager::SCREEN_HEIGHT = dm.h;
-
-        WorldManager::WINDOW_WIDTH = dm.w / 1.5;
-        WorldManager::WINDOW_HEIGHT = dm.h / 1.5;
+        WorldManager::WINDOW_WIDTH = START_WINDOW_WIDTH;
+        WorldManager::WINDOW_HEIGHT = START_WINDOW_HEIGHT;
     }
 
     WorldManager::window = SDL_CreateWindow("Box2D", SDL_WINDOWPOS_CENTERED,
@@ -255,8 +257,8 @@ void WorldManager::goFullscreen(bool isToFullscreen)
     }
     else
     {
-        WorldManager::WINDOW_WIDTH = WorldManager::SCREEN_WIDTH / 1.5;
-        WorldManager::WINDOW_HEIGHT = WorldManager::SCREEN_HEIGHT / 1.5;
+        WorldManager::WINDOW_WIDTH = START_WINDOW_WIDTH;
+        WorldManager::WINDOW_HEIGHT = START_WINDOW_HEIGHT;
 
         SDL_SetWindowSize(WorldManager::window, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT);
         SDL_RenderSetLogicalSize(WorldManager::renderer, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT);
