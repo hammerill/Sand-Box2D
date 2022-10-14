@@ -6,7 +6,7 @@ An organized (divided by classes separated per files) cross-platform (Windows, L
 - <kbd>R</kbd> - reset physics objects angles and/or positions.
 - <kbd>WASD</kbd> or <kbd>Arrows</kbd> - move camera.
 - <kbd>Q</kbd>/<kbd>E</kbd> - adjust zoom.
-- <kbd>F</kbd> - go/exit fullscreen (may not work properly on Linux).
+- <kbd>F</kbd> - go/exit fullscreen.
 - <kbd>Tab</kbd> - On/off debug screen.
 - <kbd>X</kbd> - delete marked objects (marking happens in the code).
 - Also, you can consider using mouse for camera controls and to go/exit fullscreen mode.
