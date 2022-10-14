@@ -79,7 +79,7 @@ public:
     /// Otherwise analog value with minimum at 0 and maximum at 1.
     static double getZoomOut();
     
-    /// @brief Is user pressing mouse button or touchscreen right now?
+    /// @brief Is user pressing left mouse button or touchscreen right now?
     static bool getMoving();
     
     /// @brief Get delta X.

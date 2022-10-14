@@ -1,7 +1,5 @@
 #include "FontManager.h"
 
-#include <iostream>
-
 TTF_Font* Font::font;
 
 bool Font::loaded = false;

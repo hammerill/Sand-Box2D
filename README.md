@@ -3,7 +3,7 @@ An organized (divided by classes separated per files) cross-platform (Windows, L
 
 ## Controls
 ### For Desktops
-- <kbd>R</kbd> - reset box position.
+- <kbd>R</kbd> - reset physics objects angles and/or positions.
 - <kbd>WASD</kbd> or <kbd>Arrows</kbd> - move camera.
 - <kbd>Q</kbd>/<kbd>E</kbd> - adjust zoom.
 - <kbd>F</kbd> - go/exit fullscreen (may not work properly on Linux).
@@ -12,7 +12,7 @@ An organized (divided by classes separated per files) cross-platform (Windows, L
 - Also, you can consider using mouse for camera controls and to go/exit fullscreen mode.
 
 ### For PS Vita
-- <kbd>Cross</kbd> - reset box position.
+- <kbd>Cross</kbd> - reset physics objects angles and/or positions.
 - <kbd>Left Stick</kbd> or <kbd>DPAD</kbd> - move camera.
 - <kbd>Right Stick</kbd> or <kbd>L</kbd>/<kbd>R</kbd> - adjust zoom.
 - <kbd>Triangle</kbd> - On/off debug screen.

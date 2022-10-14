@@ -54,6 +54,7 @@ elseif(BUILD_LINUX)
 	target_link_libraries(${CMAKE_PROJECT_NAME}
 		SDL2_image
 		SDL2_mixer
+		SDL2_ttf
 		SDL2_gfx
 		SDL2
 
@@ -95,6 +96,7 @@ elseif(BUILD_VITA)
 	target_link_libraries(${CMAKE_PROJECT_NAME}
 		SDL2_image
 		SDL2_mixer
+		SDL2_ttf
 		SDL2_gfx
 		SDL2
 
@@ -109,6 +111,7 @@ elseif(BUILD_VITA)
 		jpeg
 		png
 		z
+		freetype
 
 		SceAudio_stub
 		SceAudioIn_stub

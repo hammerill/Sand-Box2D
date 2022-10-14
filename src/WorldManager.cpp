@@ -117,12 +117,21 @@ bool WorldManager::Step()
         WorldManager::y_offset += Ctrl::getDeltaY();
     }
 
+    SDL_Point scr_center = {WorldManager::WINDOW_WIDTH / 2, WorldManager::WINDOW_HEIGHT / 2};
+
+    correctOffset(scr_center, Ctrl::getZoomIn() * WorldManager::zoom_speed);
     WorldManager::zoom += Ctrl::getZoomIn() * WorldManager::zoom_speed;
-    if (WorldManager::zoom > 1)    
+    if (WorldManager::zoom > 1)
+    {
+        correctOffset(scr_center, Ctrl::getZoomOut() * WorldManager::zoom_speed * -1);
         WorldManager::zoom -= Ctrl::getZoomOut() * WorldManager::zoom_speed;
+    }
 
     if (!(WorldManager::zoom <= 1 && Ctrl::getWheel() > 0))
+    {
+        correctOffset(Ctrl::getMouse(), Ctrl::getWheel() * -1);
         WorldManager::zoom -= Ctrl::getWheel();
+    }
 
     if (WorldManager::zoom <= 1)
         WorldManager::zoom = 1;
@@ -174,14 +183,22 @@ void WorldManager::Render()
 
     if (WorldManager::isDebug && Font::getLoaded())
     {
-        SDL_Rect debugBg {0, 0, 200, 400};
+        SDL_Rect debugBg {0, 0, 300, 400};
 
         SDL_SetRenderDrawBlendMode(WorldManager::renderer, SDL_BLENDMODE_BLEND);
-        SDL_SetRenderDrawColor(WorldManager::renderer, 4, 4, 4, 0x80);
+        SDL_SetRenderDrawColor(WorldManager::renderer, 4, 4, 4, 0xA0);
 
         SDL_RenderFillRect(WorldManager::renderer, &debugBg);
 
-        Font::Render(WorldManager::renderer, "DEBUG", 8, 8);
+        SDL_Point mouse = Ctrl::getMouse();
+
+        Font::Render(WorldManager::renderer, "DEBUG", 8, 8*1);
+
+        Font::Render(WorldManager::renderer, ("Camera offset X = " + std::to_string(WorldManager::x_offset)).c_str(), 8, 8*3);
+        Font::Render(WorldManager::renderer, ("Camera offset Y = " + std::to_string(WorldManager::y_offset)).c_str(), 8, 8*4);
+        Font::Render(WorldManager::renderer, ("Zoom = " + std::to_string(WorldManager::zoom)).c_str(), 8, 8*5);
+        Font::Render(WorldManager::renderer, ("Mouse X = " + std::to_string(mouse.x)).c_str(), 8, 8*6);
+        Font::Render(WorldManager::renderer, ("Mouse Y = " + std::to_string(mouse.y)).c_str(), 8, 8*7);
     }
 
     SDL_RenderPresent(WorldManager::renderer);
@@ -227,4 +244,10 @@ void WorldManager::goFullscreen(bool isToFullscreen)
     {
         SDL_SetWindowFullscreen(WorldManager::window, 0);
     }
+}
+
+void WorldManager::correctOffset(SDL_Point mouse, float zoom_change)
+{
+    WorldManager::x_offset += ((WorldManager::x_offset - mouse.x) / WorldManager::zoom) * zoom_change;
+    WorldManager::y_offset += ((WorldManager::y_offset - mouse.y) / WorldManager::zoom) * zoom_change;
 }

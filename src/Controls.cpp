@@ -113,11 +113,12 @@ void Ctrl::Check()
         case SDL_MOUSEMOTION:
             Ctrl::deltaX = e.motion.xrel;
             Ctrl::deltaY = e.motion.yrel;
+            
+            Ctrl::mouse = SDL_Point {e.motion.x, e.motion.y};
             break;
 
         case SDL_MOUSEWHEEL:
-            Ctrl::wheel = e.wheel.preciseY;
-            Ctrl::mouse = {e.button.x, e.button.y};
+            Ctrl::wheel = SDL_MOUSEWHEEL_NORMAL ? e.wheel.preciseY : -e.wheel.preciseY;
             break;
 
         case SDL_KEYDOWN: case SDL_KEYUP:

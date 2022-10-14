@@ -14,12 +14,12 @@ public:
     Font();
     ~Font();
 
-    /// @brief Loads font to private field of this class, then you can render it later with Render().
-    /// @param path_to_font filepath to the font (*.ttf) file.
+    /// @brief Load font to private field of this class, then you can render it later with Render().
+    /// @param path_to_font path to the font (*.ttf) file.
     /// @param fontSize size of the text.
     static void LoadFont(const char* path_to_font, int fontSize = 8);
 
-    /// @brief Renders text.
+    /// @brief Render text.
     /// @param renderer the rendering context.
     /// @param text text to be rendered.
     /// @param x X position of the beginning of the text.
