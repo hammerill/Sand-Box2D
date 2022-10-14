@@ -1,6 +1,6 @@
 #include "WorldManager.h"
 
-WorldManager::WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, const char* path_to_font, bool fpsCorrection, float move_speed, float zoom_speed)
+WorldManager::WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, const char* path_to_font, bool fpsCorrection, int fullscreenScale, float move_speed, float zoom_speed)
 {
     WorldManager::WINDOW_WIDTH = WINDOW_WIDTH;
     WorldManager::WINDOW_HEIGHT = WINDOW_HEIGHT;
@@ -14,6 +14,8 @@ WorldManager::WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, const char* path
     WorldManager::world = new b2World(gravity);
 
     WorldManager::objects = std::vector<PhysicsObj*>();
+
+    WorldManager::fullscreenScale = fullscreenScale;
 
     if (path_to_font != nullptr)
         Font::LoadFont(path_to_font);
@@ -40,6 +42,9 @@ void WorldManager::initVideo()
     {
         SDL_DisplayMode dm;
         SDL_GetCurrentDisplayMode(0, &dm);
+
+        WorldManager::SCREEN_WIDTH = dm.w;
+        WorldManager::SCREEN_HEIGHT = dm.h;
 
         WorldManager::WINDOW_WIDTH = dm.w / 1.5;
         WorldManager::WINDOW_HEIGHT = dm.h / 1.5;
@@ -199,6 +204,7 @@ void WorldManager::Render()
         Font::Render(WorldManager::renderer, ("Zoom = " + std::to_string(WorldManager::zoom)).c_str(), 8, 8*5);
         Font::Render(WorldManager::renderer, ("Mouse X = " + std::to_string(mouse.x)).c_str(), 8, 8*6);
         Font::Render(WorldManager::renderer, ("Mouse Y = " + std::to_string(mouse.y)).c_str(), 8, 8*7);
+        Font::Render(WorldManager::renderer, ("Objects count = " + std::to_string(WorldManager::world->GetBodyCount())).c_str(), 8, 8*8);
     }
 
     SDL_RenderPresent(WorldManager::renderer);
@@ -238,10 +244,23 @@ void WorldManager::goFullscreen(bool isToFullscreen)
 {
     if (isToFullscreen)
     {
+        SDL_SetWindowSize(WorldManager::window, WorldManager::SCREEN_WIDTH, WorldManager::SCREEN_HEIGHT);
+
+        WorldManager::WINDOW_WIDTH = WorldManager::SCREEN_WIDTH / WorldManager::fullscreenScale;
+        WorldManager::WINDOW_HEIGHT = WorldManager::SCREEN_HEIGHT / WorldManager::fullscreenScale;
+
+        SDL_RenderSetLogicalSize(WorldManager::renderer, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT);
+
         SDL_SetWindowFullscreen(WorldManager::window, SDL_WINDOW_FULLSCREEN_DESKTOP);
     }
     else
     {
+        WorldManager::WINDOW_WIDTH = WorldManager::SCREEN_WIDTH / 1.5;
+        WorldManager::WINDOW_HEIGHT = WorldManager::SCREEN_HEIGHT / 1.5;
+
+        SDL_SetWindowSize(WorldManager::window, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT);
+        SDL_RenderSetLogicalSize(WorldManager::renderer, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT);
+
         SDL_SetWindowFullscreen(WorldManager::window, 0);
     }
 }
