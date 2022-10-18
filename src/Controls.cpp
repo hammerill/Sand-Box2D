@@ -18,7 +18,7 @@ bool Ctrl::moving = false;
 int Ctrl::deltaX = 0;
 int Ctrl::deltaY = 0;
 
-float Ctrl::wheel = 0;
+bool Ctrl::isWheel = false;
 
 SDL_Point Ctrl::mouse;
 
@@ -85,7 +85,12 @@ void Ctrl::Check()
 {
     Ctrl::deltaX = 0; 
     Ctrl::deltaY = 0;
-    Ctrl::wheel = 0;
+
+    if (Ctrl::isWheel)
+    {
+        Ctrl::zoomIn = 0; 
+        Ctrl::zoomOut = 0;
+    }
 
     Ctrl::fullscreen = false;
 
@@ -118,7 +123,22 @@ void Ctrl::Check()
             break;
 
         case SDL_MOUSEWHEEL:
-            Ctrl::wheel = SDL_MOUSEWHEEL_NORMAL ? e.wheel.preciseY : -e.wheel.preciseY;
+            if (SDL_MOUSEWHEEL_NORMAL)
+            {
+                if (e.wheel.preciseY >= 0)
+                    Ctrl::zoomIn = abs(e.wheel.preciseY);
+                else
+                    Ctrl::zoomOut = abs(e.wheel.preciseY);
+            }
+            else
+            {
+                if (e.wheel.preciseY >= 0)
+                    Ctrl::zoomOut = abs(e.wheel.preciseY);
+                else
+                    Ctrl::zoomIn = abs(e.wheel.preciseY);
+            }
+            
+            Ctrl::isWheel = true;
             break;
 
         case SDL_KEYDOWN: case SDL_KEYUP:
@@ -152,9 +172,11 @@ void Ctrl::Check()
 
             case SDLK_e:
                 Ctrl::zoomIn = e.type == SDL_KEYDOWN ? 1 : 0;
+                Ctrl::isWheel = false;
                 break;
             case SDLK_q:
                 Ctrl::zoomOut = e.type == SDL_KEYDOWN ? 1 : 0;
+                Ctrl::isWheel = false;
                 break;
 
             default:
@@ -187,6 +209,6 @@ bool Ctrl::getMoving()  { return Ctrl::moving; }
 int Ctrl::getDeltaX()   { return Ctrl::deltaX; }
 int Ctrl::getDeltaY()   { return Ctrl::deltaY; }
 
-float Ctrl::getWheel()    { return Ctrl::wheel; }
+bool Ctrl::getIsWheel()   { return Ctrl::isWheel; }
 
 SDL_Point Ctrl::getMouse()  { return Ctrl::mouse; }

@@ -131,22 +131,31 @@ bool WorldManager::Step()
 
     SDL_Point scr_center = {WorldManager::WINDOW_WIDTH / 2, WorldManager::WINDOW_HEIGHT / 2};
 
-    correctOffset(scr_center, Ctrl::getZoomIn() * WorldManager::zoom_speed);
-    WorldManager::zoom += Ctrl::getZoomIn() * WorldManager::zoom_speed;
-    if (WorldManager::zoom > 1)
-    {
-        correctOffset(scr_center, Ctrl::getZoomOut() * WorldManager::zoom_speed * -1);
-        WorldManager::zoom -= Ctrl::getZoomOut() * WorldManager::zoom_speed;
-    }
-
-    if (!(WorldManager::zoom <= 1 && Ctrl::getWheel() > 0))
-    {
-        correctOffset(Ctrl::getMouse(), Ctrl::getWheel() * -1);
-        WorldManager::zoom -= Ctrl::getWheel();
-    }
-
     if (WorldManager::zoom <= 1)
+    {
+        correctOffset(  Ctrl::getIsWheel() ? Ctrl::getMouse() : scr_center,
+                        WorldManager::zoom - 1);
         WorldManager::zoom = 1;
+    }
+    else
+    {
+        correctOffset(  Ctrl::getIsWheel() ? Ctrl::getMouse() : scr_center,
+                        Ctrl::getZoomOut() * WorldManager::zoom_speed * -1 * WorldManager::zoom);
+        WorldManager::zoom -= Ctrl::getZoomOut() * WorldManager::zoom_speed * WorldManager::zoom;
+    }
+
+    if (WorldManager::zoom >= 1000)
+    {
+        correctOffset(  Ctrl::getIsWheel() ? Ctrl::getMouse() : scr_center,
+                        1000 - WorldManager::zoom);
+        WorldManager::zoom = 1000;
+    }
+    else
+    {
+        correctOffset(  Ctrl::getIsWheel() ? Ctrl::getMouse() : scr_center,
+                        Ctrl::getZoomIn() * WorldManager::zoom_speed * WorldManager::zoom);
+        WorldManager::zoom += Ctrl::getZoomIn() * WorldManager::zoom_speed * WorldManager::zoom;
+    }
 
     WorldManager::world->Step(1.0f / 60.0f, 6, 2);
 
@@ -211,7 +220,9 @@ void WorldManager::Render()
         Font::Render(WorldManager::renderer, ("Zoom = " + std::to_string(WorldManager::zoom)).c_str(), 8, 8*5);
         Font::Render(WorldManager::renderer, ("Mouse X = " + std::to_string(mouse.x)).c_str(), 8, 8*6);
         Font::Render(WorldManager::renderer, ("Mouse Y = " + std::to_string(mouse.y)).c_str(), 8, 8*7);
-        Font::Render(WorldManager::renderer, ("Objects count = " + std::to_string(WorldManager::world->GetBodyCount())).c_str(), 8, 8*8);
+        Font::Render(WorldManager::renderer, ("Zoom In = " + std::to_string(Ctrl::getZoomIn())).c_str(), 8, 8*8);
+        Font::Render(WorldManager::renderer, ("Zoom Out = " + std::to_string(Ctrl::getZoomOut())).c_str(), 8, 8*9);
+        Font::Render(WorldManager::renderer, ("Objects count = " + std::to_string(WorldManager::world->GetBodyCount())).c_str(), 8, 8*10);
     }
 
     SDL_RenderPresent(WorldManager::renderer);

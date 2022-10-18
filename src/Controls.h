@@ -28,7 +28,7 @@ private:
     static int deltaX;
     static int deltaY;
 
-    static float wheel;
+    static bool isWheel;
 
     static SDL_Point mouse;
 
@@ -72,11 +72,11 @@ public:
     
     /// @brief Is user does want to zoom in?
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).
-    /// Otherwise analog value with minimum at 0 and maximum at 1.
+    /// Otherwise analog value with minimum at 0 and unlimited maximum.
     static double getZoomIn();
     /// @brief Is user does want to zoom out?
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).
-    /// Otherwise analog value with minimum at 0 and maximum at 1.
+    /// Otherwise analog value with minimum at 0 and unlimited maximum.
     static double getZoomOut();
     
     /// @brief Is user pressing left mouse button or touchscreen right now?
@@ -93,11 +93,10 @@ public:
     /// strictly vertically down or -3 if strictly vertically up.
     static int getDeltaY();
 
-    /// @brief Is user woving a wheel right now?
-    /// @return 0 if no. Otherwise amount of scrolled pixels on Y.
-    static float getWheel();
+    /// @brief Is user changing zoom right now using mouse wheel?
+    static bool getIsWheel();
 
-    /// @brief Get current mouse position.
+    /// @brief Get current mouse (or touchscreen) position.
     /// @return SDL_Point object with fields X and Y.
     static SDL_Point getMouse();
 };
