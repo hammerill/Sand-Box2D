@@ -28,14 +28,66 @@ SDL_Event Ctrl::e;
 const double stickDeadZone = 10;
 const double stickCenter = 128;
 
+SceCtrlData ctrl;
+SceTouchData touchxy[SCE_TOUCH_PORT_MAX_NUM];
+
+SDL_Point old_mouse;
+
+Ctrl::Ctrl()
+{
+    sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG);
+
+    sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
+    sceTouchEnableTouchForce(SCE_TOUCH_PORT_FRONT);
+}
+
 void Ctrl::Check()
 {
-    SceCtrlData ctrl;
     sceCtrlPeekBufferPositive(0, &ctrl, 1);
+    sceTouchPeek(0, &touchxy[0], 1);
 
     Ctrl::reset = ctrl.buttons & SCE_CTRL_CROSS;
     Ctrl::debug = ctrl.buttons & SCE_CTRL_TRIANGLE;
     Ctrl::deleteObjs = ctrl.buttons & SCE_CTRL_CIRCLE;
+
+    if (touchxy[0].reportNum == 1)
+    {
+        Ctrl::mouse = SDL_Point {touchxy[0].report[0].x / 2, touchxy[0].report[0].y / 2};
+
+        if (Ctrl::moving) 
+        {
+            Ctrl::deltaX = Ctrl::mouse.x - old_mouse.x;
+            Ctrl::deltaY = Ctrl::mouse.y - old_mouse.y;
+
+            old_mouse = Ctrl::mouse;
+        }
+        else
+        {
+            old_mouse = Ctrl::mouse;
+
+            Ctrl::deltaX = 0;
+            Ctrl::deltaY = 0;
+        }
+
+        Ctrl::moving = true;
+    }
+    else
+    {
+        const int touchVel = 7;
+
+        Ctrl::deltaX -= Ctrl::deltaX / touchVel;
+        Ctrl::deltaY -= Ctrl::deltaY / touchVel;
+
+        if (    Ctrl::deltaX <= touchVel && Ctrl::deltaY <= touchVel
+            &&  Ctrl::deltaX >=-touchVel && Ctrl::deltaY >=-touchVel)
+        {
+            Ctrl::moving = false;
+
+            Ctrl::deltaX = 0;
+            Ctrl::deltaY = 0;
+        }
+    }
+    
 
     if (ctrl.buttons & SCE_CTRL_UP) /////////////////////////////////// UP
         Ctrl::moveUp = 1;
@@ -212,3 +264,28 @@ int Ctrl::getDeltaY()   { return Ctrl::deltaY; }
 bool Ctrl::getIsWheel()   { return Ctrl::isWheel; }
 
 SDL_Point Ctrl::getMouse()  { return Ctrl::mouse; }
+
+// OldCtrl::Copy(Ctrl* ctrl)
+// {
+//     OldCtrl::exit = ctrl->exit;
+//     OldCtrl::reset = ctrl->reset;
+//     OldCtrl::fullscreen = ctrl->fullscreen;
+//     OldCtrl::debug = ctrl->debug;
+//     OldCtrl::deleteObjs = ctrl->deleteObjs;
+
+//     OldCtrl::moveUp = ctrl->moveUp;
+//     OldCtrl::moveRight = ctrl->moveRight;
+//     OldCtrl::moveDown = ctrl->moveDown;
+//     OldCtrl::moveLeft = ctrl->moveLeft;
+
+//     OldCtrl::zoomIn = ctrl->zoomIn;
+//     OldCtrl::zoomOut = ctrl->zoomOut;
+
+//     OldCtrl::moving = ctrl->moving;
+//     OldCtrl::deltaX = ctrl->deltaX;
+//     OldCtrl::deltaY = ctrl->deltaY;
+
+//     OldCtrl::isWheel = ctrl->isWheel;
+
+//     OldCtrl::mouse = ctrl->mouse;
+// }

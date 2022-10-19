@@ -215,6 +215,9 @@ void WorldManager::Render()
         debugStrings.push_back("Zoom = " + std::to_string(WorldManager::zoom));
         debugStrings.push_back("Mouse X = " + std::to_string(mouse.x));
         debugStrings.push_back("Mouse Y = " + std::to_string(mouse.y));
+        debugStrings.push_back("Delta X = " + std::to_string(Ctrl::getDeltaX()));
+        debugStrings.push_back("Delta Y = " + std::to_string(Ctrl::getDeltaY()));
+        debugStrings.push_back("IsMoving? = " + std::to_string(Ctrl::getMoving()));
         debugStrings.push_back("Zoom In = " + std::to_string(Ctrl::getZoomIn()));
         debugStrings.push_back("Zoom Out = " + std::to_string(Ctrl::getZoomOut()));
         debugStrings.push_back("Objects count = " + std::to_string(WorldManager::world->GetBodyCount()));

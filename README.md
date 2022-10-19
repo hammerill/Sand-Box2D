@@ -17,6 +17,7 @@ An organized (divided by classes separated per files) cross-platform (Windows, L
 - <kbd>Right Stick</kbd> or <kbd>L</kbd>/<kbd>R</kbd> - adjust zoom.
 - <kbd>Triangle</kbd> - On/off debug screen.
 - <kbd>Circle</kbd> - delete marked objects (marking happens in the code).
+- Also, you can consider using touchscreen for camera controls.
 
 ## Build 
 ### On Windows
