@@ -204,25 +204,22 @@ void WorldManager::Render()
 
     if (WorldManager::isDebug && Font::getLoaded())
     {
-        SDL_Rect debugBg {0, 0, 300, 400};
-
-        SDL_SetRenderDrawBlendMode(WorldManager::renderer, SDL_BLENDMODE_BLEND);
-        SDL_SetRenderDrawColor(WorldManager::renderer, 4, 4, 4, 0xA0);
-
-        SDL_RenderFillRect(WorldManager::renderer, &debugBg);
-
         SDL_Point mouse = Ctrl::getMouse();
 
-        Font::Render(WorldManager::renderer, "DEBUG", 8, 8*1);
+        std::vector<std::string> debugStrings;
 
-        Font::Render(WorldManager::renderer, ("Camera offset X = " + std::to_string(WorldManager::x_offset)).c_str(), 8, 8*3);
-        Font::Render(WorldManager::renderer, ("Camera offset Y = " + std::to_string(WorldManager::y_offset)).c_str(), 8, 8*4);
-        Font::Render(WorldManager::renderer, ("Zoom = " + std::to_string(WorldManager::zoom)).c_str(), 8, 8*5);
-        Font::Render(WorldManager::renderer, ("Mouse X = " + std::to_string(mouse.x)).c_str(), 8, 8*6);
-        Font::Render(WorldManager::renderer, ("Mouse Y = " + std::to_string(mouse.y)).c_str(), 8, 8*7);
-        Font::Render(WorldManager::renderer, ("Zoom In = " + std::to_string(Ctrl::getZoomIn())).c_str(), 8, 8*8);
-        Font::Render(WorldManager::renderer, ("Zoom Out = " + std::to_string(Ctrl::getZoomOut())).c_str(), 8, 8*9);
-        Font::Render(WorldManager::renderer, ("Objects count = " + std::to_string(WorldManager::world->GetBodyCount())).c_str(), 8, 8*10);
+        debugStrings.push_back("DEBUG");
+        debugStrings.push_back("");
+        debugStrings.push_back("Camera offset X = " + std::to_string(WorldManager::x_offset));
+        debugStrings.push_back("Camera offset Y = " + std::to_string(WorldManager::y_offset));
+        debugStrings.push_back("Zoom = " + std::to_string(WorldManager::zoom));
+        debugStrings.push_back("Mouse X = " + std::to_string(mouse.x));
+        debugStrings.push_back("Mouse Y = " + std::to_string(mouse.y));
+        debugStrings.push_back("Zoom In = " + std::to_string(Ctrl::getZoomIn()));
+        debugStrings.push_back("Zoom Out = " + std::to_string(Ctrl::getZoomOut()));
+        debugStrings.push_back("Objects count = " + std::to_string(WorldManager::world->GetBodyCount()));
+
+        WorldManager::renderDebugScreen(debugStrings);        
     }
 
     SDL_RenderPresent(WorldManager::renderer);
@@ -280,6 +277,32 @@ void WorldManager::goFullscreen(bool isToFullscreen)
         SDL_RenderSetLogicalSize(WorldManager::renderer, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT);
 
         SDL_SetWindowFullscreen(WorldManager::window, 0);
+    }
+}
+
+void WorldManager::renderDebugScreen(std::vector<std::string> debugStrings)
+{
+    const int fontWidth = 8; // Going to move it somewhere else later (or never)
+
+    std::vector<int> debugWidths;
+    for (size_t i = 0; i < debugStrings.size(); i++)
+        debugWidths.push_back((debugStrings[i].size() + 2) * fontWidth);
+    
+    std::sort(debugWidths.begin(), debugWidths.end());
+
+    int debug_w = (debugWidths[debugWidths.size()-1]);
+    int debug_h = (debugStrings.size() + 2) * fontWidth;
+
+    SDL_Rect debugBg {0, 0, debug_w, debug_h};
+
+    SDL_SetRenderDrawBlendMode(WorldManager::renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(WorldManager::renderer, 4, 4, 4, 0xA0);
+
+    SDL_RenderFillRect(WorldManager::renderer, &debugBg);
+
+    for (size_t i = 0; i < debugStrings.size(); i++)
+    {
+        Font::Render(WorldManager::renderer, debugStrings[i].c_str(), fontWidth, fontWidth * (i+1));
     }
 }
 

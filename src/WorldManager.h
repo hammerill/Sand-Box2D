@@ -3,6 +3,7 @@
 #include <box2d/box2d.h>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 #include "PhysicsObj.h"
 #include "Controls.h"
@@ -89,6 +90,10 @@ public:
 
     /// @brief Run main cycle of the program, exit only by initiative of user.
     void Cycle();
+
+    /// @brief Render debug screen at upper-left corner of a window.
+    /// @param debugStrings information to be shown.
+    void renderDebugScreen(std::vector<std::string> debugStrings);
 
     /// @brief Get rendering context.
     /// @return link to the rendering context.
