@@ -1,4 +1,4 @@
-# Box2D Test with Objects
+# Sand-Box2D
 An organized (divided by classes separated per files) cross-platform (Windows, Linux, PS Vita) sample project of using Box2D with SDL2.
 
 ## Controls
@@ -24,7 +24,7 @@ An organized (divided by classes separated per files) cross-platform (Windows, L
 2. Install [SDL2](https://github.com/libsdl-org/SDL/releases/tag/release-2.24.0) (put contents of SDL2-devel...mingw.zip/x86-64... somewhere). As well as [SDL_Image](https://github.com/libsdl-org/SDL_image/releases/tag/release-2.6.2), [SDL_Mixer](https://github.com/libsdl-org/SDL_mixer/releases/tag/release-2.6.2) (put contents to the same directory as for SDL2), [SDL2_gfx](https://www.ferzkopp.net/wordpress/2016/01/02/sdl_gfx-sdl2_gfx/), [SDL_ttf](https://github.com/libsdl-org/SDL_ttf/releases) and [Box2D](https://github.com/erincatto/box2d). Or simply just unpack contents of [this](https://github.com/Hammerill/box2d-test-obj/releases/download/v1.0.0/packages-win64-sdl2-sdl2_image-sdl2_mixer-sdl2_gfx-box2d.zip) and [this](https://github.com/Hammerill/box2d-test-obj/releases/download/v1.0.0/packages-win64-sdl2_ttf.zip) archive somewhere. Also, you have to add "bin" directory (located where the packages are installed) to your PATH variable, or copy its contents (*.dll) to the same directory where .exe file should be (build).
 3. Clone repo:
   ```
-  git clone https://github.com/Hammerill/box2d-test-obj && cd box2d-test-obj
+  git clone https://github.com/Hammerill/Sand-Box2D && cd Sand-Box2D
   ```
 4. Build (at the 4th line at the end change path to where you have installed packages or extracted an archive):
   ```
@@ -36,14 +36,14 @@ An organized (divided by classes separated per files) cross-platform (Windows, L
   ```
 5. .exe file should appear, you can now launch this program:
   ```
-  Box2D-test.exe
+  Sand-Box2D.exe
   ```
 
 ### On Linux
 1. Install libraries SDL2, SDL2_image, SDL2_mixer, SDL2_ttf, SDL2_gfx and Box2D somehow with your package manager.
 2. Clone repo:
   ```
-  git clone https://github.com/Hammerill/box2d-test-obj && cd box2d-test-obj
+  git clone https://github.com/Hammerill/Sand-Box2D && cd Sand-Box2D
   ```
 3. Build:
   ```
@@ -54,7 +54,7 @@ An organized (divided by classes separated per files) cross-platform (Windows, L
   ```
 4. Executable should appear, you can now launch this program:
   ```
-  ./Box2D-test
+  ./Sand-Box2D
   ```
 
 ### For PS Vita
@@ -62,7 +62,7 @@ Build for PS Vita should be performed in Linux environment (or in MSYS2 in Windo
 1. Install [VITASDK](https://vitasdk.org/).
 2. Clone repo:
   ```
-  git clone https://github.com/Hammerill/box2d-test-obj && cd box2d-test-obj
+  git clone https://github.com/Hammerill/Sand-Box2D && cd Sand-Box2D
   ```
 3. Build:
   ```
@@ -73,4 +73,4 @@ Build for PS Vita should be performed in Linux environment (or in MSYS2 in Windo
   make -j4
   ```
 4. .vpk file should appear. Copy this file to your hacked PS Vita and install via VitaShell.
-5. Bubble "Box2D OBJ" will appear, you can now launch this program.
+5. Bubble "Sand-Box2D" will appear, you can now launch this app.

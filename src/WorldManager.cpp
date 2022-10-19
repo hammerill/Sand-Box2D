@@ -57,7 +57,7 @@ void WorldManager::initVideo()
         WorldManager::WINDOW_HEIGHT = START_WINDOW_HEIGHT;
     }
 
-    WorldManager::window = SDL_CreateWindow("Box2D", SDL_WINDOWPOS_CENTERED,
+    WorldManager::window = SDL_CreateWindow("Sand-Box2D", SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
     
     WorldManager::renderer = SDL_CreateRenderer(WorldManager::window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);

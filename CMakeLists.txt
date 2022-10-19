@@ -14,7 +14,7 @@ if(BUILD_WINDOWS)
 
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -pthread -std=c++11 -Wl,-subsystem,windows")
 	
-	project(Box2D-test)
+	project(Sand-Box2D)
 
 	set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/icon.rc")
 	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES} ${APP_ICON_RESOURCE_WINDOWS})
@@ -46,7 +46,7 @@ elseif(BUILD_LINUX)
 	message(STATUS "Building for Linux")
 	add_definitions(-DLinux)
 
-	project(Box2D-test)
+	project(Sand-Box2D)
 
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -pthread -std=c++11")
 	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
@@ -77,10 +77,10 @@ elseif(BUILD_VITA)
 	  endif()
 	endif()
 
-	project(Box2D-test)
+	project(Sand-Box2D)
 	include("${VITASDK}/share/vita.cmake" REQUIRED)
 
-	set(VITA_APPNAME  "Box2D OBJ")
+	set(VITA_APPNAME  "Sand-Box2D")
 	set(VITA_TITLEID  "HMRL00004")
 	set(VITA_VERSION  "01.00")
 
