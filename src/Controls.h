@@ -25,9 +25,12 @@ protected:
     static double zoomIn;
     static double zoomOut;
 
-    static bool moving;
+    static bool isMoving;
     static int deltaX;
     static int deltaY;
+
+    static bool isPinching;
+    static int deltaPinch;
 
     static bool isWheel;
 
@@ -80,8 +83,8 @@ public:
     /// Otherwise analog value with minimum at 0 and unlimited maximum.
     static double getZoomOut();
     
-    /// @brief Is user pressing left mouse button or touchscreen right now?
-    static bool getMoving();
+    /// @brief Is user pressing left mouse button or touchscreen right now in order to move camera?
+    static bool getIsMoving();
     
     /// @brief Get delta X.
     /// @return amount of pixels that user moved with mouse (or swiped) on X relatively to previous frame.
@@ -93,6 +96,14 @@ public:
     /// @example Users mouse speed 3 pixels/frame. This function will return 3 if they also move mouse 
     /// strictly vertically down or -3 if strictly vertically up.
     static int getDeltaY();
+
+    /// @brief Is user zooming screen using touchscreen right now?
+    static bool getIsPinching();
+    
+    /// @brief Get delta of zoom. Caution, this function is pixel-specific, and so should be properly
+    /// handled at the getting side.
+    /// @return amount of pixels by how much user pinched screen relatively to previous frame.
+    static int getDeltaPinch();
 
     /// @brief Is user changing zoom right now using mouse wheel?
     static bool getIsWheel();

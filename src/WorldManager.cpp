@@ -123,10 +123,17 @@ bool WorldManager::Step()
     WorldManager::y_offset -= Ctrl::getMoveDown() * WorldManager::move_speed;
     WorldManager::x_offset += Ctrl::getMoveLeft() * WorldManager::move_speed;
 
-    if (Ctrl::getMoving())
+    if (Ctrl::getIsMoving())
     {
         WorldManager::x_offset += Ctrl::getDeltaX();
         WorldManager::y_offset += Ctrl::getDeltaY();
+    }
+
+    if (Ctrl::getIsPinching() && ((WorldManager::zoom + Ctrl::getDeltaPinch()) > 10))
+    {
+        correctOffset(  Ctrl::getMouse(),
+                        Ctrl::getDeltaPinch());
+        WorldManager::zoom += Ctrl::getDeltaPinch();
     }
 
     SDL_Point scr_center = {WorldManager::WINDOW_WIDTH / 2, WorldManager::WINDOW_HEIGHT / 2};
@@ -217,7 +224,9 @@ void WorldManager::Render()
         debugStrings.push_back("Mouse Y = " + std::to_string(mouse.y));
         debugStrings.push_back("Delta X = " + std::to_string(Ctrl::getDeltaX()));
         debugStrings.push_back("Delta Y = " + std::to_string(Ctrl::getDeltaY()));
-        debugStrings.push_back("IsMoving? = " + std::to_string(Ctrl::getMoving()));
+        debugStrings.push_back("IsMoving? = " + std::to_string(Ctrl::getIsMoving()));
+        debugStrings.push_back("Delta pinch = " + std::to_string(Ctrl::getDeltaPinch()));
+        debugStrings.push_back("IsPinching? = " + std::to_string(Ctrl::getIsPinching()));
         debugStrings.push_back("Zoom In = " + std::to_string(Ctrl::getZoomIn()));
         debugStrings.push_back("Zoom Out = " + std::to_string(Ctrl::getZoomOut()));
         debugStrings.push_back("Objects count = " + std::to_string(WorldManager::world->GetBodyCount()));
