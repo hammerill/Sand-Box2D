@@ -228,17 +228,17 @@ void Ctrl::Check()
         case SDL_MOUSEWHEEL:
             if (SDL_MOUSEWHEEL_NORMAL)
             {
-                if (e.isWheel.preciseY >= 0)
-                    Ctrl::zoomIn = abs(e.isWheel.preciseY);
+                if (e.wheel.preciseY >= 0)
+                    Ctrl::zoomIn = abs(e.wheel.preciseY);
                 else
-                    Ctrl::zoomOut = abs(e.isWheel.preciseY);
+                    Ctrl::zoomOut = abs(e.wheel.preciseY);
             }
             else
             {
-                if (e.isWheel.preciseY >= 0)
-                    Ctrl::zoomOut = abs(e.isWheel.preciseY);
+                if (e.wheel.preciseY >= 0)
+                    Ctrl::zoomOut = abs(e.wheel.preciseY);
                 else
-                    Ctrl::zoomIn = abs(e.isWheel.preciseY);
+                    Ctrl::zoomIn = abs(e.wheel.preciseY);
             }
             
             Ctrl::isWheel = true;
