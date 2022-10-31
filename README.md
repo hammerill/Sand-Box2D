@@ -1,4 +1,6 @@
 # Sand-Box2D
+![Main](./screenshots/main.jpg)
+
 An organized (divided by classes separated per files) cross-platform (Windows, Linux, PS Vita) sample project of using Box2D with SDL2.
 
 ## Controls
@@ -18,6 +20,9 @@ An organized (divided by classes separated per files) cross-platform (Windows, L
 - <kbd>Triangle</kbd> - On/off debug screen.
 - <kbd>Circle</kbd> - reload current level.
 - Also, you can consider using touchscreen for camera controls.
+
+## Levels
+Support for loading custom levels is coming soon. You can look to the [documentation](https://github.com/Hammerill/Sand-Box2D-levels) of an upcoming update. 
 
 ## Build 
 ### On Windows
