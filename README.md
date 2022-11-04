@@ -3,6 +3,12 @@
 
 An open source cross-platform game based on Box2D with SDL2.
 
+This project was developed mainly for educational purposes.
+I've started developing it for myself just to understand basis of Box2D, how to link it with SDL2 and etc. 
+But then, I've realized it could be more than just some rewritten code, a game.
+So, I took [this project](https://github.com/eder13/Box2D-SDL2-Demo) as the base,
+have rewritten it from zero using OOP, and now you're free to play this game and use its code at way as you want.
+
 Supported platforms:
 - Windows
 - Linux
@@ -16,7 +22,8 @@ Supported platforms:
 - Add support for loading custom levels
 ([documentation](https://github.com/Hammerill/Sand-Box2D-levels) about it already in development).
 - Implement level editor (right now to make levels you need to manually edit JSON).
-- Add support of bunch of objects.
+- Add support of a lot of objects.
+
 Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/issues)!
 
 ## Controls
