@@ -60,7 +60,7 @@ Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/issues
   cmake .. -DBUILD_WINDOWS_PKGS=C:/path/to/pkgs
   make
   ```
-5. .exe file should appear, you can now launch this program:
+5. .exe file should appear, you can now launch this game:
   ```cmd
   Sand-Box2D.exe
   ```
@@ -78,7 +78,7 @@ Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/issues
   cmake .. -DBUILD_WINDOWS=OFF -DBUILD_LINUX=ON
   make -j4
   ```
-4. Executable should appear, you can now launch this program:
+4. Executable should appear, you can now launch this game:
   ```bash
   ./Sand-Box2D
   ```
@@ -99,4 +99,4 @@ Build for PS Vita should be performed in Linux environment (or in MSYS2 in Windo
   make -j4
   ```
 4. .vpk file should appear. Copy this file to your hacked PS Vita and install via VitaShell.
-5. Bubble "Sand-Box2D" will appear, you can now launch this app.
+5. Bubble "Sand-Box2D" will appear, you can now launch this game.
