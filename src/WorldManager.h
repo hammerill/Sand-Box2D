@@ -36,7 +36,7 @@ private:
 
     SDL_Window* window;
 
-    void initVideo();
+    void initVideo(const char* path_to_icon = nullptr);
 
     unsigned int a, b = 0;
     double delta = 0;
@@ -67,10 +67,11 @@ public:
     /// @param WINDOW_HEIGHT resolution of the window height in pixels. If 0, height would be adjusted automatically.
     /// @param path_to_font filepath to the font (*.ttf) file. If leave nullptr, WM wouldn't render any text.
     /// @param fpsCorrection is WorldManager should adjust speed/FPS? Should be used only when there's need in this.
+    /// @param path_to_icon path to the icon that WM will set to program instance. Leave nullptr if you're setting icon in CMake.
     /// @param move_speed amount of pixels added to camera offset variable in one frame when pressed relevant button.
     /// @param zoom_speed amount of coefficiency multiplied to camera zoom variable in one frame when pressed relevant button.
     /// @param fullscreenScale if go fullscreen, how much we should scale game to screen? If 1 - don't scale (pixel to pixel).
-    WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, const char* path_to_font = nullptr, bool fpsCorrection = false, int fullscreenScale = 1, float move_speed = 10, float zoom_speed = 0.03);
+    WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, const char* path_to_font = nullptr, bool fpsCorrection = false, const char* path_to_icon = nullptr, int fullscreenScale = 1, float move_speed = 10, float zoom_speed = 0.03);
     ~WorldManager();
 
     /// @brief Add physics object realization into the PhysicsObj array.

@@ -44,7 +44,7 @@ void objCreateCycle(WorldManager* wm, SDL_Texture* texture)
 
 int main(int argv, char** args)
 {    
-    WorldManager* wm = new WorldManager(WINDOW_WIDTH, WINDOW_HEIGHT, "assets/fonts/PressStart2P-vaV7.ttf", isLinux);
+    WorldManager* wm = new WorldManager(WINDOW_WIDTH, WINDOW_HEIGHT, "assets/fonts/PressStart2P-vaV7.ttf", isLinux, isLinux ? "assets/img/icon.png" : nullptr);
 
     SDL_Texture* texture = SDL_CreateTextureFromSurface(wm->getRenderer(), IMG_Load("assets/img/box.png"));
 

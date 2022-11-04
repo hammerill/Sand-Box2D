@@ -1,7 +1,23 @@
 # Sand-Box2D
-![Main](./screenshots/main.jpg)
+![Logo](./pics/Logo-wide.jpg)
 
-An organized (divided by classes separated per files) cross-platform (Windows, Linux, PS Vita) sample project of using Box2D with SDL2.
+An open source cross-platform game based on Box2D with SDL2.
+
+Supported platforms:
+- Windows
+- Linux
+- PS Vita
+
+## Future plans
+- Make a main menu, where player can:
+  * Load and manage levels;
+  * Adjust settings;
+  * Access menu "About".
+- Add support for loading custom levels
+([documentation](https://github.com/Hammerill/Sand-Box2D-levels) about it already in development).
+- Implement level editor (right now to make levels you need to manually edit JSON).
+- Add support of bunch of objects.
+Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/issues)!
 
 ## Controls
 ### For Desktops
@@ -20,9 +36,6 @@ An organized (divided by classes separated per files) cross-platform (Windows, L
 - <kbd>Triangle</kbd> - On/off debug screen.
 - <kbd>Circle</kbd> - reload current level.
 - Also, you can consider using touchscreen for camera controls.
-
-## Levels
-Support for loading custom levels is coming soon. You can look to the [documentation](https://github.com/Hammerill/Sand-Box2D-levels) of an upcoming update. 
 
 ## Build 
 ### On Windows

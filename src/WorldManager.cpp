@@ -1,6 +1,6 @@
 #include "WorldManager.h"
 
-WorldManager::WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, const char* path_to_font, bool fpsCorrection, int fullscreenScale, float move_speed, float zoom_speed)
+WorldManager::WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, const char* path_to_font, bool fpsCorrection, const char* path_to_icon, int fullscreenScale, float move_speed, float zoom_speed)
 {
     WorldManager::START_WINDOW_WIDTH = WINDOW_WIDTH;
     WorldManager::START_WINDOW_HEIGHT = WINDOW_HEIGHT;
@@ -20,7 +20,7 @@ WorldManager::WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, const char* path
     if (path_to_font != nullptr)
         Font::LoadFont(path_to_font);
     
-    WorldManager::initVideo();
+    WorldManager::initVideo(path_to_icon);
 }
 WorldManager::~WorldManager()
 {
@@ -34,7 +34,7 @@ WorldManager::~WorldManager()
     delete[] WorldManager::world;
 }
 
-void WorldManager::initVideo()
+void WorldManager::initVideo(const char* path_to_icon)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
     
@@ -43,7 +43,7 @@ void WorldManager::initVideo()
     WorldManager::SCREEN_WIDTH = dm.w;
     WorldManager::SCREEN_HEIGHT = dm.h;
 
-    if (WorldManager::START_WINDOW_WIDTH == 0 || WorldManager::START_WINDOW_WIDTH == 0)
+    if (WorldManager::START_WINDOW_WIDTH == 0 || WorldManager::START_WINDOW_HEIGHT == 0)
     {
         WorldManager::START_WINDOW_WIDTH = WorldManager::SCREEN_WIDTH / 1.5;
         WorldManager::START_WINDOW_HEIGHT = WorldManager::SCREEN_HEIGHT / 1.5;
@@ -60,6 +60,12 @@ void WorldManager::initVideo()
     WorldManager::window = SDL_CreateWindow("Sand-Box2D", SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
     
+    if (path_to_icon != nullptr)
+    {
+        SDL_Surface* icon = IMG_Load(path_to_icon);
+        SDL_SetWindowIcon(WorldManager::window, icon);
+    }
+
     WorldManager::renderer = SDL_CreateRenderer(WorldManager::window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     SDL_RenderSetLogicalSize(WorldManager::renderer, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT);
