@@ -29,7 +29,7 @@ have rewritten it from zero using OOP, and now you're free to play this game and
   * Load and manage levels;
   * Adjust settings;
   * Access menu "About".
-- Make multi-lingual interface, where everybody can contribute their language.
+- Make multilingual interface, where everybody can contribute their language.
 - Add support for loading custom levels
 ([documentation](https://github.com/Hammerill/Sand-Box2D-levels) about it already in development).
 - Implement level editor (right now to make levels you need to manually edit JSON).
