@@ -1,12 +1,12 @@
 #pragma once
 
-#include "PhysicsObj.h"
+#include "BasePObj.h"
 
 #include <SDL2/SDL2_gfxPrimitives.h>
 
-/// Child class of the PhysicsObj which represents circle 
+/// Child class of the BasePObj which represents circle 
 /// in the WorldManager environment.
-class CircleEntity: public PhysicsObj
+class PObjCircle: public BasePObj
 {
 private:
     /// Default values of position and radius of circle entity.
@@ -27,9 +27,9 @@ public:
     /// @param vel_x velocity on X of the circle.
     /// @param vel_y velocity on Y of the circle.
     /// @param color color of the circle. Format - 0xRRGGBBAA.
-    CircleEntity(float x, float y, float radius, float vel_x = 0, float vel_y = 0, Uint32 color = 0xFFFF80FF);
+    PObjCircle(float x, float y, float radius, float vel_x = 0, float vel_y = 0, Uint32 color = 0xFFFF80FF);
 
-    ~CircleEntity();
+    ~PObjCircle();
     
     /// Register this circle in the world. Should be 
     /// called only when no world calculations are performing.

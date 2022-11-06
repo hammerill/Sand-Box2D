@@ -9,7 +9,7 @@
 #endif
 
 /// @brief Base class for physics objects in the WorldManager environment.
-class PhysicsObj
+class BasePObj
 {
 protected:
     /// @brief By multiplying this with value in radians
@@ -18,40 +18,40 @@ protected:
     /// @example DEG / RAD2DEG == RAD
     const float RAD2DEG = 180 / M_PI;
 
-    /// @brief Texture of the physics object.
+    /// @brief Texture of the PObj.
     SDL_Texture* texture;
 
-    /// @brief Link to the main body of the physics object.
+    /// @brief Link to the main body of the PObj.
     b2Body* body;
-    /// @brief Body definition of the physics object.
+    /// @brief Body definition of the PObj.
     b2BodyDef bodyDef;
-    /// @brief Starting velocity of the physics object.
+    /// @brief Starting velocity of the PObj.
     b2Vec2 vel;
-    /// @brief Fixture definition of the physics object.
+    /// @brief Fixture definition of the PObj.
     b2FixtureDef fixtureDef;
 
     /// @brief Path to the image file of texture.
     const char* pathToTexture = nullptr;
 
 public:
-    virtual ~PhysicsObj() {};
+    virtual ~BasePObj() {};
     
-    /// Register this ph. obj. in the world and set its texture. Should be 
+    /// Register this PObj in the world and set its texture. Should be 
     /// called only when no world calculations are performing.
-    /// @param world link to the world where ph. obj. should be registered.
+    /// @param world link to the world where PObj should be registered.
     /// @param renderer the rendering context.
     void Register(b2World* world, SDL_Renderer* renderer = nullptr);
 
-    /// @brief Load a texture for physics object.
+    /// @brief Load a texture for PObj.
     /// @param renderer the rendering context.
     void LoadTexture(SDL_Renderer* renderer);
 
     b2Body* getBody();
 
-    /// @brief Set default position and angle of physics object.
+    /// @brief Set default position and angle of PObj.
     virtual void Reset() = 0;
     
-    /// @brief Render this physics object.
+    /// @brief Render this PObj.
     /// @param renderer the rendering context.
     /// @param x_offset camera X offset in pixels.
     /// @param y_offset camera Y offset in pixels.

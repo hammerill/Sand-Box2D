@@ -1,10 +1,10 @@
 #pragma once
 
-#include "PhysicsObj.h"
+#include "BasePObj.h"
 
-/// Child class of the PhysicsObj which represents either box or 
+/// Child class of the BasePObj which represents either box or 
 /// rectangle in the WorldManager environment.
-class BoxEntity: public PhysicsObj
+class PObjBox: public BasePObj
 {
 private:
     /// Default values of position and angle of box entity.
@@ -24,7 +24,7 @@ public:
     /// @param angle_box angle of the box in radians.
     /// @param vel_x velocity on X of the box.
     /// @param vel_y velocity on Y of the box.
-    BoxEntity(const char* path_to_texture, float x_box, float y_box, float w_box, float h_box, float angle_box, float vel_x = 0, float vel_y = 0);
+    PObjBox(const char* path_to_texture, float x_box, float y_box, float w_box, float h_box, float angle_box, float vel_x = 0, float vel_y = 0);
     
     /// @brief Create a new box entity.
     /// @param texture link to the texture. Can be used in order to improve perfomance with many boxes with same texture.
@@ -35,9 +35,9 @@ public:
     /// @param angle_box angle of the box in radians.
     /// @param vel_x velocity on X of the box.
     /// @param vel_y velocity on Y of the box.
-    BoxEntity(SDL_Texture* texture, float x_box, float y_box, float w_box, float h_box, float angle_box, float vel_x = 0, float vel_y = 0);
+    PObjBox(SDL_Texture* texture, float x_box, float y_box, float w_box, float h_box, float angle_box, float vel_x = 0, float vel_y = 0);
     
-    ~BoxEntity();
+    ~PObjBox();
 
     /// Register this box in the world and set its texture. Should be 
     /// called only when no world calculations are performing.

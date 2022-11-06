@@ -1,13 +1,14 @@
 #pragma once
 
+#include "PObjs/BasePObj.h"
+
+#include "Controls.h"
+#include "FontManager.h"
+
 #include <box2d/box2d.h>
 #include <vector>
 #include <iostream>
 #include <algorithm>
-
-#include "PhysicsObj.h"
-#include "Controls.h"
-#include "FontManager.h"
 
 /// @brief Class for managing either SDL2 window, renderer and Box2D world with physics objects within it.
 class WorldManager
@@ -19,13 +20,13 @@ private:
     /// @brief The rendering context.
     SDL_Renderer* renderer;
     
-    /// Array of physics objects of the world. PhysicsObj is an abstract class and this array
-    /// should only contain realizations of it (for example, BoxEntity).
-    std::vector<PhysicsObj*> objects;
+    /// Array of physics objects of the world. BasePObj is an abstract class and this array
+    /// should only contain realizations of it (for example, PObjBox).
+    std::vector<BasePObj*> objects;
 
     /// Array of "ordered" physics objects that should be added to main ph. obj-s array when
     /// no world calculations are performing.
-    std::vector<PhysicsObj*> order;
+    std::vector<BasePObj*> order;
 
     int START_WINDOW_WIDTH, START_WINDOW_HEIGHT;
     int WINDOW_WIDTH, WINDOW_HEIGHT;
@@ -74,9 +75,9 @@ public:
     WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, const char* path_to_font = nullptr, bool fpsCorrection = false, const char* path_to_icon = nullptr, int fullscreenScale = 1, float move_speed = 10, float zoom_speed = 0.03);
     ~WorldManager();
 
-    /// @brief Add physics object realization into the PhysicsObj array.
+    /// @brief Add physics object realization into the BasePObj array.
     /// @param obj link to the physics object realization to add.
-    void addObject(PhysicsObj* obj);
+    void addObject(BasePObj* obj);
 
     /// @brief Delete chosen physics object from an array.
     /// @param index index of the physics object realization in array to delete.

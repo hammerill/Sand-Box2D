@@ -13,7 +13,7 @@ WorldManager::WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, const char* path
     b2Vec2 gravity = b2Vec2(0.0f, 9.81f);
     WorldManager::world = new b2World(gravity);
 
-    WorldManager::objects = std::vector<PhysicsObj*>();
+    WorldManager::objects = std::vector<BasePObj*>();
 
     WorldManager::fullscreenScale = fullscreenScale;
 
@@ -71,7 +71,7 @@ void WorldManager::initVideo(const char* path_to_icon)
     SDL_RenderSetLogicalSize(WorldManager::renderer, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT);
 }
 
-void WorldManager::addObject(PhysicsObj* obj) { WorldManager::order.push_back(obj); }
+void WorldManager::addObject(BasePObj* obj) { WorldManager::order.push_back(obj); }
 void WorldManager::deleteObject(int index)
 {
     delete WorldManager::objects[index]; // Call a destructor.

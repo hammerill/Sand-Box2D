@@ -1,10 +1,10 @@
 #pragma once
 
-#include "PhysicsObj.h"
+#include "BasePObj.h"
 
-/// Child class of the PhysicsObj which represents static yellow stick. 
+/// Child class of the BasePObj which represents static yellow stick. 
 /// Or main platform.
-class PlatformEntity: public PhysicsObj
+class PObjPlatform: public BasePObj
 {
 private:
     /// @brief Start and end positions of platform.
@@ -19,9 +19,9 @@ public:
     /// @param y1_plat position Y of the start point of the platform.
     /// @param x2_plat position X of the end point of the platform.
     /// @param y2_plat position Y of the end point of the platform.
-    PlatformEntity(float x1_plat, float y1_plat, float x2_plat, float y2_plat);
+    PObjPlatform(float x1_plat, float y1_plat, float x2_plat, float y2_plat);
     
-    ~PlatformEntity();
+    ~PObjPlatform();
 
     void Reset();
 
