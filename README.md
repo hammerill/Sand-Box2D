@@ -35,7 +35,7 @@ have rewritten it from zero using OOP, and now you're free to play this game and
 - Implement level editor (right now to make levels you need to manually edit JSON).
 - Add support of a lot of objects.
 
-Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/issues)!
+Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/discussions)!
 
 ## Controls
 ### For Desktops
