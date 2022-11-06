@@ -3,22 +3,33 @@
 
 An open source cross-platform game based on Box2D with SDL2.
 
+Supported platforms:
+- Windows;
+- Linux;
+- PS Vita.
+
 This project was developed mainly for educational purposes.
 I've started developing it for myself just to understand basis of Box2D, how to link it with SDL2 and etc. 
 But then, I've realized it could be more than just some rewritten code: a game.
 So, I took [this project](https://github.com/eder13/Box2D-SDL2-Demo) as the base,
 have rewritten it from zero using OOP, and now you're free to play this game and use its code at way as you want.
 
-Supported platforms:
-- Windows
-- Linux
-- PS Vita
+## Contents
+- [Future plans](#future-plans)
+- [Controls](#controls)
+  * [For Desktops](#for-desktops)
+  * [For PS Vita](#for-ps-vita)
+- [Build](#build)
+  * [On Windows](#on-windows)
+  * [On Linux](#on-linux)
+  * [For PS Vita](#for-ps-vita-1)
 
 ## Future plans
 - Make a main menu, where player can:
   * Load and manage levels;
   * Adjust settings;
   * Access menu "About".
+- Make multi-lingual interface, where everybody can contribute their language.
 - Add support for loading custom levels
 ([documentation](https://github.com/Hammerill/Sand-Box2D-levels) about it already in development).
 - Implement level editor (right now to make levels you need to manually edit JSON).
@@ -47,7 +58,18 @@ Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/issues
 ## Build 
 ### On Windows
 1. Ensure you have all necessaire tools installed and wrote to your PATH variable (cmake, make, mingw (g++), git, etc.).
-2. Install [SDL2](https://github.com/libsdl-org/SDL/releases/tag/release-2.24.0) (put contents of SDL2-devel...mingw.zip/x86-64... somewhere). As well as [SDL_Image](https://github.com/libsdl-org/SDL_image/releases/tag/release-2.6.2), [SDL_Mixer](https://github.com/libsdl-org/SDL_mixer/releases/tag/release-2.6.2) (put contents to the same directory as for SDL2), [SDL2_gfx](https://www.ferzkopp.net/wordpress/2016/01/02/sdl_gfx-sdl2_gfx/), [SDL_ttf](https://github.com/libsdl-org/SDL_ttf/releases) and [Box2D](https://github.com/erincatto/box2d). Or simply just unpack contents of [this](https://github.com/Hammerill/box2d-test-obj/releases/download/v1.0.0/packages-win64-sdl2-sdl2_image-sdl2_mixer-sdl2_gfx-box2d.zip) and [this](https://github.com/Hammerill/box2d-test-obj/releases/download/v1.0.0/packages-win64-sdl2_ttf.zip) archive somewhere. Also, you have to add "bin" directory (located where the packages are installed) to your PATH variable, or copy its contents (*.dll) to the same directory where .exe file should be (build).
+2. Install packages:
+- You need to install all those packages and unpack them in the same directory:
+  * [SDL2](https://github.com/libsdl-org/SDL/releases/tag/release-2.24.0)
+  (put contents of SDL2-devel...mingw.zip/x86-64... somewhere, for all next packages use the same dir);
+  * [SDL_Image](https://github.com/libsdl-org/SDL_image/releases/tag/release-2.6.2);
+  * [SDL_Mixer](https://github.com/libsdl-org/SDL_mixer/releases/tag/release-2.6.2);
+  * [SDL2_gfx](https://www.ferzkopp.net/wordpress/2016/01/02/sdl_gfx-sdl2_gfx/);
+  * [SDL_ttf](https://github.com/libsdl-org/SDL_ttf/releases);
+  * [Box2D](https://github.com/erincatto/box2d).
+- Or simply just unpack contents of [this](https://github.com/Hammerill/box2d-test-obj/releases/download/v1.0.0/packages-win64-sdl2-sdl2_image-sdl2_mixer-sdl2_gfx-box2d.zip) and [this](https://github.com/Hammerill/box2d-test-obj/releases/download/v1.0.0/packages-win64-sdl2_ttf.zip) archive somewhere. 
+- Also, you have to add "bin" directory (located where the packages are installed) to your PATH variable,
+or copy its contents (*.dll) to the same directory where .exe file should be (build).
 3. Clone repo:
   ```cmd
   git clone https://github.com/Hammerill/Sand-Box2D && cd Sand-Box2D
@@ -66,7 +88,13 @@ Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/issues
   ```
 
 ### On Linux
-1. Install libraries SDL2, SDL2_image, SDL2_mixer, SDL2_ttf, SDL2_gfx and Box2D somehow with your package manager.
+1. Install following libraries somehow with your package manager:
+- SDL2;
+- SDL2_image;
+- SDL2_mixer;
+- SDL2_ttf;
+- SDL2_gfx;
+- Box2D.
 2. Clone repo:
   ```bash
   git clone https://github.com/Hammerill/Sand-Box2D && cd Sand-Box2D
