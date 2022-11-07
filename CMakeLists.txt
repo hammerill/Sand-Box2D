@@ -29,6 +29,8 @@ if(BUILD_WINDOWS)
 	)
 
 	target_link_libraries(${CMAKE_PROJECT_NAME}
+		jsoncpp
+
 		SDL2_image
 		SDL2_mixer
 		SDL2_ttf
@@ -53,6 +55,8 @@ elseif(BUILD_LINUX)
 	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES} ${SOURCES_POBJS})
 
 	target_link_libraries(${CMAKE_PROJECT_NAME}
+		jsoncpp
+
 		SDL2_image
 		SDL2_mixer
 		SDL2_ttf
@@ -95,6 +99,8 @@ elseif(BUILD_VITA)
 	include_directories(src)
 
 	target_link_libraries(${CMAKE_PROJECT_NAME}
+		jsoncpp
+
 		SDL2_image
 		SDL2_mixer
 		SDL2_ttf

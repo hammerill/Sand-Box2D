@@ -66,8 +66,9 @@ Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/discus
   * [SDL_Mixer](https://github.com/libsdl-org/SDL_mixer/releases/tag/release-2.6.2);
   * [SDL2_gfx](https://www.ferzkopp.net/wordpress/2016/01/02/sdl_gfx-sdl2_gfx/);
   * [SDL_ttf](https://github.com/libsdl-org/SDL_ttf/releases);
-  * [Box2D](https://github.com/erincatto/box2d).
-- Or simply just unpack contents of [this](https://github.com/Hammerill/box2d-test-obj/releases/download/v1.0.0/packages-win64-sdl2-sdl2_image-sdl2_mixer-sdl2_gfx-box2d.zip) and [this](https://github.com/Hammerill/box2d-test-obj/releases/download/v1.0.0/packages-win64-sdl2_ttf.zip) archive somewhere. 
+  * [Box2D](https://github.com/erincatto/box2d);
+  * [jsoncpp](https://github.com/open-source-parsers/jsoncpp)
+- Or simply just unpack contents of [this](https://github.com/Hammerill/Sand-Box2D/releases/download/v1.0.0/win64-packages.zip) archive somewhere. 
 - Also, you have to add "bin" directory (located where the packages are installed) to your PATH variable,
 or copy its contents (*.dll) to the same directory where .exe file should be (build).
 3. Clone repo:
@@ -94,7 +95,8 @@ or copy its contents (*.dll) to the same directory where .exe file should be (bu
 - SDL2_mixer;
 - SDL2_ttf;
 - SDL2_gfx;
-- Box2D.
+- Box2D;
+- jsoncpp.
 2. Clone repo:
   ```bash
   git clone https://github.com/Hammerill/Sand-Box2D && cd Sand-Box2D
