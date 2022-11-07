@@ -283,6 +283,11 @@ SDL_Renderer* WorldManager::getRenderer() { return WorldManager::renderer; }
 
 void WorldManager::goFullscreen(bool isToFullscreen)
 {
+    SDL_DisplayMode dm;
+    SDL_GetCurrentDisplayMode(0, &dm);
+    WorldManager::SCREEN_WIDTH = dm.w;
+    WorldManager::SCREEN_HEIGHT = dm.h;
+    
     if (isToFullscreen)
     {
         SDL_SetWindowSize(WorldManager::window, WorldManager::SCREEN_WIDTH, WorldManager::SCREEN_HEIGHT);
