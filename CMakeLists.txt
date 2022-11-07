@@ -30,6 +30,7 @@ if(BUILD_WINDOWS)
 
 	target_link_libraries(${CMAKE_PROJECT_NAME}
 		jsoncpp
+		curl
 
 		SDL2_image
 		SDL2_mixer
@@ -56,6 +57,7 @@ elseif(BUILD_LINUX)
 
 	target_link_libraries(${CMAKE_PROJECT_NAME}
 		jsoncpp
+		curl
 
 		SDL2_image
 		SDL2_mixer
@@ -100,6 +102,7 @@ elseif(BUILD_VITA)
 
 	target_link_libraries(${CMAKE_PROJECT_NAME}
 		jsoncpp
+		curl
 
 		SDL2_image
 		SDL2_mixer
