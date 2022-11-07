@@ -58,7 +58,7 @@ public:
     /// @param zoom camera zoom coefficient.
     /// @param width screen width in pixels.
     /// @param height screen height in pixels.
-    /// @return true if object rendered. False if didn't rendered because it's out of screen bounds. 
+    /// @return true if object rendered. False if didn't render because it's out of screen bounds. 
     virtual bool Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width = 0, int height = 0) = 0;
 
     /// @brief If this is true, object can be deleted when user does want it.

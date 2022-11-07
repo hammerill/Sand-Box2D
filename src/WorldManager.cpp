@@ -201,18 +201,25 @@ bool WorldManager::Step()
     return true;
 }
 
+int renderedItemsCount;
 void WorldManager::Render()
 {
     SDL_SetRenderDrawBlendMode(WorldManager::renderer, SDL_BLENDMODE_NONE);
     SDL_SetRenderDrawColor(WorldManager::renderer, 0x32, 0x32, 0x32, 0);
     SDL_RenderClear(WorldManager::renderer);
 
+    renderedItemsCount = 0;
     for (size_t i = 0; i < WorldManager::objects.size(); i++)   
     {
-        WorldManager::objects[i]->Render(   WorldManager::renderer, 
-                                            WorldManager::x_offset, 
-                                            WorldManager::y_offset, 
-                                            WorldManager::zoom);
+        if (WorldManager::objects[i]->Render(   WorldManager::renderer, 
+                                                WorldManager::x_offset, 
+                                                WorldManager::y_offset, 
+                                                WorldManager::zoom,
+                                                WorldManager::SCREEN_WIDTH,
+                                                WorldManager::SCREEN_HEIGHT))
+        {
+            renderedItemsCount++;
+        }        
     }
 
     if (WorldManager::isDebug && Font::getLoaded())
@@ -236,6 +243,7 @@ void WorldManager::Render()
         debugStrings.push_back("Zoom In = " + std::to_string(Ctrl::getZoomIn()));
         debugStrings.push_back("Zoom Out = " + std::to_string(Ctrl::getZoomOut()));
         debugStrings.push_back("Objects count = " + std::to_string(WorldManager::world->GetBodyCount()));
+        debugStrings.push_back("Objects rendered = " + std::to_string(renderedItemsCount));
 
         WorldManager::renderDebugScreen(debugStrings);        
     }

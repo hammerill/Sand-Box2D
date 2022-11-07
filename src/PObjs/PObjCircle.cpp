@@ -35,13 +35,28 @@ void PObjCircle::Reset()
 bool PObjCircle::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)
 {
     b2Vec2 pos = PObjCircle::body->GetPosition();
-    filledCircleColor(renderer, (pos.x * zoom) + x_offset, (pos.y * zoom) + y_offset, PObjCircle::radius * zoom, PObjCircle::color);
 
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+    b2Vec2 circle = {
+        (pos.x * zoom) + x_offset,
+        (pos.y * zoom) + y_offset
+    };
+    float radiusZoomed = PObjCircle::radius * zoom;
 
-    SDL_RenderDrawLine(renderer, 
-    (pos.x * zoom) + x_offset, 
-    (pos.y * zoom) + y_offset, 
-    ((pos.x * zoom) + x_offset) + (cos(PObjCircle::body->GetAngle()) * PObjCircle::radius * zoom), 
-    ((pos.y * zoom) + y_offset) + (sin(PObjCircle::body->GetAngle()) * PObjCircle::radius * zoom));
+    if (circle.x > -radiusZoomed && circle.x < width + radiusZoomed
+    &&  circle.y > -radiusZoomed && circle.y < height + radiusZoomed)
+    {
+        filledCircleColor(renderer, circle.x, (pos.y * zoom) + y_offset, radiusZoomed, PObjCircle::color);
+
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+        SDL_RenderDrawLine(renderer, 
+        circle.x, 
+        circle.y, 
+        (circle.x) + (cos(PObjCircle::body->GetAngle()) * radiusZoomed), 
+        (circle.y) + (sin(PObjCircle::body->GetAngle()) * radiusZoomed));
+
+        return true;
+    }
+    else
+        return false;
+
 }

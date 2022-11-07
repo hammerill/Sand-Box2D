@@ -74,11 +74,12 @@ bool PObjBox::Render(SDL_Renderer* renderer, float x_offset, float y_offset, flo
     box.x = (pos.x * zoom) + x_offset - (box.w / 2.0f);
     box.y = (pos.y * zoom) + y_offset - (box.h / 2.0f);
 
-    // if (box.x > )
-    // {
-    //     /* code */
-    // }
-    
-
-    SDL_RenderCopyEx(renderer, PObjBox::texture, NULL, &box, PObjBox::body->GetAngle() * PObjBox::RAD2DEG, NULL, SDL_FLIP_NONE);
+    if (box.x > -(box.w * 2) && box.x < width + box.w
+    &&  box.y > -(box.h * 2) && box.y < height + box.h)
+    {
+        SDL_RenderCopyEx(renderer, PObjBox::texture, NULL, &box, PObjBox::body->GetAngle() * PObjBox::RAD2DEG, NULL, SDL_FLIP_NONE);
+        return true;
+    }
+    else
+        return false;
 }

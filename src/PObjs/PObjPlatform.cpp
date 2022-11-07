@@ -23,7 +23,7 @@ PObjPlatform::~PObjPlatform()
 
 void PObjPlatform::Reset() {}
 bool PObjPlatform::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)
-{
+{    
     SDL_SetRenderDrawColor(renderer, 255, 255, 0, 0);
 
     SDL_RenderDrawLine(renderer, 
@@ -31,4 +31,6 @@ bool PObjPlatform::Render(SDL_Renderer* renderer, float x_offset, float y_offset
     (PObjPlatform::y1 * zoom) + y_offset, 
     (PObjPlatform::x2 * zoom) + x_offset, 
     (PObjPlatform::y2 * zoom) + y_offset);
+
+    return true; // It was too damn hard to determine is platform in the screen bounds, so I just render it always and always return true
 }
