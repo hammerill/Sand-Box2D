@@ -23,14 +23,31 @@ PObjPlatform::~PObjPlatform()
 
 void PObjPlatform::Reset() {}
 bool PObjPlatform::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)
-{    
-    SDL_SetRenderDrawColor(renderer, 255, 255, 0, 0);
+{
+    b2Vec2 begin =  {(PObjPlatform::x1 * zoom) + x_offset, (PObjPlatform::y1 * zoom) + y_offset};
+    b2Vec2 end =    {(PObjPlatform::x2 * zoom) + x_offset, (PObjPlatform::y2 * zoom) + y_offset};
 
-    SDL_RenderDrawLine(renderer, 
-    (PObjPlatform::x1 * zoom) + x_offset, 
-    (PObjPlatform::y1 * zoom) + y_offset, 
-    (PObjPlatform::x2 * zoom) + x_offset, 
-    (PObjPlatform::y2 * zoom) + y_offset);
+    // Formula to calculate distance between two points
+    float halfDistance =    sqrt(
+                                pow(end.x - begin.x, 2)
+                                +
+                                pow(end.y - begin.y, 2)
+                            )
+                            /2;
 
-    return true; // It was too damn hard to determine is platform in the screen bounds, so I just render it always and always return true
+    /// Yes, in order to determine is the platform in the screen bounds, 
+    /// I just used the same formula as for circle, i.e. look at this center,
+    /// and check its bounding with screen taking care of radius, 
+    /// but platform does not have a radius, 
+    /// but we can calculate half distance between begin at end instead.
+    if ((begin.x + end.x) / 2 > -halfDistance && (begin.x + end.x) / 2 < width + halfDistance 
+    &&  (begin.y + end.y) / 2 > -halfDistance && (begin.y + end.y) / 2 < height + halfDistance)
+    {
+        SDL_SetRenderDrawColor(renderer, 255, 255, 0, 0);
+        SDL_RenderDrawLine(renderer, begin.x, begin.y, end.x, end.y);
+
+        return true;
+    }
+    else
+        return false;
 }

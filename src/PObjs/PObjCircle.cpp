@@ -58,5 +58,4 @@ bool PObjCircle::Render(SDL_Renderer* renderer, float x_offset, float y_offset, 
     }
     else
         return false;
-
 }
