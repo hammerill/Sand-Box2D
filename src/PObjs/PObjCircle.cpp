@@ -32,7 +32,7 @@ void PObjCircle::Reset()
     PObjCircle::body->SetTransform(b2Vec2(PObjCircle::x, PObjCircle::y), 0);
     PObjCircle::body->SetLinearVelocity(PObjCircle::vel);
 }
-void PObjCircle::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom)
+bool PObjCircle::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)
 {
     b2Vec2 pos = PObjCircle::body->GetPosition();
     filledCircleColor(renderer, (pos.x * zoom) + x_offset, (pos.y * zoom) + y_offset, PObjCircle::radius * zoom, PObjCircle::color);

@@ -53,5 +53,8 @@ public:
     /// @param x_offset camera X offset in pixels.
     /// @param y_offset camera Y offset in pixels.
     /// @param zoom camera zoom coefficient.
-    void Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom);
+    /// @param width screen width in pixels.
+    /// @param height screen height in pixels.
+    /// @return true if box rendered. False if didn't rendered because it's out of screen bounds. 
+    bool Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width = 0, int height = 0);
 };

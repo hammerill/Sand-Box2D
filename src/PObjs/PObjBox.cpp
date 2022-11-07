@@ -63,7 +63,7 @@ void PObjBox::Reset()
     PObjBox::body->SetTransform(b2Vec2(PObjBox::x, PObjBox::y), PObjBox::angle);
     PObjBox::body->SetLinearVelocity(PObjBox::vel);
 }
-void PObjBox::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom)
+bool PObjBox::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)
 {
     b2Vec2 pos = PObjBox::body->GetPosition();
     SDL_Rect box;
@@ -73,6 +73,12 @@ void PObjBox::Render(SDL_Renderer* renderer, float x_offset, float y_offset, flo
 
     box.x = (pos.x * zoom) + x_offset - (box.w / 2.0f);
     box.y = (pos.y * zoom) + y_offset - (box.h / 2.0f);
+
+    // if (box.x > )
+    // {
+    //     /* code */
+    // }
+    
 
     SDL_RenderCopyEx(renderer, PObjBox::texture, NULL, &box, PObjBox::body->GetAngle() * PObjBox::RAD2DEG, NULL, SDL_FLIP_NONE);
 }

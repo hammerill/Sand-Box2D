@@ -22,7 +22,7 @@ PObjPlatform::~PObjPlatform()
 }
 
 void PObjPlatform::Reset() {}
-void PObjPlatform::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom)
+bool PObjPlatform::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)
 {
     SDL_SetRenderDrawColor(renderer, 255, 255, 0, 0);
 
