@@ -14,13 +14,13 @@ if(BUILD_WINDOWS)
 	set(BUILD_WINDOWS_PKGS "C:/Users/Hamme/pkgs" CACHE STRING "Path to the packages, only for Windows")
 
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -pthread -std=c++17 -Wl,-subsystem,windows")
-	
+
 	project(Sand-Box2D)
 
 	set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/pics/icon.rc")
 	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES} ${SOURCES_POBJS} ${APP_ICON_RESOURCE_WINDOWS})
 
-	target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE 
+	target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
 		"${BUILD_WINDOWS_PKGS}/include"
 	)
 
@@ -73,7 +73,7 @@ elseif(BUILD_LINUX)
 elseif(BUILD_VITA)
 	message(STATUS "Building for Vita")
 	add_definitions(-DVita)
-	
+
 	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES} ${SOURCES_POBJS})
 
 	if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
