@@ -298,6 +298,9 @@ void WorldManager::goFullscreen(bool isToFullscreen)
         SDL_RenderSetLogicalSize(WorldManager::renderer, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT);
 
         SDL_SetWindowFullscreen(WorldManager::window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+
+        // NetworkManager::setRepo("https://raw.githubusercontent.com/Hammerill/Sand-Box2D-levels/main/levels");
+        // NetworkManager::DownloadFile("./levels", "index.json");
     }
     else
     {

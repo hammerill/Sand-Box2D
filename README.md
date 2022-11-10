@@ -23,6 +23,7 @@ have rewritten it from zero using OOP, and now you're free to play this game and
   * [On Windows](#on-windows)
   * [On Linux](#on-linux)
   * [For PS Vita](#for-ps-vita-1)
+- [Credits](#credits)
 
 ## Future plans
 - Make a main menu, where player can:
@@ -132,3 +133,12 @@ Build for PS Vita should be performed in Linux environment (or in MSYS2 in Windo
   ```
 4. .vpk file should appear. Copy this file to your hacked PS Vita and install via VitaShell.
 5. Bubble "Sand-Box2D" will appear, you can now launch this game.
+
+## Credits
+- [eder13](https://github.com/eder13) - for the base project "Box2D-SDL2-Demo".
+- [Hammerill](https://github.com/Hammerill) - author of this game.
+- To everybody who contributes to open source, to those who made these (used in the project) libraries exist.
+
+Translations:
+- English - Hammerill
+- Russian and Ukrainian are pending - Hammerill

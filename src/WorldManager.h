@@ -4,6 +4,7 @@
 
 #include "Controls.h"
 #include "FontManager.h"
+#include "NetworkManager.h"
 
 #include <box2d/box2d.h>
 #include <vector>
