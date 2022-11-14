@@ -135,7 +135,8 @@ Build for PS Vita should be performed in Linux environment (or in MSYS2 in Windo
 5. Bubble "Sand-Box2D" will appear, you can now launch this game.
 
 ## Credits
-- [eder13](https://github.com/eder13) - for the base project "Box2D-SDL2-Demo".
+- [eder13](https://github.com/eder13) - base project (Box2D-SDL2-Demo) author.
+- [codeman38](https://www.fontspace.com/codeman38) - main font (PressStart2P) author.
 - [Hammerill](https://github.com/Hammerill) - author of this game.
 - To everybody who contributes to open source, to those who made these (used in the project) libraries exist.
 
