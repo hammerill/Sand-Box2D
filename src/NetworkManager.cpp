@@ -29,7 +29,7 @@ CURLcode NetworkManager::DownloadFile(std::string base, std::string filepath)
 
     std::filesystem::create_directories(base);
 
-    if (filepath.find("\\/") != std::string::npos)
+    if (filepath.find_last_of("\\/") != std::string::npos)
     {
         std::filesystem::create_directories((base + "/" + filepath.substr(0, filepath.find_last_of("\\/"))).c_str());
     }
