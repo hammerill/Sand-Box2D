@@ -28,7 +28,7 @@ public:
     /// @param base where is directory of all the levels stored on the platform are located?
     /// Will download file there.
     /// @param filepath path to the file to be downloaded, relatively to the "repo" (see setRepo()).
-    /// @return exception if something went wrong, nullptr if everything's ok.
-    static std::exception* DownloadFile(std::string base, std::string filepath);
+    /// @return response code (CURLcode).
+    static CURLcode DownloadFile(std::string base, std::string filepath);
 };
 

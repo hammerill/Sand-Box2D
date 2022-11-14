@@ -23,31 +23,28 @@ void NetworkManager::setRepo(std::string repo)
 {
     NetworkManager::repo = repo;
 }
-std::exception* NetworkManager::DownloadFile(std::string base, std::string filepath)
+CURLcode NetworkManager::DownloadFile(std::string base, std::string filepath)
 {
-    try
+    NetworkManager::curl = curl_easy_init();
+
+    std::filesystem::create_directories(base);
+
+    if (filepath.find("\\/") != std::string::npos)
     {
-        NetworkManager::curl = curl_easy_init();
-
-        if (filepath.find("\\/") != std::string::npos)
-        {
-            std::filesystem::create_directories((base + "/" + filepath.substr(0, filepath.find_last_of("\\/"))).c_str());
-        }
-
-        NetworkManager::file = fopen((base + "/" + filepath).c_str(), "wb");
-
-        curl_easy_setopt(NetworkManager::curl, CURLOPT_URL, (NetworkManager::repo + "/" + filepath).c_str());
-        curl_easy_setopt(NetworkManager::curl, CURLOPT_WRITEDATA, NetworkManager::file);
-        curl_easy_setopt(NetworkManager::curl, CURLOPT_WRITEFUNCTION, write_data);
-        curl_easy_setopt(NetworkManager::curl, CURLOPT_SSL_VERIFYPEER, 0L);
-
-        NetworkManager::res = curl_easy_perform(NetworkManager::curl);
-
-        curl_easy_cleanup(NetworkManager::curl);
-        fclose(NetworkManager::file);
-
-        return nullptr;
+        std::filesystem::create_directories((base + "/" + filepath.substr(0, filepath.find_last_of("\\/"))).c_str());
     }
-    catch (std::exception* e) { return e; }    
+    NetworkManager::file = fopen((base + "/" + filepath).c_str(), "wb");
+
+    curl_easy_setopt(NetworkManager::curl, CURLOPT_URL, (NetworkManager::repo + "/" + filepath).c_str());
+    curl_easy_setopt(NetworkManager::curl, CURLOPT_WRITEDATA, NetworkManager::file);
+    curl_easy_setopt(NetworkManager::curl, CURLOPT_WRITEFUNCTION, write_data);
+    curl_easy_setopt(NetworkManager::curl, CURLOPT_SSL_VERIFYPEER, 0L);
+
+    NetworkManager::res = curl_easy_perform(NetworkManager::curl);
+
+    curl_easy_cleanup(NetworkManager::curl);
+    fclose(NetworkManager::file);
+
+    return NetworkManager::res;
 }
 
