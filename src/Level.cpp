@@ -99,12 +99,14 @@ void Level::ProceedPObj(Json::Value jsonObj, std::vector<JsonPObj*>* arrayPObjs)
 
 Level::~Level()
 {
-    objects->clear();
-    cycles->clear();
+    objects.clear();
+    cycles.clear();
 }
 
 std::exception* Level::LoadFile(std::string base, std::string filepath)
 {
+    Level::~Level();
+
     try
     {
         std::ifstream ifs((base + "/" + filepath).c_str());
@@ -140,10 +142,23 @@ std::exception* Level::LoadFile(std::string base, std::string filepath)
         const Json::Value& jsonObjects = jsonLevel["objects"];
         for (int i = 0; i < jsonObjects.size(); i++)
         {
-            Level::ProceedPObj(jsonObjects[i], Level::objects);
-        }
-        
+            Level::ProceedPObj(jsonObjects[i], &(Level::objects));
+        }        
         //////////
+
+        // CYCLES
+        const Json::Value& jsonCycles = jsonLevel["cycles"];
+        for (int i = 0; i < jsonCycles.size(); i++)
+        {
+            JsonCycle jsonCycle =
+            {
+                jsonCycles[i]["delay"],
+                jsonCycles[i]["objects"]
+            };
+
+            Level::cycles.push_back(jsonCycle);
+        }        
+        /////////
 
         return nullptr;
     }
@@ -151,5 +166,24 @@ std::exception* Level::LoadFile(std::string base, std::string filepath)
     {
         return e;
     }
+}
+
+std::vector<LoadedCycle> Level::getCycles()
+{
+    std::vector<LoadedCycle> result = std::vector<LoadedCycle>();
+
+    for (int i = 0; i < Level::cycles.size(); i++)
+    {
+        LoadedCycle cycle;
+
+        cycle.delay = Level::LoadNumber(Level::cycles[i].delay);
+        for (int j = 0; j < Level::cycles[i].objects.size(); j++)
+        {
+            Level::ProceedPObj(Level::cycles[i].objects[j], &(cycle.objects));
+        }
+        
+        result.push_back(cycle);
+    }
     
+    return result;
 }

@@ -44,8 +44,13 @@ struct JsonPObjCircle : JsonPObj
 
 struct JsonCycle
 {
+    Json::Value delay;
+    Json::Value objects;
+};
+struct LoadedCycle
+{
     int delay;
-    std::vector<JsonPObj*>* objects = new std::vector<JsonPObj*>();
+    std::vector<JsonPObj*> objects = std::vector<JsonPObj*>();
 };
 
 /// @brief Class that represents Sand-Box2D level loaded from JSON. 
@@ -59,13 +64,13 @@ private:
 
     /// @brief Load number (parse it), further info here:
     /// https://github.com/Hammerill/Sand-Box2D-levels/blob/main/docs/README-level-file.md#numbers-input
-    /// @param input JSON value to be parsed. It can be number itself or string random ("100-200")
+    /// @param input JSON value to be parsed. It can be number itself or string random ("100-200").
     /// @return NULL if something went wrong, otherwise number represented as float. 
     float LoadNumber(Json::Value input);
 
     /// @brief Array of loaded cycles from JSON represented as structs.
     /// Should be accessed through getter (see getCycles()).
-    std::vector<JsonCycle*>* cycles = new std::vector<JsonCycle*>();
+    std::vector<JsonCycle> cycles = std::vector<JsonCycle>();
 
     /// @brief Parse PObject and add it to array.
     /// @param jsonObj PObj from JSON to be proceeded.
@@ -85,11 +90,11 @@ public:
     JsonCamera camera;
 
     /// @brief Array of loaded objects from JSON represented as structs.
-    std::vector<JsonPObj*>* objects = new std::vector<JsonPObj*>();
+    std::vector<JsonPObj*> objects = std::vector<JsonPObj*>();
 
     /// @brief Get array of loaded cycles from JSON represented as structs.
     /// Should be accessed through getter because it should return random values every iteration.
-    std::vector<JsonCycle*>* getCycles();
+    std::vector<LoadedCycle> getCycles();
 
     /// @brief Load JSON file and represent it as an array of structs (see Level::objects).
     /// @param base where is directory of all the levels stored on the platform are located?
