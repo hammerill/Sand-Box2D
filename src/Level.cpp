@@ -69,6 +69,8 @@ void Level::ProceedPObj(Json::Value jsonObj, std::vector<JsonPObj*>* arrayPObjs)
         box->vel_y = Level::LoadNumber(jsonObj["vel_y"]);
 
         box->texture = jsonObj["texture"].asString();
+
+        arrayPObjs->push_back(box);
     }
     else if (objType == "circle")
     {
@@ -90,6 +92,8 @@ void Level::ProceedPObj(Json::Value jsonObj, std::vector<JsonPObj*>* arrayPObjs)
         circle->r_angle = Level::LoadNumber(jsonObj["r_angle"]);
         circle->g_angle = Level::LoadNumber(jsonObj["g_angle"]);
         circle->b_angle = Level::LoadNumber(jsonObj["b_angle"]);
+
+        arrayPObjs->push_back(circle);
     }
 }
 
