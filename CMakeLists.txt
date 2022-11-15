@@ -144,12 +144,7 @@ elseif(BUILD_VITA)
 		NAME ${VITA_APPNAME}
 
 		FILE assets assets
-
-		FILE pics/sce_sys/icon0.png sce_sys/icon0.png
-		FILE pics/sce_sys/pic0.png sce_sys/pic0.png
-		FILE pics/sce_sys/livearea/contents/bg0.png sce_sys/livearea/contents/bg0.png
-		FILE pics/sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
-		FILE pics/sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
+		FILE pics/sce_sys sce_sys
 	)
 
 endif()

@@ -1,11 +1,20 @@
 #include "PObjCircle.h"
 
-PObjCircle::PObjCircle(float x, float y, float radius, float vel_x, float vel_y, Uint32 color)
+PObjCircle::PObjCircle( float x, float y, float radius, float vel_x, float vel_y,
+                        uint8_t r, uint8_t g, uint8_t b,
+                        uint8_t r_angle, uint8_t g_angle, uint8_t b_angle)
 {
     PObjCircle::x = x;
     PObjCircle::y = y;
     PObjCircle::radius = radius;
-    PObjCircle::color = color;
+
+    PObjCircle::r = r;
+    PObjCircle::g = g;
+    PObjCircle::b = b;
+
+    PObjCircle::r_angle = r_angle;
+    PObjCircle::g_angle = g_angle;
+    PObjCircle::b_angle = b_angle;
 
     PObjCircle::vel.Set(vel_x, vel_y);
 
@@ -45,9 +54,9 @@ bool PObjCircle::Render(SDL_Renderer* renderer, float x_offset, float y_offset, 
     if (circle.x > -radiusZoomed && circle.x < width + radiusZoomed
     &&  circle.y > -radiusZoomed && circle.y < height + radiusZoomed)
     {
-        filledCircleColor(renderer, circle.x, (pos.y * zoom) + y_offset, radiusZoomed, PObjCircle::color);
+        filledCircleRGBA(renderer, circle.x, circle.y, radiusZoomed, PObjCircle::r, PObjCircle::g, PObjCircle::b, 0xFF);
 
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+        SDL_SetRenderDrawColor(renderer, PObjCircle::r_angle, PObjCircle::g_angle, PObjCircle::b_angle, 0);
         SDL_RenderDrawLine(renderer, 
         circle.x, 
         circle.y, 

@@ -14,7 +14,10 @@ private:
     float x, y, radius, vel_x, vel_y;
 
     /// @brief Color of the circle entity.
-    Uint32 color;
+    uint8_t r, g, b;
+
+    /// @brief Color of the circle entity angle renderer.
+    uint8_t r_angle, g_angle, b_angle;
 
     /// @brief Shape of the circle entity.
     b2CircleShape circleShape;
@@ -26,9 +29,20 @@ public:
     /// @param radius radius of the circle in Box2D meters.
     /// @param vel_x velocity on X of the circle.
     /// @param vel_y velocity on Y of the circle.
-    /// @param color color of the circle. Format - 0xRRGGBBAA.
-    PObjCircle(float x, float y, float radius, float vel_x = 0, float vel_y = 0, Uint32 color = 0xFFFF80FF);
-
+    /// @param r color RED.
+    /// @param g color GREEN.
+    /// @param b color BLUE.
+    /// @param r_angle color RED of angle render.
+    /// @param g_angle color GREEN of angle render.
+    /// @param b_angle color BLUE of angle render.
+    PObjCircle( float x, float y, float radius, float vel_x = 0, float vel_y = 0,
+                uint8_t r = 0xFF,
+                uint8_t g = 0x80,
+                uint8_t b = 0xFF,
+                uint8_t r_angle = 0,
+                uint8_t g_angle = 0,
+                uint8_t b_angle = 0);
+                
     ~PObjCircle();
     
     /// Register this circle in the world. Should be 
