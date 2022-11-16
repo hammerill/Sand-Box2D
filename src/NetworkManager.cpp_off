@@ -1,5 +1,5 @@
 #include "NetworkManager.h"
-
+//CANNOT BUILD ON VITA YET
 CURL* NetworkManager::curl;
 FILE* NetworkManager::file;
 CURLcode NetworkManager::res;

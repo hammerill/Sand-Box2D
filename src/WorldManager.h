@@ -7,7 +7,6 @@
 
 #include "Controls.h"
 #include "FontManager.h"
-#include "NetworkManager.h"
 #include "Level.h"
 
 #include <box2d/box2d.h>
