@@ -10,13 +10,13 @@ float Level::getRandomFloat(float min, float max)
 }
 
 float Level::LoadNumber(Json::Value input)
-{
+{    
     try
     {
-        if (input.asString().find_last_of("-") != std::string::npos)
+        if (input.asString().find_last_of(":") != std::string::npos)
         {
-            float min = std::stof(input.asString().substr(0, input.asString().find_last_of("-")));
-            float max = std::stof(input.asString().substr(input.asString().find_last_of("-") + 1));
+            float min = std::stof(input.asString().substr(0, input.asString().find_last_of(":")));
+            float max = std::stof(input.asString().substr(input.asString().find_last_of(":") + 1));
 
             return Level::getRandomFloat(min, max);
         }
@@ -27,8 +27,8 @@ float Level::LoadNumber(Json::Value input)
     }
     catch(const std::exception& e)
     {
-        return NULL;
-    }    
+        return 0;
+    }
 }
 
 void Level::ProceedPObj(Json::Value jsonObj, std::vector<JsonPObj*>* arrayPObjs)
@@ -39,7 +39,7 @@ void Level::ProceedPObj(Json::Value jsonObj, std::vector<JsonPObj*>* arrayPObjs)
     // Yes. It's not a switch.
     if (objType == "platform")
     {
-        JsonPObjPlatform* platform;
+        JsonPObjPlatform* platform = new JsonPObjPlatform();
         platform->type = objType;
 
         platform->x1 = Level::LoadNumber(jsonObj["x1"]);
@@ -55,7 +55,7 @@ void Level::ProceedPObj(Json::Value jsonObj, std::vector<JsonPObj*>* arrayPObjs)
     }
     else if (objType == "box")
     {
-        JsonPObjBox* box;
+        JsonPObjBox* box = new JsonPObjBox();
         box->type = objType;
 
         box->x = Level::LoadNumber(jsonObj["x"]);
@@ -74,7 +74,7 @@ void Level::ProceedPObj(Json::Value jsonObj, std::vector<JsonPObj*>* arrayPObjs)
     }
     else if (objType == "circle")
     {
-        JsonPObjCircle* circle;
+        JsonPObjCircle* circle = new JsonPObjCircle();
         circle->type = objType;
 
         circle->x = Level::LoadNumber(jsonObj["x"]);
@@ -99,13 +99,14 @@ void Level::ProceedPObj(Json::Value jsonObj, std::vector<JsonPObj*>* arrayPObjs)
 
 Level::~Level()
 {
-    objects.clear();
-    cycles.clear();
+    std::vector<JsonPObj*>().swap(objects);
+    std::vector<JsonCycle>().swap(cycles);
 }
 
-std::exception* Level::LoadFile(std::string base, std::string filepath)
+bool Level::LoadFile(std::string base, std::string filepath)
 {
     Level::~Level();
+    Level::camera = JsonCamera();
 
     try
     {
@@ -125,30 +126,30 @@ std::exception* Level::LoadFile(std::string base, std::string filepath)
         //////////
 
         // CAMERA
-        Level::camera.type = jsonLevel["type"].asString();
+        Level::camera.type = jsonLevel["camera"]["type"].asString();
 
         if (Level::camera.type != "attached")
         {
-            Level::camera.x = Level::LoadNumber(jsonLevel["x"]);
-            Level::camera.y = Level::LoadNumber(jsonLevel["y"]);
-            Level::camera.move = jsonLevel["move"].asBool();
+            Level::camera.x = Level::LoadNumber(jsonLevel["camera"]["x"]);
+            Level::camera.y = Level::LoadNumber(jsonLevel["camera"]["y"]);
+            Level::camera.move = jsonLevel["camera"]["move"].asBool();
         }
 
-        Level::camera.zoom = jsonLevel["zoom"].asBool();
-        Level::camera.height    = Level::LoadNumber(jsonLevel["height"]);
+        Level::camera.zoom = jsonLevel["camera"]["zoom"].asBool();
+        Level::camera.height    = Level::LoadNumber(jsonLevel["camera"]["height"]);
         /////////
 
         // OBJECTS
-        const Json::Value& jsonObjects = jsonLevel["objects"];
-        for (int i = 0; i < jsonObjects.size(); i++)
+        Json::Value jsonObjects = jsonLevel["objects"];
+        for (unsigned int i = 0; i < jsonObjects.size(); i++)
         {
             Level::ProceedPObj(jsonObjects[i], &(Level::objects));
         }        
         //////////
 
         // CYCLES
-        const Json::Value& jsonCycles = jsonLevel["cycles"];
-        for (int i = 0; i < jsonCycles.size(); i++)
+        Json::Value jsonCycles = jsonLevel["cycles"];
+        for (unsigned int i = 0; i < jsonCycles.size(); i++)
         {
             JsonCycle jsonCycle =
             {
@@ -160,11 +161,13 @@ std::exception* Level::LoadFile(std::string base, std::string filepath)
         }        
         /////////
 
-        return nullptr;
+        ifs.close();
+
+        return true;
     }
-    catch(std::exception* e)
+    catch(const std::exception& e)
     {
-        return e;
+        return false;
     }
 }
 
@@ -172,18 +175,25 @@ std::vector<LoadedCycle> Level::getCycles()
 {
     std::vector<LoadedCycle> result = std::vector<LoadedCycle>();
 
-    for (int i = 0; i < Level::cycles.size(); i++)
+    try
     {
-        LoadedCycle cycle;
-
-        cycle.delay = Level::LoadNumber(Level::cycles[i].delay);
-        for (int j = 0; j < Level::cycles[i].objects.size(); j++)
+        for (unsigned int i = 0; i < Level::cycles.size(); i++)
         {
-            Level::ProceedPObj(Level::cycles[i].objects[j], &(cycle.objects));
+            LoadedCycle cycle;
+
+            cycle.delay = Level::LoadNumber(Level::cycles[i].delay);
+            for (unsigned int j = 0; j < Level::cycles[i].objects.size(); j++)
+            {
+                Level::ProceedPObj(Level::cycles[i].objects[j], &(cycle.objects));
+            }
+            
+            result.push_back(cycle);
         }
         
-        result.push_back(cycle);
+        return result;
     }
-    
-    return result;
+    catch(const std::exception& e)
+    {
+        return std::vector<LoadedCycle>();
+    }
 }

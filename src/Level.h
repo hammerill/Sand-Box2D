@@ -65,7 +65,7 @@ private:
     /// @brief Load number (parse it), further info here:
     /// https://github.com/Hammerill/Sand-Box2D-levels/blob/main/docs/README-level-file.md#numbers-input
     /// @param input JSON value to be parsed. It can be number itself or string random ("100-200").
-    /// @return NULL if something went wrong, otherwise number represented as float. 
+    /// @return !!! 0 if something went wrong, otherwise number represented as float. 
     float LoadNumber(Json::Value input);
 
     /// @brief Array of loaded cycles from JSON represented as structs.
@@ -84,22 +84,23 @@ public:
     Json::Value metadata;
 
     /// @brief Represents "options" sector from the file.
-    JsonOptions options;
+    JsonOptions options = JsonOptions();
 
     /// @brief Represents "camera" sector from the file.
-    JsonCamera camera;
+    JsonCamera camera = JsonCamera();
 
     /// @brief Array of loaded objects from JSON represented as structs.
     std::vector<JsonPObj*> objects = std::vector<JsonPObj*>();
 
     /// @brief Get array of loaded cycles from JSON represented as structs.
     /// Should be accessed through getter because it should return random values every iteration.
+    /// @return empty vector if something went wrong, otherwise filled LoadedCycle vector.
     std::vector<LoadedCycle> getCycles();
 
     /// @brief Load JSON file and represent it as an array of structs (see Level::objects).
     /// @param base where is directory of all the levels stored on the platform are located?
     /// @param filepath where is the level file (*.json) located relatively to the "base"?
     /// Will load this file.
-    /// @return exception if something went wrong, nullptr if everything's ok.
-    std::exception* LoadFile(std::string base, std::string filepath);
+    /// @return false if something went wrong, true if everything's ok.
+    bool LoadFile(std::string base, std::string filepath);
 };
