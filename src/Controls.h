@@ -15,7 +15,7 @@ protected:
     static bool reset;
     static bool fullscreen;
     static bool debug;
-    static bool deleteObjs;
+    static bool reloadLevel;
 
     static double moveUp;
     static double moveRight;
@@ -54,8 +54,8 @@ public:
     static bool getFullscreen();
     /// @brief Is user does want to activate/deactivate debug mode?
     static bool getDebug();
-    /// @brief Is user does want to delete marked objects?
-    static bool getDeleteObjs();
+    /// @brief Is user does want to reload current level?
+    static bool getReloadLevel();
 
     /// @brief Is user does want to move camera up?
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).

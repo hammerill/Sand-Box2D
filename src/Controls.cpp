@@ -4,7 +4,7 @@ bool Ctrl::exit = false;
 bool Ctrl::reset = false;
 bool Ctrl::fullscreen = false;
 bool Ctrl::debug = false;
-bool Ctrl::deleteObjs = false;
+bool Ctrl::reloadLevel = false;
 
 double Ctrl::moveUp = 0;
 double Ctrl::moveRight = 0;
@@ -54,7 +54,7 @@ void Ctrl::Check()
 
     Ctrl::reset = ctrl.buttons & SCE_CTRL_CROSS;
     Ctrl::debug = ctrl.buttons & SCE_CTRL_TRIANGLE;
-    Ctrl::deleteObjs = ctrl.buttons & SCE_CTRL_CIRCLE;
+    Ctrl::reloadLevel = ctrl.buttons & SCE_CTRL_CIRCLE;
 
     if (touchxy[0].reportNum == 1)
     {
@@ -257,7 +257,7 @@ void Ctrl::Check()
                 Ctrl::debug = e.type == SDL_KEYDOWN; 
                 break;
             case SDLK_x:
-                Ctrl::deleteObjs = e.type == SDL_KEYDOWN; 
+                Ctrl::reloadLevel = e.type == SDL_KEYDOWN; 
                 break;
 
             case SDLK_UP: case SDLK_w:
@@ -298,7 +298,7 @@ bool Ctrl::getExit()        { return Ctrl::exit; }
 bool Ctrl::getReset()       { return Ctrl::reset; }
 bool Ctrl::getFullscreen()  { return Ctrl::fullscreen; }
 bool Ctrl::getDebug()       { return Ctrl::debug; }
-bool Ctrl::getDeleteObjs()  { return Ctrl::deleteObjs; }
+bool Ctrl::getReloadLevel()  { return Ctrl::reloadLevel; }
 
 double Ctrl::getMoveUp()    { return Ctrl::moveUp; }
 double Ctrl::getMoveRight() { return Ctrl::moveRight; }

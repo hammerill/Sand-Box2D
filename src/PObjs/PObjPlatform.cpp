@@ -1,11 +1,15 @@
 #include "PObjPlatform.h"
 
-PObjPlatform::PObjPlatform(float x1_plat, float y1_plat, float x2_plat, float y2_plat)
+PObjPlatform::PObjPlatform(float x1_plat, float y1_plat, float x2_plat, float y2_plat, uint8_t r, uint8_t g, uint8_t b)
 {
     PObjPlatform::x1 = x1_plat;
     PObjPlatform::y1 = y1_plat;
     PObjPlatform::x2 = x2_plat;
     PObjPlatform::y2 = y2_plat;
+
+    PObjPlatform::r = r;
+    PObjPlatform::g = g;
+    PObjPlatform::b = b;
 
     b2Vec2 start_point = b2Vec2(PObjPlatform::x1, PObjPlatform::y1);
     b2Vec2 end_point = b2Vec2(PObjPlatform::x2, PObjPlatform::y2);
@@ -43,7 +47,7 @@ bool PObjPlatform::Render(SDL_Renderer* renderer, float x_offset, float y_offset
     if ((begin.x + end.x) / 2 > -halfDistance && (begin.x + end.x) / 2 < width + halfDistance 
     &&  (begin.y + end.y) / 2 > -halfDistance && (begin.y + end.y) / 2 < height + halfDistance)
     {
-        SDL_SetRenderDrawColor(renderer, 255, 255, 0, 0);
+        SDL_SetRenderDrawColor(renderer, PObjPlatform::r, PObjPlatform::g, PObjPlatform::b, 0);
         SDL_RenderDrawLine(renderer, begin.x, begin.y, end.x, end.y);
 
         return true;

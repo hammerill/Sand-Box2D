@@ -27,12 +27,11 @@ have rewritten it from zero using OOP, and now you're free to play this game and
 
 ## Future plans
 - Make a main menu, where player can:
-  * Load and manage levels;
+  * Download, manage and start levels;
   * Adjust settings;
   * Access menu "About".
 - Make multilingual interface, where everybody can contribute their language.
-- Add support for loading custom levels
-([documentation](https://github.com/Hammerill/Sand-Box2D-levels) about it already in development).
+- ~~Add support for loading custom levels ([documentation](https://github.com/Hammerill/Sand-Box2D-levels) about it in development)~~ ✔️Done!
 - Implement level editor (right now to make levels you need to manually edit JSON).
 - Add support of a lot of objects.
 
@@ -45,7 +44,7 @@ Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/discus
 - <kbd>Q</kbd>/<kbd>E</kbd> - adjust zoom.
 - <kbd>F</kbd> - go/exit fullscreen.
 - <kbd>Tab</kbd> - On/off debug screen.
-- <kbd>X</kbd> - reload current level.
+- <kbd>X</kbd> - reload current level (gonna be deprecated soon).
 - Also, you can consider using mouse for camera controls and to go/exit fullscreen mode.
 
 ### For PS Vita
@@ -53,7 +52,7 @@ Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/discus
 - <kbd>Left Stick</kbd> or <kbd>DPAD</kbd> - move camera.
 - <kbd>Right Stick</kbd> or <kbd>L</kbd>/<kbd>R</kbd> - adjust zoom.
 - <kbd>Triangle</kbd> - On/off debug screen.
-- <kbd>Circle</kbd> - reload current level.
+- <kbd>Circle</kbd> - reload current level (gonna be deprecated soon).
 - Also, you can consider using touchscreen for camera controls.
 
 ## Build 

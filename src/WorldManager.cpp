@@ -78,6 +78,40 @@ void WorldManager::deleteObject(int index)
     WorldManager::objects.erase(WorldManager::objects.begin() + index); // Remove from vector.
 }
 
+void ProceedPObj(JsonPObj* pObject, WorldManager* wm)
+{
+    // Gonna delete this hardcoded stuff later.
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(wm->getRenderer(), IMG_Load("assets/img/box.png"));
+    // Also, I think that I should rewrite the whole JSON level loading system, bc rn it's very repetitive
+
+    if (pObject->type == "platform")
+    {
+        JsonPObjPlatform* jsonPlatform = (JsonPObjPlatform*)pObject;
+        PObjPlatform* platform = new PObjPlatform(  jsonPlatform->x1, jsonPlatform->y1,
+                                                    jsonPlatform->x2, jsonPlatform->y2,
+                                                    jsonPlatform->r, jsonPlatform->g, jsonPlatform->b);
+        wm->addObject(platform);
+    }
+    else if (pObject->type == "box")
+    {
+        JsonPObjBox* jsonBox = (JsonPObjBox*)pObject;
+        PObjBox* box = new PObjBox( texture, jsonBox->x, jsonBox->y, 
+                                    jsonBox->w, jsonBox->h, jsonBox->angle,
+                                    jsonBox->vel_x, jsonBox->vel_y);
+        wm->addObject(box);
+    }
+    else if (pObject->type == "circle")
+    {
+        JsonPObjCircle* jsonCircle = (JsonPObjCircle*)pObject;
+        PObjCircle* circle = new PObjCircle(jsonCircle->x, jsonCircle->y, jsonCircle->radius,
+                                            jsonCircle->vel_x, jsonCircle->vel_y, 
+                                            jsonCircle->r, jsonCircle->g, jsonCircle->b,
+                                            jsonCircle->r_angle, jsonCircle->g_angle, jsonCircle->b_angle);
+        wm->addObject(circle);
+    }
+}
+
+bool oldReload = false;
 bool WorldManager::Step()
 {
     if (WorldManager::speedCorrection)
@@ -114,15 +148,6 @@ bool WorldManager::Step()
     }
     else    
         WorldManager::holdingDebugButton = false;
-
-    if (Ctrl::getDeleteObjs())
-    {
-        for (int i = WorldManager::objects.size() - 1; i >= 0; i--)
-        {
-            if (WorldManager::objects[i]->isMarkedToDelete)
-                WorldManager::deleteObject(i);        
-        }
-    }
 
     WorldManager::y_offset += Ctrl::getMoveUp() * WorldManager::move_speed;
     WorldManager::x_offset -= Ctrl::getMoveRight() * WorldManager::move_speed;
@@ -179,6 +204,28 @@ bool WorldManager::Step()
             WorldManager::objects[i]->Reset();
         }
     }
+
+    // CYCLES
+    for (size_t i = 0; i < WorldManager::cyclesDelays.size(); i++)
+    {
+        if (--(WorldManager::cyclesDelays[i]) <= 0)
+        {
+            for (size_t j = 0; j < WorldManager::level.getCycles()[i].objects.size(); j++)
+            {
+                ProceedPObj(WorldManager::level.getCycles()[i].objects[j], this);
+            }
+            WorldManager::cyclesDelays[i] = WorldManager::level.getCycles()[i].delay;
+        }
+    }    
+    /////////
+
+    
+    // LATER IT WILL BE CONSIDERED DEPRECATED AND DESTROYED
+    if (Ctrl::getReloadLevel() && !oldReload)
+        WorldManager::LoadLevel(WorldManager::level);
+    
+    oldReload = Ctrl::getReloadLevel();
+    ///////////////////////////////////////////////////////
 
     for (int i = WorldManager::order.size() - 1; i >= 0; i--)
     { // Load order.
@@ -279,6 +326,45 @@ void WorldManager::Cycle()
     }
 }
 
+void WorldManager::LoadLevel(Level level)
+{
+    WorldManager::level = level;
+
+    // CAMERA
+    if (WorldManager::level.camera.type == "static")
+    {
+        WorldManager::zoom = WorldManager::WINDOW_HEIGHT / WorldManager::level.camera.height;
+
+        WorldManager::x_offset =    -(WorldManager::level.camera.x * WorldManager::zoom)
+                                    +(WorldManager::WINDOW_WIDTH / 2);
+
+        WorldManager::y_offset =    -(WorldManager::level.camera.y * WorldManager::zoom)
+                                    +(WorldManager::WINDOW_HEIGHT / 2);
+    }
+    /////////
+    
+    // OBJECTS
+    for (int i = WorldManager::objects.size() - 1; i >= 0; i--)
+    { // Remove current loaded objects
+        WorldManager::deleteObject(i);
+    }
+    
+    for (size_t i = 0; i < WorldManager::level.objects.size(); i++)
+    {
+        ProceedPObj(WorldManager::level.objects[i], this);
+    }
+    //////////
+
+    // CYCLES (everything other at the end of the Step())
+    WorldManager::cyclesDelays = std::vector<int>();
+
+    for (size_t i = 0; i < WorldManager::level.getCycles().size(); i++)
+    {
+        WorldManager::cyclesDelays.push_back(1);
+    }    
+    /////////
+}
+
 SDL_Renderer* WorldManager::getRenderer() { return WorldManager::renderer; }
 
 void WorldManager::goFullscreen(bool isToFullscreen)
@@ -301,7 +387,7 @@ void WorldManager::goFullscreen(bool isToFullscreen)
 
         // NetworkManager::setRepo("https://raw.githubusercontent.com/Hammerill/Sand-Box2D-levels/main/levels");
         // NetworkManager::DownloadFile("./levels", "index.json");
-        // NetworkManager::DownloadFile("./levels", "default_level/default_level.json");
+        // NetworkManager::DownloadFile("./assets", "default_level/default_level.json");
     }
     else
     {
@@ -317,16 +403,14 @@ void WorldManager::goFullscreen(bool isToFullscreen)
 
 void WorldManager::renderDebugScreen(std::vector<std::string> debugStrings)
 {
-    const int fontWidth = 8; // Going to move it somewhere else later (or never)
-
     std::vector<int> debugWidths;
     for (size_t i = 0; i < debugStrings.size(); i++)
-        debugWidths.push_back((debugStrings[i].size() + 2) * fontWidth);
+        debugWidths.push_back((debugStrings[i].size() + 2) * Font::FontWidth);
     
     std::sort(debugWidths.begin(), debugWidths.end());
 
     int debug_w = (debugWidths[debugWidths.size()-1]);
-    int debug_h = (debugStrings.size() + 2) * fontWidth;
+    int debug_h = (debugStrings.size() + 2) * Font::FontWidth;
 
     SDL_Rect debugBg {0, 0, debug_w, debug_h};
 
@@ -337,7 +421,7 @@ void WorldManager::renderDebugScreen(std::vector<std::string> debugStrings)
 
     for (size_t i = 0; i < debugStrings.size(); i++)
     {
-        Font::Render(WorldManager::renderer, debugStrings[i].c_str(), fontWidth, fontWidth * (i+1));
+        Font::Render(WorldManager::renderer, debugStrings[i].c_str(), Font::FontWidth, Font::FontWidth * (i+1));
     }
 }
 

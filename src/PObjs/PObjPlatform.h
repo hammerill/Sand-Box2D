@@ -10,6 +10,9 @@ private:
     /// @brief Start and end positions of platform.
     float x1, y1, x2, y2;
 
+    /// @brief Color.
+    uint8_t r, g, b;
+
     /// @brief Shape of the platform entity.
     b2EdgeShape platformShape;
 
@@ -19,7 +22,13 @@ public:
     /// @param y1_plat position Y of the start point of the platform.
     /// @param x2_plat position X of the end point of the platform.
     /// @param y2_plat position Y of the end point of the platform.
-    PObjPlatform(float x1_plat, float y1_plat, float x2_plat, float y2_plat);
+    /// @param r color RED.
+    /// @param g color GREEN.
+    /// @param b color BLUE.
+    PObjPlatform(float x1_plat, float y1_plat, float x2_plat, float y2_plat,
+                    uint8_t r = 0xFF,
+                    uint8_t g = 0xFF,
+                    uint8_t b = 0);
     
     ~PObjPlatform();
 

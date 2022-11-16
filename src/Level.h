@@ -64,7 +64,7 @@ private:
 
     /// @brief Load number (parse it), further info here:
     /// https://github.com/Hammerill/Sand-Box2D-levels/blob/main/docs/README-level-file.md#numbers-input
-    /// @param input JSON value to be parsed. It can be number itself or string random ("100-200").
+    /// @param input JSON value to be parsed. It can be number itself or string random ("100:200").
     /// @return !!! 0 if something went wrong, otherwise number represented as float. 
     float LoadNumber(Json::Value input);
 

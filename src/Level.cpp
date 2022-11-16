@@ -136,7 +136,7 @@ bool Level::LoadFile(std::string base, std::string filepath)
         }
 
         Level::camera.zoom = jsonLevel["camera"]["zoom"].asBool();
-        Level::camera.height    = Level::LoadNumber(jsonLevel["camera"]["height"]);
+        Level::camera.height = Level::LoadNumber(jsonLevel["camera"]["height"]);
         /////////
 
         // OBJECTS

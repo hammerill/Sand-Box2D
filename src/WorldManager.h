@@ -1,6 +1,9 @@
 #pragma once
 
 #include "PObjs/BasePObj.h"
+#include "PObjs/PObjPlatform.h"
+#include "PObjs/PObjBox.h"
+#include "PObjs/PObjCircle.h"
 
 #include "Controls.h"
 #include "FontManager.h"
@@ -52,6 +55,14 @@ private:
     bool holdingDebugButton = false;
     bool isDebug = false;
 
+    /// @brief Current loaded level.
+    Level level = Level();
+
+    /// @brief Array with size of quantity of cycles which contains
+    /// amount of frames before each cycle will do one step (every frame all the values here are
+    /// decreasing, if some of they reach 0, corresponding cycle will do step and that value updates).
+    std::vector<int> cyclesDelays = std::vector<int>();
+
     /// @brief Set fullscreen or disable it.
     /// @param isToFullscreen should this command go fullscreen or disable it?
     void goFullscreen(bool isToFullscreen);
@@ -94,6 +105,11 @@ public:
 
     /// @brief Run main cycle of the program, exit only by initiative of user.
     void Cycle();
+
+    /// @brief Load level (object of class Level filled with required fields).
+    /// First, it will destroy current loaded level (if it exists), then it will load attached level.
+    /// @param level Level to be loaded.
+    void LoadLevel(Level level);
 
     /// @brief Render debug screen at upper-left corner of a window.
     /// @param debugStrings information to be shown.
