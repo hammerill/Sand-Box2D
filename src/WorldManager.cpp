@@ -221,8 +221,18 @@ bool WorldManager::Step()
 
     
     // LATER IT WILL BE CONSIDERED DEPRECATED AND DESTROYED
-    if (Ctrl::getReloadLevel() && !oldReload)
+    if (Ctrl::getReloadLevel() && !oldReload){
         WorldManager::LoadLevel(WorldManager::level);
+        
+//         NetworkManager::setRepo("https://raw.githubusercontent.com/Hammerill/Sand-Box2D-levels/main/levels");
+// #ifdef Vita
+//         NetworkManager::DownloadFile("ux0:Data/Sand-Box2D/levels", "index.json");
+//         NetworkManager::DownloadFile("ux0:Data/Sand-Box2D/levels", "default_level/default_level.json");
+// #else
+//         NetworkManager::DownloadFile("./levels", "index.json");
+//         NetworkManager::DownloadFile("./levels", "default_level/default_level.json");
+// #endif
+    }
     
     oldReload = Ctrl::getReloadLevel();
     ///////////////////////////////////////////////////////
@@ -384,10 +394,6 @@ void WorldManager::goFullscreen(bool isToFullscreen)
         SDL_RenderSetLogicalSize(WorldManager::renderer, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT);
 
         SDL_SetWindowFullscreen(WorldManager::window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-
-        // NetworkManager::setRepo("https://raw.githubusercontent.com/Hammerill/Sand-Box2D-levels/main/levels");
-        // NetworkManager::DownloadFile("./levels", "index.json");
-        // NetworkManager::DownloadFile("./assets", "default_level/default_level.json");
     }
     else
     {
