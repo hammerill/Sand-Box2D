@@ -23,7 +23,6 @@ class NetworkManager
 {
 private:
     static CURL* curl;
-    static FILE* file;
     static CURLcode res;
 
     static std::string repo;

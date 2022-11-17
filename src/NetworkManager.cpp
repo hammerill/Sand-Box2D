@@ -1,12 +1,26 @@
 #include "NetworkManager.h"
 
 CURL* NetworkManager::curl;
-FILE* NetworkManager::file;
 CURLcode NetworkManager::res;
 
 std::string NetworkManager::repo;
 
 #ifdef Vita
+
+int file;
+
+void openFile(std::string path)
+{
+    file = sceIoOpen(path.c_str(), SCE_O_WRONLY | SCE_O_CREAT, 0777);
+}
+void closeFile()
+{
+    sceIoClose(file);
+}
+int* getFile()
+{
+    return &file;
+}
 
 bool doesDirExist(const char* path) { 
 	SceUID dir = sceIoDopen(path); 
@@ -47,18 +61,39 @@ bool mkDirs(std::string path)
     return true;
 }
 
+size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)
+{
+	return sceIoWrite(*(int*) stream, ptr, size*nmemb);
+}
+
 #else
+
+FILE* file;
+
+void openFile(std::string path)
+{
+    file = fopen(path.c_str(), "wb");
+}
+void closeFile()
+{
+    fclose(file);
+}
+FILE* getFile()
+{
+    return file;
+}
 
 bool mkDirs(std::string path)
 {
     return std::filesystem::create_directories(path.c_str());
 }
 
-#endif
-
-size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream) {
+size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream)
+{
     return fwrite(ptr, size, nmemb, stream);
 }
+
+#endif
 
 NetworkManager::NetworkManager()
 {
@@ -83,17 +118,17 @@ CURLcode NetworkManager::DownloadFile(std::string base, std::string filepath)
     {
         mkDirs(base + "/" + filepath.substr(0, filepath.find_last_of("\\/")));
     }
-    NetworkManager::file = fopen((base + "/" + filepath).c_str(), "wb");
+    openFile(base + "/" + filepath);
 
     curl_easy_setopt(NetworkManager::curl, CURLOPT_URL, (NetworkManager::repo + "/" + filepath).c_str());
-    curl_easy_setopt(NetworkManager::curl, CURLOPT_WRITEDATA, NetworkManager::file);
+    curl_easy_setopt(NetworkManager::curl, CURLOPT_WRITEDATA, getFile());
     curl_easy_setopt(NetworkManager::curl, CURLOPT_WRITEFUNCTION, write_data);
     curl_easy_setopt(NetworkManager::curl, CURLOPT_SSL_VERIFYPEER, 0L);
 
     NetworkManager::res = curl_easy_perform(NetworkManager::curl);
 
     curl_easy_cleanup(NetworkManager::curl);
-    // fclose(NetworkManager::file);
+    closeFile();
 
     return NetworkManager::res;
 }
