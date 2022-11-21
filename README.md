@@ -19,6 +19,7 @@ have rewritten it from zero using OOP, and now you're free to play this game and
 - [Controls](#controls)
   * [For Desktops](#for-desktops)
   * [For PS Vita](#for-ps-vita)
+- [Future architecture](#future-architecture)
 - [Build](#build)
   * [On Windows](#on-windows)
   * [On Linux](#on-linux)
@@ -54,6 +55,9 @@ Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/discus
 - <kbd>Triangle</kbd> - On/off debug screen.
 - <kbd>Circle</kbd> - reload current level (gonna be deprecated soon).
 - Also, you can consider using touchscreen for camera controls.
+
+## Future architecture
+![Arch](./pics/project-arch.drawio.svg)
 
 ## Build 
 ### On Windows
