@@ -1,12 +1,4 @@
-#include "PObjs/PObjPlatform.h"
-#include "PObjs/PObjBox.h"
-#include "PObjs/PObjCircle.h"
-
-#include "Controls.h"
 #include "WorldManager.h"
-
-#include <chrono>
-#include <thread>
 
 #ifdef Linux
 const bool isLinux = true;
