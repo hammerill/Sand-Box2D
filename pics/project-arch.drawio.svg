@@ -1,4 +1,4 @@
-<svg host="65bd71144e" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="607px" height="471px" viewBox="-0.5 -0.5 607 471" content="&lt;mxfile&gt;&lt;diagram id=&quot;FUUgNC-9w1Y4Yhm3BXc2&quot; name=&quot;Project architecture&quot;&gt;5Vpbc+IgFP41vjoBkhgfq73sizud9aHtIzU0yRSDg1h1f/0SA7mY7DayNdi2znTgwFH4DnznkgzQdLm743gVz1hI6AA64W6ArgcQeuNA/s8E+1zgjpxcEPEkzEWgFMyT30QJ9bRNEpJ1baJgjIpkVRcuWJqShajJMOdsW5/2wmj9V1c4Ig3BfIFpU/qQhCLOpYHnlPIfJIli/cvAUSNLrCcrwTrGIdtWROhmgKacMZG3lrspoRl2Gpdc7/Yvo8XCOElFFwWUK7xhulF7m+EkVWsTe73hbZwIMl/hRdbfSpsO0CQWSyp7QDZfEkqnjDJ+mI3gVfbJ5CwVFfnt4U/KKX4mdMJ4SLgeTlkqv3uyFpy9kjad5s7UZt8IF2RXEamd3hG2JILv5RQ1CoGfq+zrx2lb2hBow8QV+/lKhtWxiYpvLpGVDQVuO9BeA1MSyjOlumr3FUjJLhGPsu2o9lPWHnqqd72rDF3vdSeVi3rUX5B1KlpZt1Q79LSeAehrtuELtRF1mQXmEVGzxrko2+I/DcMJxSJ5q1+r/4HZN4QZmMDs2IZZn+f+cR6ZHuch9CpQg45AD0deDevekYbWkA4aDH2Hl2SGU+lk+AD6VK5w8py1IlFs8OtRd+DUqRv2yN3jhgl+kVQCUBjhNMg520jt8HMZABz7zj4NoB11d7opmQOBoEodYOjAd9jj0LsnPJHrJPxjKAV4F+QkATgVzjYv2ZW6HYTqfjIoBZYt8PH+U6nes0Qupbg8rnvEXqOjS5EvSmkdGbJYRjfbQtOr0m/Q2GqOkbUb4fYRz5wBMntxiV7NUeo4I+nmi8YgwHdrt7hwbVUXqCnlw12g34B7KuHhjK6/RfzhIpvxx6gB/k8itoy/fgvsQd17tZ77s0EfmPqzigt7qo6dx58VdciLCPDGxu5sVHVnnWM820jbK4TAk1OTz1NxakNaFzItIK15qyThB8ZpaJiFfxLuRW7d76E+i9bw5GSirWptVuM7N4tcUkKuH8MY8LURXVtH2iJfG2d6ndO8CtBB4NcZ23H8d9A+R+2jzQT2MkfYzBzv8WZNvnDq6I5tsngzdZwTIZI0+h6pYwGAftugz9TRuBx3FFR3e+Sl30ZATeuAZwwIbMNactLNVWcuQU0qCWwxiXnVzugh5GUapO25sLUgHZhGMv2lQz2YpLVSC3qyieyW7w/lTxDKl7DQzR8=&lt;/diagram&gt;&lt;/mxfile&gt;">
+<svg host="65bd71144e" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="608px" height="471px" viewBox="-0.5 -0.5 608 471" content="&lt;mxfile&gt;&lt;diagram id=&quot;FUUgNC-9w1Y4Yhm3BXc2&quot; name=&quot;Project architecture&quot;&gt;5Vpbc+IgFP41eXUCxCQ+Vm27L+501oe2j9RQzRSDg1h1f/0SA7mY7DayNVhbZzpw4ET4DnznEh00Wu7uOV4tJiwi1IFutHPQ2IHQHwTyfyrYZ4J+2ksFcx5HmQgUgmn8myihq6SbOCLrykTBGBXxqiqcsSQhM1GRYc7ZtjrtldHqt67wnNQE0xmmdeljHIlFJg37biH/QeL5Qn8zcNXIEuvJSrBe4IhtSyJ066ARZ0xkreVuRGiKncYl07v7y2i+ME4S0UYBZQrvmG7U3iY4TtTaxF5veLuIBZmu8Cztb6VNHTRciCWVPSCbrzGlI0YZP8xG8Cb9pHKWiJL87vAn5RS/EDpkPCJcDycskc8ergVnb6RJp74ztdl3wgXZlURqp/eELYngezlFjULgZyr76nHaFjYE2jCLkv18JcPq2MzzJxfIyoYCtxnofg1TEskzpbpq9yVIyS4WT7LtqvZz2u71VW+8Kw2N97qTyEU96QeknZJW2i3UDj2tZwD6mm34TG0kVDcQ8zlRswaZKN3iPw3DCcUifq9eq/+B2TeEGZjA7NqGWZ/n7nEOTI9zD/ZLUIOWQPeCfgXrzpGG1pAOawx9j5dkghPpZLgDfSpXOHxJW3ORb/D6qDt0q9QNO+TuQc0Ev0giAUjxPw1tzjZSMfpa2INjt9kl9tpHt2eagjQQCMusAXou/IA4Dr0HwmO5TsI/h01A/4L8IwCnwtnkINuytotQ1UWGhcCyBT7fdSrVBxbLpeSXx/OOiCs4uhTZopTWkSHzZbSzLTS9Kt3Gi43mCKzdCK+LUOYMkNkLSfRqjrLGCUk2Vxp+AN+r3OLctZVdoKaUT3eBfg3ukYSHM7r+FvGHh2zGH0EN/J9EbBl/+xbYg6r3ajz3Z4M+NPVnJRf2XB47jz/LS5AXEeANjN1ZUHZnrWM820jbq4HAk1OTr1NsakJa1zAtIK15qyDhR8ZplFdBrjLoQF7V76Eu69Xw5GSiqWBtVt47N4tcUkKu38AY8LURXVtH2iJfG2d6rdO8EtBh6FcZ23X9D9A+R+2jyQT2MkdYzxwf8GZNrjh19AY2WbyeOk6JEHEy/x6pYw6AAt/rMnU0LscdBdXt3nbpHyKgunXACwYENmEtOen2pjWXoDqVhLaYxLxqZ/T+8TIN0vRK2FqQDkwjme7SoQ5M0lipBR3ZRHaLnw5lbxCK31+h2z8=&lt;/diagram&gt;&lt;/mxfile&gt;">
     <defs/>
     <g>
         <rect x="206" y="0" width="120" height="60" fill="#2a2a2a" stroke="#ffffff" pointer-events="all"/>
@@ -49,13 +49,13 @@
                     <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 118px; height: 1px; padding-top: 140px; margin-left: 107px;">
                         <div data-drawio-colors="color: #FFFFFF; " style="box-sizing: border-box; font-size: 0px; text-align: center;">
                             <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(255, 255, 255); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                RenderManager
+                                Renderer
                             </div>
                         </div>
                     </div>
                 </foreignObject>
                 <text x="166" y="144" fill="#FFFFFF" font-family="Helvetica" font-size="12px" text-anchor="middle">
-                    RenderManager
+                    Renderer
                 </text>
             </switch>
         </g>
