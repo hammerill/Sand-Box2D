@@ -409,14 +409,14 @@ void WorldManager::goFullscreen(bool isToFullscreen)
 
 void WorldManager::renderDebugScreen(std::vector<std::string> debugStrings)
 {
+    float debugScale = 2;
+
     std::vector<int> debugWidths;
     for (size_t i = 0; i < debugStrings.size(); i++)
-        debugWidths.push_back((debugStrings[i].size() + 2) * Font::FontWidth);
-    
-    std::sort(debugWidths.begin(), debugWidths.end());
+        debugWidths.push_back((debugStrings[i].size() + 2) * Font::FontWidth * debugScale);
 
-    int debug_w = (debugWidths[debugWidths.size()-1]);
-    int debug_h = (debugStrings.size() + 2) * Font::FontWidth;
+    int debug_w = *std::max_element(debugWidths.begin(), debugWidths.end());
+    int debug_h = (debugStrings.size() + 2) * Font::FontWidth * debugScale;
 
     SDL_Rect debugBg {0, 0, debug_w, debug_h};
 
@@ -427,7 +427,7 @@ void WorldManager::renderDebugScreen(std::vector<std::string> debugStrings)
 
     for (size_t i = 0; i < debugStrings.size(); i++)
     {
-        Font::Render(WorldManager::renderer, debugStrings[i].c_str(), Font::FontWidth, Font::FontWidth * (i+1));
+        Font::Render(WorldManager::renderer, debugStrings[i].c_str(), Font::FontWidth * debugScale, Font::FontWidth * debugScale * (i+1), debugScale);
     }
 }
 

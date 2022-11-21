@@ -12,7 +12,7 @@ void Font::LoadFont(const char* path_to_font)
     Font::loaded = true;
 }
 
-void Font::Render(SDL_Renderer* renderer, const char* text, int x, int y, int scale, Uint8 r, Uint8 g, Uint8 b)
+void Font::Render(SDL_Renderer* renderer, const char* text, int x, int y, float scale, Uint8 r, Uint8 g, Uint8 b)
 {
     SDL_Rect textRect;
 

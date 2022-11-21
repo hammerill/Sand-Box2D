@@ -27,7 +27,7 @@ public:
     /// @param r Color.
     /// @param g Color.
     /// @param b Color.
-    static void Render(SDL_Renderer* renderer, const char* text, int x = 0, int y = 0, int scale = 1, Uint8 r = 0xFF, Uint8 g = 0xFF, Uint8 b = 0xFF);
+    static void Render(SDL_Renderer* renderer, const char* text, int x = 0, int y = 0, float scale = 1, Uint8 r = 0xFF, Uint8 g = 0xFF, Uint8 b = 0xFF);
 
     /// @brief Did FontManager load font and is it able to render text?
     static bool getLoaded();
