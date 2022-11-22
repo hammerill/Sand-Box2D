@@ -85,40 +85,6 @@ void WorldManager::DeleteObject(int index)
     WorldManager::objects.erase(WorldManager::objects.begin() + index); // Remove from vector.
 }
 
-void ProceedPObj(JsonPObj* pObject, WorldManager* wm)
-{
-    // Gonna delete this hardcoded stuff later.
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(wm->GetRenderer(), IMG_Load("assets/img/box.png"));
-    // Also, I think that I should rewrite the whole JSON level loading system, bc rn it's very repetitive
-
-    if (pObject->type == "platform")
-    {
-        JsonPObjPlatform* jsonPlatform = (JsonPObjPlatform*)pObject;
-        PObjPlatform* platform = new PObjPlatform(  jsonPlatform->x1, jsonPlatform->y1,
-                                                    jsonPlatform->x2, jsonPlatform->y2,
-                                                    jsonPlatform->r, jsonPlatform->g, jsonPlatform->b);
-        wm->AddObject(platform);
-    }
-    else if (pObject->type == "box")
-    {
-        JsonPObjBox* jsonBox = (JsonPObjBox*)pObject;
-        PObjBox* box = new PObjBox( texture, jsonBox->x, jsonBox->y, 
-                                    jsonBox->w, jsonBox->h, jsonBox->angle,
-                                    jsonBox->vel_x, jsonBox->vel_y);
-        wm->AddObject(box);
-    }
-    else if (pObject->type == "circle")
-    {
-        JsonPObjCircle* jsonCircle = (JsonPObjCircle*)pObject;
-        PObjCircle* circle = new PObjCircle(jsonCircle->x, jsonCircle->y, jsonCircle->radius,
-                                            jsonCircle->vel_x, jsonCircle->vel_y, 
-                                            jsonCircle->r, jsonCircle->g, jsonCircle->b,
-                                            jsonCircle->r_angle, jsonCircle->g_angle, jsonCircle->b_angle);
-        wm->AddObject(circle);
-    }
-}
-
-bool oldReload = false;
 bool WorldManager::Step()
 {
     if (WorldManager::speedCorrection)
@@ -200,22 +166,26 @@ bool WorldManager::Step()
     }
 
     // CYCLES
+    auto cycles = WorldManager::level.GetCycles();
     for (size_t i = 0; i < WorldManager::cyclesDelays.size(); i++)
     {
         if (--(WorldManager::cyclesDelays[i]) <= 0)
         {
-            for (size_t j = 0; j < WorldManager::level.GetCycles()[i].objects.size(); j++)
+            auto cycle = cycles[i];
+
+            WorldManager::cyclesDelays[i] = cycle.delay;
+
+            for (size_t j = 0; j < cycle.objects.size(); j++)
             {
-                ProceedPObj(WorldManager::level.GetCycles()[i].objects[j], this);
+                WorldManager::AddObject(cycle.objects[j]);
             }
-            WorldManager::cyclesDelays[i] = WorldManager::level.GetCycles()[i].delay;
         }
     }    
     /////////
 
     
     // LATER IT WILL BE CONSIDERED DEPRECATED AND DESTROYED
-    if (ctrl.GetReloadLevel() && !oldReload){
+    if (ctrl.GetReloadLevel() && !old_ctrl.GetReloadLevel()){
         WorldManager::LoadLevel(WorldManager::level);
         
 //         NetworkManager::SetRepo("https://raw.githubusercontent.com/Hammerill/Sand-Box2D-levels/main/levels");
@@ -227,8 +197,6 @@ bool WorldManager::Step()
 //         NetworkManager::DownloadFile("./levels", "default_level/default_level.json");
 // #endif
     }
-    
-    oldReload = ctrl.GetReloadLevel();
     ///////////////////////////////////////////////////////
 
     for (int i = WorldManager::order.size() - 1; i >= 0; i--)
@@ -335,14 +303,16 @@ void WorldManager::LoadLevel(Level level)
     WorldManager::level = level;
 
     // CAMERA
-    if (WorldManager::level.camera.type == "static")
-    {
-        WorldManager::zoom = WorldManager::WINDOW_HEIGHT / WorldManager::level.camera.height;
+    auto camera = WorldManager::level.GetCamera();
 
-        WorldManager::x_offset =    -(WorldManager::level.camera.x * WorldManager::zoom)
+    if (camera.type == "static")
+    {
+        WorldManager::zoom = WorldManager::WINDOW_HEIGHT / camera.height;
+
+        WorldManager::x_offset =    -(camera.x * WorldManager::zoom)
                                     +(WorldManager::WINDOW_WIDTH / 2);
 
-        WorldManager::y_offset =    -(WorldManager::level.camera.y * WorldManager::zoom)
+        WorldManager::y_offset =    -(camera.y * WorldManager::zoom)
                                     +(WorldManager::WINDOW_HEIGHT / 2);
     }
     /////////
@@ -353,9 +323,10 @@ void WorldManager::LoadLevel(Level level)
         WorldManager::DeleteObject(i);
     }
     
-    for (size_t i = 0; i < WorldManager::level.objects.size(); i++)
+    auto objects = WorldManager::level.GetPObjects();
+    for (size_t i = 0; i < objects.size(); i++)
     {
-        ProceedPObj(WorldManager::level.objects[i], this);
+        WorldManager::AddObject(objects[i]);
     }
     //////////
 

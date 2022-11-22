@@ -1,19 +1,19 @@
 #include "Settings.h"
 
-Settings::Settings(const char* path_to_settings, const char* path_to_def_settings)
+Settings::Settings(std::string base, std::string path_to_settings, std::string path_to_def_settings)
 {
     Settings::settings = Json::Value();
     Settings::def_settings = Json::Value();
 
-    if (path_to_settings != nullptr)
+    if (path_to_settings != "")
     {
-        Settings::path_to_settings = path_to_settings;
+        Settings::path_to_settings = (base + "/" +path_to_settings).c_str();
 
         std::ifstream ifs(Settings::path_to_settings);
         Json::Reader reader;
         reader.parse(ifs, Settings::settings);
     }
-    if (path_to_def_settings != nullptr)
+    if (path_to_def_settings != "")
     {
         std::ifstream ifs(path_to_def_settings);
         Json::Reader reader;

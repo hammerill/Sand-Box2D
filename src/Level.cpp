@@ -1,6 +1,6 @@
 #include "Level.h"
 
-float Level::getRandomFloat(float min, float max)
+float Level::GetRandomFloat(float min, float max)
 {
     return  min
             +
@@ -18,7 +18,7 @@ float Level::LoadNumber(Json::Value input)
             float min = std::stof(input.asString().substr(0, input.asString().find_last_of(":")));
             float max = std::stof(input.asString().substr(input.asString().find_last_of(":") + 1));
 
-            return Level::getRandomFloat(min, max);
+            return Level::GetRandomFloat(min, max);
         }
         else 
         {
@@ -31,135 +31,79 @@ float Level::LoadNumber(Json::Value input)
     }
 }
 
-void Level::ProceedPObj(Json::Value jsonObj, std::vector<JsonPObj*>* arrayPObjs)
+// Gonna delete this hardcoded stuff later.
+SDL_Texture* texture;
+BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
 {
-    std::string objType = jsonObj["type"].asString();
-
-    // Yes. It's if/else if/else if/else if/...
-    // Yes. It's not a switch.
-    if (objType == "platform")
+    try
     {
-        JsonPObjPlatform* platform = new JsonPObjPlatform();
-        platform->type = objType;
+        if (jsonObj["type"] == "platform")
+        {
+            return new PObjPlatform(Level::LoadNumber(jsonObj["x1"]),
+                                    Level::LoadNumber(jsonObj["y1"]),
+                                    Level::LoadNumber(jsonObj["x2"]),
+                                    Level::LoadNumber(jsonObj["y2"]),
 
-        platform->x1 = Level::LoadNumber(jsonObj["x1"]);
-        platform->y1 = Level::LoadNumber(jsonObj["y1"]);
-        platform->x2 = Level::LoadNumber(jsonObj["x2"]);
-        platform->y2 = Level::LoadNumber(jsonObj["y2"]);
+                                    Level::LoadNumber(jsonObj["r"]),
+                                    Level::LoadNumber(jsonObj["g"]),
+                                    Level::LoadNumber(jsonObj["b"]) );
+        }
+        else if (jsonObj["type"] == "box")
+        {
+            return new PObjBox( texture,
+                                Level::LoadNumber(jsonObj["x"]),
+                                Level::LoadNumber(jsonObj["y"]),
+                                Level::LoadNumber(jsonObj["w"]),
+                                Level::LoadNumber(jsonObj["h"]),
 
-        platform->r = Level::LoadNumber(jsonObj["r"]);
-        platform->g = Level::LoadNumber(jsonObj["g"]);
-        platform->b = Level::LoadNumber(jsonObj["b"]);
+                                Level::LoadNumber(jsonObj["angle"]),
 
-        arrayPObjs->push_back(platform);
+                                Level::LoadNumber(jsonObj["vel_x"]),
+                                Level::LoadNumber(jsonObj["vel_x"]) );
+        }
+        else if (jsonObj["type"] == "circle")
+        {
+            return new PObjCircle(  Level::LoadNumber(jsonObj["x"]),
+                                    Level::LoadNumber(jsonObj["y"]),
+                                    Level::LoadNumber(jsonObj["radius"]),
+                                    
+                                    Level::LoadNumber(jsonObj["vel_x"]),
+                                    Level::LoadNumber(jsonObj["vel_y"]),
+                                    
+                                    Level::LoadNumber(jsonObj["r"]),
+                                    Level::LoadNumber(jsonObj["g"]),
+                                    Level::LoadNumber(jsonObj["b"]),
+                                    
+                                    Level::LoadNumber(jsonObj["r_angle"]),
+                                    Level::LoadNumber(jsonObj["g_angle"]),
+                                    Level::LoadNumber(jsonObj["b_angle"]) );
+        }
+        else
+            return nullptr;
     }
-    else if (objType == "box")
+    catch(const std::exception& e)
     {
-        JsonPObjBox* box = new JsonPObjBox();
-        box->type = objType;
-
-        box->x = Level::LoadNumber(jsonObj["x"]);
-        box->y = Level::LoadNumber(jsonObj["y"]);
-        box->w = Level::LoadNumber(jsonObj["w"]);
-        box->h = Level::LoadNumber(jsonObj["h"]);
-
-        box->angle = Level::LoadNumber(jsonObj["angle"]);
-
-        box->vel_x = Level::LoadNumber(jsonObj["vel_x"]);
-        box->vel_y = Level::LoadNumber(jsonObj["vel_y"]);
-
-        box->texture = jsonObj["texture"].asString();
-
-        arrayPObjs->push_back(box);
-    }
-    else if (objType == "circle")
-    {
-        JsonPObjCircle* circle = new JsonPObjCircle();
-        circle->type = objType;
-
-        circle->x = Level::LoadNumber(jsonObj["x"]);
-        circle->y = Level::LoadNumber(jsonObj["y"]);
-        
-        circle->radius = Level::LoadNumber(jsonObj["radius"]);
-
-        circle->vel_x = Level::LoadNumber(jsonObj["vel_x"]);
-        circle->vel_y = Level::LoadNumber(jsonObj["vel_y"]);
-
-        circle->r = Level::LoadNumber(jsonObj["r"]);
-        circle->g = Level::LoadNumber(jsonObj["g"]);
-        circle->b = Level::LoadNumber(jsonObj["b"]);
-
-        circle->r_angle = Level::LoadNumber(jsonObj["r_angle"]);
-        circle->g_angle = Level::LoadNumber(jsonObj["g_angle"]);
-        circle->b_angle = Level::LoadNumber(jsonObj["b_angle"]);
-
-        arrayPObjs->push_back(circle);
-    }
+        return nullptr;
+    }    
 }
 
 Level::~Level()
 {
-    std::vector<JsonPObj*>().swap(objects);
-    std::vector<JsonCycle>().swap(cycles);
+    
 }
 
-bool Level::LoadFile(std::string base, std::string filepath)
+bool Level::LoadFile(std::string base, std::string filepath, SDL_Renderer* temp_rr)
 {
+    texture = SDL_CreateTextureFromSurface(temp_rr, IMG_Load("assets/img/box.png"));
+
     Level::~Level();
-    Level::camera = JsonCamera();
 
     try
     {
         std::ifstream ifs((base + "/" + filepath).c_str());
 
         Json::Reader reader;
-        Json::Value jsonLevel;
-
-        reader.parse(ifs, jsonLevel);
-
-        // METADATA
-        Level::metadata = jsonLevel["metadata"];
-        ///////////
-
-        // OPTIONS
-        // sorry nothing
-        //////////
-
-        // CAMERA
-        Level::camera.type = jsonLevel["camera"]["type"].asString();
-
-        if (Level::camera.type != "attached")
-        {
-            Level::camera.x = Level::LoadNumber(jsonLevel["camera"]["x"]);
-            Level::camera.y = Level::LoadNumber(jsonLevel["camera"]["y"]);
-            Level::camera.move = jsonLevel["camera"]["move"].asBool();
-        }
-
-        Level::camera.zoom = jsonLevel["camera"]["zoom"].asBool();
-        Level::camera.height = Level::LoadNumber(jsonLevel["camera"]["height"]);
-        /////////
-
-        // OBJECTS
-        Json::Value jsonObjects = jsonLevel["objects"];
-        for (unsigned int i = 0; i < jsonObjects.size(); i++)
-        {
-            Level::ProceedPObj(jsonObjects[i], &(Level::objects));
-        }        
-        //////////
-
-        // CYCLES
-        Json::Value jsonCycles = jsonLevel["cycles"];
-        for (unsigned int i = 0; i < jsonCycles.size(); i++)
-        {
-            JsonCycle jsonCycle =
-            {
-                jsonCycles[i]["delay"],
-                jsonCycles[i]["objects"]
-            };
-
-            Level::cycles.push_back(jsonCycle);
-        }        
-        /////////
+        reader.parse(ifs, Level::jsonLevel);
 
         ifs.close();
 
@@ -171,29 +115,71 @@ bool Level::LoadFile(std::string base, std::string filepath)
     }
 }
 
-std::vector<LoadedCycle> Level::GetCycles()
+JsonOptions Level::GetOptions()
 {
-    std::vector<LoadedCycle> result = std::vector<LoadedCycle>();
+    return JsonOptions(); //lol
+}
+
+JsonCamera Level::GetCamera()
+{
+    auto camera = JsonCamera();
+
+    camera.type = Level::jsonLevel["camera"]["type"].asString();
+
+    if (camera.type != "attached")
+    {
+        camera.x = Level::LoadNumber(Level::jsonLevel["camera"]["x"]);
+        camera.y = Level::LoadNumber(Level::jsonLevel["camera"]["y"]);    
+        camera.move = Level::jsonLevel["camera"]["move"].asBool();
+    }
+
+    camera.height = Level::LoadNumber(Level::jsonLevel["camera"]["height"]);
+    camera.zoom = Level::jsonLevel["camera"]["zoom"].asBool();
+
+    return camera;
+}
+
+std::vector<BasePObj*> Level::GetPObjects()
+{
+    auto objects = std::vector<BasePObj*>();
+
+    Json::Value jsonObjects = Level::jsonLevel["objects"];
+    for (int i = 0; i < jsonObjects.size(); i++)
+    {
+        objects.push_back(Level::ParseJsonPObj(jsonObjects[i]));
+    }
+    
+    return objects;
+}
+
+std::vector<JsonCycle> Level::GetCycles()
+{
+    auto cycles = std::vector<JsonCycle>();
 
     try
     {
-        for (unsigned int i = 0; i < Level::cycles.size(); i++)
+        Json::Value jsonCycles = Level::jsonLevel["cycles"];
+        for (int i = 0; i < jsonCycles.size(); i++)
         {
-            LoadedCycle cycle;
+            auto cycle = JsonCycle();
 
-            cycle.delay = Level::LoadNumber(Level::cycles[i].delay);
-            for (unsigned int j = 0; j < Level::cycles[i].objects.size(); j++)
+            cycle.delay = Level::LoadNumber(jsonCycles[i]["delay"]);
+
+            auto objects = std::vector<BasePObj*>();
+            Json::Value jsonCycleObjects = jsonCycles[i]["objects"];
+            for (int j = 0; j < jsonCycleObjects.size(); j++)
             {
-                Level::ProceedPObj(Level::cycles[i].objects[j], &(cycle.objects));
+                objects.push_back(Level::ParseJsonPObj(jsonCycleObjects[j]));
             }
-            
-            result.push_back(cycle);
+            cycle.objects = objects;
+
+            cycles.push_back(cycle);
         }
-        
-        return result;
     }
     catch(const std::exception& e)
     {
-        return std::vector<LoadedCycle>();
+        return std::vector<JsonCycle>();
     }
+        
+    return cycles;
 }
