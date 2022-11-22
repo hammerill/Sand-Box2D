@@ -1,32 +1,5 @@
 #include "Controls.h"
 
-bool Ctrl::exit = false;
-bool Ctrl::reset = false;
-bool Ctrl::fullscreen = false;
-bool Ctrl::debug = false;
-bool Ctrl::reloadLevel = false;
-
-double Ctrl::moveUp = 0;
-double Ctrl::moveRight = 0;
-double Ctrl::moveDown = 0;
-double Ctrl::moveLeft = 0;
-
-double Ctrl::zoomIn = 0;
-double Ctrl::zoomOut = 0;
-
-bool Ctrl::isMoving = false;
-int Ctrl::deltaX = 0;
-int Ctrl::deltaY = 0;
-
-bool Ctrl::isPinching = false;
-int Ctrl::deltaPinch = 0;
-
-bool Ctrl::isWheel = false;
-
-SDL_Point Ctrl::mouse;
-
-SDL_Event Ctrl::e;
-
 #ifdef Vita
 const double stickDeadZone = 10;
 const double stickCenter = 128;
@@ -39,247 +12,251 @@ int old_pinch;
 
 bool isInPinchVelState = false;
 
-Ctrl::Ctrl()
+Controls::Controls()
 {
     sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG);
 
     sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
     sceTouchEnableTouchForce(SCE_TOUCH_PORT_FRONT);
 }
+Controls::~Controls() {}
 
-void Ctrl::Check()
+void Controls::Check()
 {
     sceCtrlPeekBufferPositive(0, &ctrl, 1);
     sceTouchPeek(0, &touchxy[0], 1);
 
-    Ctrl::reset = ctrl.buttons & SCE_CTRL_CROSS;
-    Ctrl::debug = ctrl.buttons & SCE_CTRL_TRIANGLE;
-    Ctrl::reloadLevel = ctrl.buttons & SCE_CTRL_CIRCLE;
+    Controls::reset = ctrl.buttons & SCE_CTRL_CROSS;
+    Controls::debug = ctrl.buttons & SCE_CTRL_TRIANGLE;
+    Controls::reloadLevel = ctrl.buttons & SCE_CTRL_CIRCLE;
 
     if (touchxy[0].reportNum == 1)
     {
-        Ctrl::mouse = SDL_Point {touchxy[0].report[0].x / 2, touchxy[0].report[0].y / 2};
+        Controls::mouse = SDL_Point {touchxy[0].report[0].x / 2, touchxy[0].report[0].y / 2};
 
-        if (Ctrl::isMoving && !Ctrl::isPinching && !isInPinchVelState) 
+        if (Controls::isMoving && !Controls::isPinching && !isInPinchVelState) 
         {
-            Ctrl::deltaX = Ctrl::mouse.x - old_mouse.x;
-            Ctrl::deltaY = Ctrl::mouse.y - old_mouse.y;
+            Controls::deltaX = Controls::mouse.x - old_mouse.x;
+            Controls::deltaY = Controls::mouse.y - old_mouse.y;
 
-            old_mouse = Ctrl::mouse;
+            old_mouse = Controls::mouse;
         }
         else
         {
-            old_mouse = Ctrl::mouse;
+            old_mouse = Controls::mouse;
 
-            Ctrl::deltaX = 0;
-            Ctrl::deltaY = 0;
+            Controls::deltaX = 0;
+            Controls::deltaY = 0;
         }
 
-        Ctrl::isMoving = true;
-        Ctrl::isPinching = false;
+        Controls::isMoving = true;
+        Controls::isPinching = false;
         isInPinchVelState = false;
     }
     else if (touchxy[0].reportNum == 2)
     {
-        Ctrl::mouse = SDL_Point
+        Controls::mouse = SDL_Point
         {
             ((touchxy[0].report[0].x / 2) + (touchxy[0].report[1].x / 2)) / 2,
             ((touchxy[0].report[0].y / 2) + (touchxy[0].report[1].y / 2)) / 2
         };
 
         // Formula to calculate distance between two points
-        Ctrl::deltaPinch =  sqrt(
+        Controls::deltaPinch =  sqrt(
                                 pow((touchxy[0].report[1].x / 2) - (touchxy[0].report[0].x / 2), 2)
                                 +
                                 pow((touchxy[0].report[1].y / 2) - (touchxy[0].report[0].y / 2), 2)
                             );
 
-        if (Ctrl::isMoving && Ctrl::isPinching) 
+        if (Controls::isMoving && Controls::isPinching) 
         {
-            Ctrl::deltaX = Ctrl::mouse.x - old_mouse.x;
-            Ctrl::deltaY = Ctrl::mouse.y - old_mouse.y;
+            Controls::deltaX = Controls::mouse.x - old_mouse.x;
+            Controls::deltaY = Controls::mouse.y - old_mouse.y;
 
-            Ctrl::deltaPinch -= old_pinch;
+            Controls::deltaPinch -= old_pinch;
 
-            old_mouse = Ctrl::mouse;
-            old_pinch += Ctrl::deltaPinch;
+            old_mouse = Controls::mouse;
+            old_pinch += Controls::deltaPinch;
         }
         else
         {
-            old_mouse = Ctrl::mouse;
-            old_pinch = Ctrl::deltaPinch;
+            old_mouse = Controls::mouse;
+            old_pinch = Controls::deltaPinch;
 
-            Ctrl::deltaX = 0;
-            Ctrl::deltaY = 0;
-            Ctrl::deltaPinch = 0;
+            Controls::deltaX = 0;
+            Controls::deltaY = 0;
+            Controls::deltaPinch = 0;
         }
 
-        Ctrl::isMoving = true;
-        Ctrl::isPinching = true;
+        Controls::isMoving = true;
+        Controls::isPinching = true;
     }
     else
     {
         const int touchVel = 7;
 
-        Ctrl::deltaX -= Ctrl::deltaX / touchVel;
-        Ctrl::deltaY -= Ctrl::deltaY / touchVel;
+        Controls::deltaX -= Controls::deltaX / touchVel;
+        Controls::deltaY -= Controls::deltaY / touchVel;
 
-        if (    Ctrl::deltaX <= touchVel && Ctrl::deltaY <= touchVel
-            &&  Ctrl::deltaX >=-touchVel && Ctrl::deltaY >=-touchVel)
+        if (    Controls::deltaX <= touchVel && Controls::deltaY <= touchVel
+            &&  Controls::deltaX >=-touchVel && Controls::deltaY >=-touchVel)
         {
-            Ctrl::isMoving = false;
+            Controls::isMoving = false;
             isInPinchVelState = false;
 
-            Ctrl::deltaX = 0;
-            Ctrl::deltaY = 0;
+            Controls::deltaX = 0;
+            Controls::deltaY = 0;
         }
         else
             isInPinchVelState = true;
 
-        Ctrl::isPinching = false;
+        Controls::isPinching = false;
     }
     
 
     if (ctrl.buttons & SCE_CTRL_UP) /////////////////////////////////// UP
-        Ctrl::moveUp = 1;
+        Controls::moveUp = 1;
     else if (ctrl.ly < stickCenter - stickDeadZone)
-        Ctrl::moveUp = (stickCenter - ctrl.ly) / stickCenter;
+        Controls::moveUp = (stickCenter - ctrl.ly) / stickCenter;
     else
-        Ctrl::moveUp = 0;
+        Controls::moveUp = 0;
     
     if (ctrl.buttons & SCE_CTRL_RIGHT) /////////////////////////////////// RIGHT
-        Ctrl::moveRight = 1;
+        Controls::moveRight = 1;
     else if (ctrl.lx > stickCenter + stickDeadZone)
-        Ctrl::moveRight = (ctrl.lx - stickCenter) / stickCenter;
+        Controls::moveRight = (ctrl.lx - stickCenter) / stickCenter;
     else
-        Ctrl::moveRight = 0;
+        Controls::moveRight = 0;
 
     if (ctrl.buttons & SCE_CTRL_DOWN) /////////////////////////////////// DOWN
-        Ctrl::moveDown = 1;
+        Controls::moveDown = 1;
     else if (ctrl.ly > stickCenter + stickDeadZone)
-        Ctrl::moveDown = (ctrl.ly - stickCenter) / stickCenter;
+        Controls::moveDown = (ctrl.ly - stickCenter) / stickCenter;
     else
-        Ctrl::moveDown = 0;
+        Controls::moveDown = 0;
     
     if (ctrl.buttons & SCE_CTRL_LEFT) /////////////////////////////////// LEFT
-        Ctrl::moveLeft = 1;
+        Controls::moveLeft = 1;
     else if (ctrl.lx < stickCenter - stickDeadZone)
-        Ctrl::moveLeft = (stickCenter - ctrl.lx) / stickCenter;
+        Controls::moveLeft = (stickCenter - ctrl.lx) / stickCenter;
     else
-        Ctrl::moveLeft = 0;
+        Controls::moveLeft = 0;
 
 
     if (ctrl.buttons & SCE_CTRL_RTRIGGER) /////////////////////////////////// ZOOMIN
-        Ctrl::zoomIn = 1;
+        Controls::zoomIn = 1;
     else if (ctrl.ry > stickCenter + stickDeadZone)
-        Ctrl::zoomIn = (ctrl.ry - stickCenter) / stickCenter;
+        Controls::zoomIn = (ctrl.ry - stickCenter) / stickCenter;
     else
-        Ctrl::zoomIn = 0;
+        Controls::zoomIn = 0;
 
     if (ctrl.buttons & SCE_CTRL_LTRIGGER) /////////////////////////////////// ZOOMOUT
-        Ctrl::zoomOut = 1;
+        Controls::zoomOut = 1;
     else if (ctrl.ry < stickCenter - stickDeadZone)
-        Ctrl::zoomOut = (stickCenter - ctrl.ry) / stickCenter;
+        Controls::zoomOut = (stickCenter - ctrl.ry) / stickCenter;
     else
-        Ctrl::zoomOut = 0;
+        Controls::zoomOut = 0;
 }
 #else
-void Ctrl::Check()
-{
-    Ctrl::deltaX = 0; 
-    Ctrl::deltaY = 0;
+Controls::Controls() {}
+Controls::~Controls() {}
 
-    if (Ctrl::isWheel)
+void Controls::Check()
+{
+    Controls::deltaX = 0; 
+    Controls::deltaY = 0;
+
+    if (Controls::isWheel)
     {
-        Ctrl::zoomIn = 0; 
-        Ctrl::zoomOut = 0;
+        Controls::zoomIn = 0; 
+        Controls::zoomOut = 0;
     }
 
-    Ctrl::fullscreen = false;
+    Controls::fullscreen = false;
 
     while(SDL_PollEvent(&e))
     {
         switch (e.type)
         {
         case SDL_QUIT:
-            Ctrl::exit = true;
+            Controls::exit = true;
             break;
 
         case SDL_MOUSEBUTTONDOWN:
             if (e.button.button == SDL_BUTTON_LEFT)
             {
-                Ctrl::isMoving = true;
+                Controls::isMoving = true;
                 
                 if (e.button.clicks == 2)
-                    Ctrl::fullscreen = true;
+                    Controls::fullscreen = true;
             }
             
             break;
         case SDL_MOUSEBUTTONUP:
-            Ctrl::isMoving = false;
+            Controls::isMoving = false;
             break;
         case SDL_MOUSEMOTION:
-            Ctrl::deltaX = e.motion.xrel;
-            Ctrl::deltaY = e.motion.yrel;
+            Controls::deltaX = e.motion.xrel;
+            Controls::deltaY = e.motion.yrel;
             
-            Ctrl::mouse = SDL_Point {e.motion.x, e.motion.y};
+            Controls::mouse = SDL_Point {e.motion.x, e.motion.y};
             break;
 
         case SDL_MOUSEWHEEL:
             if (SDL_MOUSEWHEEL_NORMAL)
             {
                 if (e.wheel.preciseY >= 0)
-                    Ctrl::zoomIn = abs(e.wheel.preciseY);
+                    Controls::zoomIn = abs(e.wheel.preciseY);
                 else
-                    Ctrl::zoomOut = abs(e.wheel.preciseY);
+                    Controls::zoomOut = abs(e.wheel.preciseY);
             }
             else
             {
                 if (e.wheel.preciseY >= 0)
-                    Ctrl::zoomOut = abs(e.wheel.preciseY);
+                    Controls::zoomOut = abs(e.wheel.preciseY);
                 else
-                    Ctrl::zoomIn = abs(e.wheel.preciseY);
+                    Controls::zoomIn = abs(e.wheel.preciseY);
             }
             
-            Ctrl::isWheel = true;
+            Controls::isWheel = true;
             break;
 
         case SDL_KEYDOWN: case SDL_KEYUP:
             switch (e.key.keysym.sym)
             {
             case SDLK_r:
-                Ctrl::reset = e.type == SDL_KEYDOWN; // If keydown - reset continues (true), if keyup (!keydown) - reset stops (false)
+                Controls::reset = e.type == SDL_KEYDOWN; // If keydown - reset continues (true), if keyup (!keydown) - reset stops (false)
                 break;
             case SDLK_f:
-                Ctrl::fullscreen = e.type == SDL_KEYDOWN; 
+                Controls::fullscreen = e.type == SDL_KEYDOWN; 
                 break;
             case SDLK_TAB:
-                Ctrl::debug = e.type == SDL_KEYDOWN; 
+                Controls::debug = e.type == SDL_KEYDOWN; 
                 break;
             case SDLK_x:
-                Ctrl::reloadLevel = e.type == SDL_KEYDOWN; 
+                Controls::reloadLevel = e.type == SDL_KEYDOWN; 
                 break;
 
             case SDLK_UP: case SDLK_w:
-                Ctrl::moveUp = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::moveUp = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
             case SDLK_RIGHT: case SDLK_d:
-                Ctrl::moveRight = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::moveRight = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
             case SDLK_DOWN: case SDLK_s:
-                Ctrl::moveDown = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::moveDown = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
             case SDLK_LEFT: case SDLK_a:
-                Ctrl::moveLeft = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::moveLeft = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
 
             case SDLK_e:
-                Ctrl::zoomIn = e.type == SDL_KEYDOWN ? 1 : 0;
-                Ctrl::isWheel = false;
+                Controls::zoomIn = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::isWheel = false;
                 break;
             case SDLK_q:
-                Ctrl::zoomOut = e.type == SDL_KEYDOWN ? 1 : 0;
-                Ctrl::isWheel = false;
+                Controls::zoomOut = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::isWheel = false;
                 break;
 
             default:
@@ -294,27 +271,27 @@ void Ctrl::Check()
 }
 #endif
 
-bool Ctrl::GetExit()        { return Ctrl::exit; }
-bool Ctrl::GetReset()       { return Ctrl::reset; }
-bool Ctrl::GetFullscreen()  { return Ctrl::fullscreen; }
-bool Ctrl::GetDebug()       { return Ctrl::debug; }
-bool Ctrl::GetReloadLevel()  { return Ctrl::reloadLevel; }
+bool Controls::GetExit()        { return Controls::exit; }
+bool Controls::GetReset()       { return Controls::reset; }
+bool Controls::GetFullscreen()  { return Controls::fullscreen; }
+bool Controls::GetDebug()       { return Controls::debug; }
+bool Controls::GetReloadLevel()  { return Controls::reloadLevel; }
 
-double Ctrl::GetMoveUp()    { return Ctrl::moveUp; }
-double Ctrl::GetMoveRight() { return Ctrl::moveRight; }
-double Ctrl::GetMoveDown()  { return Ctrl::moveDown; }
-double Ctrl::GetMoveLeft()  { return Ctrl::moveLeft; }
+double Controls::GetMoveUp()    { return Controls::moveUp; }
+double Controls::GetMoveRight() { return Controls::moveRight; }
+double Controls::GetMoveDown()  { return Controls::moveDown; }
+double Controls::GetMoveLeft()  { return Controls::moveLeft; }
 
-double Ctrl::GetZoomIn()    { return Ctrl::zoomIn; }
-double Ctrl::GetZoomOut()   { return Ctrl::zoomOut; }
+double Controls::GetZoomIn()    { return Controls::zoomIn; }
+double Controls::GetZoomOut()   { return Controls::zoomOut; }
 
-bool Ctrl::GetIsMoving()    { return Ctrl::isMoving; }
-int Ctrl::GetDeltaX()       { return Ctrl::deltaX; }
-int Ctrl::GetDeltaY()       { return Ctrl::deltaY; }
+bool Controls::GetIsMoving()    { return Controls::isMoving; }
+int Controls::GetDeltaX()       { return Controls::deltaX; }
+int Controls::GetDeltaY()       { return Controls::deltaY; }
 
-bool Ctrl::GetIsPinching()  { return Ctrl::isPinching; }
-int Ctrl::GetDeltaPinch()   { return Ctrl::deltaPinch; }
+bool Controls::GetIsPinching()  { return Controls::isPinching; }
+int Controls::GetDeltaPinch()   { return Controls::deltaPinch; }
 
-bool Ctrl::GetIsWheel()     { return Ctrl::isWheel; }
+bool Controls::GetIsWheel()     { return Controls::isWheel; }
 
-SDL_Point Ctrl::GetMouse()  { return Ctrl::mouse; }
+SDL_Point Controls::GetMouse()  { return Controls::mouse; }

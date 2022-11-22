@@ -3,6 +3,10 @@
 // #include "Settings.h"
 // Settings settings = Settings("./settings.json", "./assets/default_settings.json");
 
+// GONNA BE DEPRECATED SOON
+Controls ctrl;
+///////////////////////////
+
 WorldManager::WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, const char* path_to_font, bool fpsCorrection, const char* path_to_icon, int fullscreenScale, float move_speed, float zoom_speed)
 {
     WorldManager::START_WINDOW_WIDTH = WINDOW_WIDTH;
@@ -120,14 +124,14 @@ bool WorldManager::Step()
     if (WorldManager::speedCorrection)
         WorldManager::b = WorldManager::a;
 
-    Ctrl::Check();
+    ctrl.Check();
 
-    if (Ctrl::GetExit())
+    if (ctrl.GetExit())
     {
         return false;
     }
 
-    if (Ctrl::GetFullscreen())
+    if (ctrl.GetFullscreen())
     {
         if (WorldManager::holdingFullscreenButton == false)
         {
@@ -141,7 +145,7 @@ bool WorldManager::Step()
     else    
         WorldManager::holdingFullscreenButton = false;
 
-    if (Ctrl::GetDebug())
+    if (ctrl.GetDebug())
     {
         if (WorldManager::holdingDebugButton == false)
         {
@@ -152,55 +156,55 @@ bool WorldManager::Step()
     else    
         WorldManager::holdingDebugButton = false;
 
-    WorldManager::y_offset += Ctrl::GetMoveUp() * WorldManager::move_speed;
-    WorldManager::x_offset -= Ctrl::GetMoveRight() * WorldManager::move_speed;
-    WorldManager::y_offset -= Ctrl::GetMoveDown() * WorldManager::move_speed;
-    WorldManager::x_offset += Ctrl::GetMoveLeft() * WorldManager::move_speed;
+    WorldManager::y_offset += ctrl.GetMoveUp() * WorldManager::move_speed;
+    WorldManager::x_offset -= ctrl.GetMoveRight() * WorldManager::move_speed;
+    WorldManager::y_offset -= ctrl.GetMoveDown() * WorldManager::move_speed;
+    WorldManager::x_offset += ctrl.GetMoveLeft() * WorldManager::move_speed;
 
-    if (Ctrl::GetIsMoving())
+    if (ctrl.GetIsMoving())
     {
-        WorldManager::x_offset += Ctrl::GetDeltaX();
-        WorldManager::y_offset += Ctrl::GetDeltaY();
+        WorldManager::x_offset += ctrl.GetDeltaX();
+        WorldManager::y_offset += ctrl.GetDeltaY();
     }
 
-    if (Ctrl::GetIsPinching() && ((WorldManager::zoom + Ctrl::GetDeltaPinch()) > 10))
+    if (ctrl.GetIsPinching() && ((WorldManager::zoom + ctrl.GetDeltaPinch()) > 10))
     {
-        correctOffset(  Ctrl::GetMouse(),
-                        Ctrl::GetDeltaPinch());
-        WorldManager::zoom += Ctrl::GetDeltaPinch();
+        correctOffset(  ctrl.GetMouse(),
+                        ctrl.GetDeltaPinch());
+        WorldManager::zoom += ctrl.GetDeltaPinch();
     }
 
     SDL_Point scr_center = {WorldManager::WINDOW_WIDTH / 2, WorldManager::WINDOW_HEIGHT / 2};
 
     if (WorldManager::zoom <= 1)
     {
-        correctOffset(  Ctrl::GetIsWheel() ? Ctrl::GetMouse() : scr_center,
+        correctOffset(  ctrl.GetIsWheel() ? ctrl.GetMouse() : scr_center,
                         WorldManager::zoom - 1);
         WorldManager::zoom = 1;
     }
     else
     {
-        correctOffset(  Ctrl::GetIsWheel() ? Ctrl::GetMouse() : scr_center,
-                        Ctrl::GetZoomOut() * WorldManager::zoom_speed * -1 * WorldManager::zoom);
-        WorldManager::zoom -= Ctrl::GetZoomOut() * WorldManager::zoom_speed * WorldManager::zoom;
+        correctOffset(  ctrl.GetIsWheel() ? ctrl.GetMouse() : scr_center,
+                        ctrl.GetZoomOut() * WorldManager::zoom_speed * -1 * WorldManager::zoom);
+        WorldManager::zoom -= ctrl.GetZoomOut() * WorldManager::zoom_speed * WorldManager::zoom;
     }
 
     if (WorldManager::zoom >= 1000)
     {
-        correctOffset(  Ctrl::GetIsWheel() ? Ctrl::GetMouse() : scr_center,
+        correctOffset(  ctrl.GetIsWheel() ? ctrl.GetMouse() : scr_center,
                         1000 - WorldManager::zoom);
         WorldManager::zoom = 1000;
     }
     else
     {
-        correctOffset(  Ctrl::GetIsWheel() ? Ctrl::GetMouse() : scr_center,
-                        Ctrl::GetZoomIn() * WorldManager::zoom_speed * WorldManager::zoom);
-        WorldManager::zoom += Ctrl::GetZoomIn() * WorldManager::zoom_speed * WorldManager::zoom;
+        correctOffset(  ctrl.GetIsWheel() ? ctrl.GetMouse() : scr_center,
+                        ctrl.GetZoomIn() * WorldManager::zoom_speed * WorldManager::zoom);
+        WorldManager::zoom += ctrl.GetZoomIn() * WorldManager::zoom_speed * WorldManager::zoom;
     }
 
     WorldManager::world->Step(1.0f / 60.0f, 6, 2);
 
-    if (Ctrl::GetReset())
+    if (ctrl.GetReset())
     {
         for (size_t i = 0; i < WorldManager::objects.size(); i++)
         {
@@ -224,7 +228,7 @@ bool WorldManager::Step()
 
     
     // LATER IT WILL BE CONSIDERED DEPRECATED AND DESTROYED
-    if (Ctrl::GetReloadLevel() && !oldReload){
+    if (ctrl.GetReloadLevel() && !oldReload){
         WorldManager::LoadLevel(WorldManager::level);
         
 //         NetworkManager::SetRepo("https://raw.githubusercontent.com/Hammerill/Sand-Box2D-levels/main/levels");
@@ -237,7 +241,7 @@ bool WorldManager::Step()
 // #endif
     }
     
-    oldReload = Ctrl::GetReloadLevel();
+    oldReload = ctrl.GetReloadLevel();
     ///////////////////////////////////////////////////////
 
     for (int i = WorldManager::order.size() - 1; i >= 0; i--)
@@ -284,7 +288,7 @@ void WorldManager::Render()
 
     if (WorldManager::isDebug && Font::GetLoaded())
     {
-        SDL_Point mouse = Ctrl::GetMouse();
+        SDL_Point mouse = ctrl.GetMouse();
 
         std::vector<std::string> debugStrings;
 
@@ -295,13 +299,13 @@ void WorldManager::Render()
         debugStrings.push_back("Zoom = " + std::to_string(WorldManager::zoom));
         debugStrings.push_back("Mouse X = " + std::to_string(mouse.x));
         debugStrings.push_back("Mouse Y = " + std::to_string(mouse.y));
-        debugStrings.push_back("Delta X = " + std::to_string(Ctrl::GetDeltaX()));
-        debugStrings.push_back("Delta Y = " + std::to_string(Ctrl::GetDeltaY()));
-        debugStrings.push_back("IsMoving? = " + std::to_string(Ctrl::GetIsMoving()));
-        debugStrings.push_back("Delta pinch = " + std::to_string(Ctrl::GetDeltaPinch()));
-        debugStrings.push_back("IsPinching? = " + std::to_string(Ctrl::GetIsPinching()));
-        debugStrings.push_back("Zoom In = " + std::to_string(Ctrl::GetZoomIn()));
-        debugStrings.push_back("Zoom Out = " + std::to_string(Ctrl::GetZoomOut()));
+        debugStrings.push_back("Delta X = " + std::to_string(ctrl.GetDeltaX()));
+        debugStrings.push_back("Delta Y = " + std::to_string(ctrl.GetDeltaY()));
+        debugStrings.push_back("IsMoving? = " + std::to_string(ctrl.GetIsMoving()));
+        debugStrings.push_back("Delta pinch = " + std::to_string(ctrl.GetDeltaPinch()));
+        debugStrings.push_back("IsPinching? = " + std::to_string(ctrl.GetIsPinching()));
+        debugStrings.push_back("Zoom In = " + std::to_string(ctrl.GetZoomIn()));
+        debugStrings.push_back("Zoom Out = " + std::to_string(ctrl.GetZoomOut()));
         debugStrings.push_back("Objects count = " + std::to_string(WorldManager::world->GetBodyCount()));
         debugStrings.push_back("Objects rendered = " + std::to_string(renderedItemsCount));
 
