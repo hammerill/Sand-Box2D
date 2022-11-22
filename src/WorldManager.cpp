@@ -189,7 +189,7 @@ bool WorldManager::Step()
         WorldManager::zoom += ctrl.GetZoomIn() * WorldManager::zoom_speed * WorldManager::zoom;
     }
 
-    WorldManager::world->Step(1.0f / 60.0f, 6, 2);
+    WorldManager::world->Step(1.0f / 60.0f, 12*4, 4*4);
 
     if (ctrl.GetReset())
     {
