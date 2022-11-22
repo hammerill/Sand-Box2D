@@ -32,4 +32,4 @@ void Font::Render(SDL_Renderer* renderer, const char* text, int x, int y, float 
     SDL_DestroyTexture(textTexture);
 }
 
-bool Font::getLoaded()  { return Font::loaded; }
+bool Font::GetLoaded()  { return Font::loaded; }

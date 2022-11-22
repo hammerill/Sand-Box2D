@@ -90,11 +90,11 @@ public:
 
     /// @brief Add physics object realization into the BasePObj array.
     /// @param obj link to the physics object realization to add.
-    void addObject(BasePObj* obj);
+    void AddObject(BasePObj* obj);
 
     /// @brief Delete chosen physics object from an array.
     /// @param index index of the physics object realization in array to delete.
-    void deleteObject(int index);
+    void DeleteObject(int index);
 
     /// @brief Perform step of the world and logic, read keys and process them.
     /// @return running status (true - still running; false - stop).
@@ -113,9 +113,9 @@ public:
 
     /// @brief Render debug screen at upper-left corner of a window.
     /// @param debugStrings information to be shown.
-    void renderDebugScreen(std::vector<std::string> debugStrings);
+    void RenderDebugScreen(std::vector<std::string> debugStrings);
 
     /// @brief Get rendering context.
     /// @return link to the rendering context.
-    SDL_Renderer* getRenderer();
+    SDL_Renderer* GetRenderer();
 };

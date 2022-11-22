@@ -69,7 +69,7 @@ private:
     float LoadNumber(Json::Value input);
 
     /// @brief Array of loaded cycles from JSON represented as structs.
-    /// Should be accessed through getter (see getCycles()).
+    /// Should be accessed through getter (see GetCycles()).
     std::vector<JsonCycle> cycles = std::vector<JsonCycle>();
 
     /// @brief Parse PObject and add it to array.
@@ -95,7 +95,7 @@ public:
     /// @brief Get array of loaded cycles from JSON represented as structs.
     /// Should be accessed through getter because it should return random values every iteration.
     /// @return empty vector if something went wrong, otherwise filled LoadedCycle vector.
-    std::vector<LoadedCycle> getCycles();
+    std::vector<LoadedCycle> GetCycles();
 
     /// @brief Load JSON file and represent it as an array of structs (see Level::objects).
     /// @param base where is directory of all the levels stored on the platform are located?

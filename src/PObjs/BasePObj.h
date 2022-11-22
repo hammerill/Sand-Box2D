@@ -46,7 +46,7 @@ public:
     /// @param renderer the rendering context.
     void LoadTexture(SDL_Renderer* renderer);
 
-    b2Body* getBody();
+    b2Body* GetBody();
 
     /// @brief Set default position and angle of PObj.
     virtual void Reset() = 0;

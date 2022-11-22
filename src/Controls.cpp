@@ -294,27 +294,27 @@ void Ctrl::Check()
 }
 #endif
 
-bool Ctrl::getExit()        { return Ctrl::exit; }
-bool Ctrl::getReset()       { return Ctrl::reset; }
-bool Ctrl::getFullscreen()  { return Ctrl::fullscreen; }
-bool Ctrl::getDebug()       { return Ctrl::debug; }
-bool Ctrl::getReloadLevel()  { return Ctrl::reloadLevel; }
+bool Ctrl::GetExit()        { return Ctrl::exit; }
+bool Ctrl::GetReset()       { return Ctrl::reset; }
+bool Ctrl::GetFullscreen()  { return Ctrl::fullscreen; }
+bool Ctrl::GetDebug()       { return Ctrl::debug; }
+bool Ctrl::GetReloadLevel()  { return Ctrl::reloadLevel; }
 
-double Ctrl::getMoveUp()    { return Ctrl::moveUp; }
-double Ctrl::getMoveRight() { return Ctrl::moveRight; }
-double Ctrl::getMoveDown()  { return Ctrl::moveDown; }
-double Ctrl::getMoveLeft()  { return Ctrl::moveLeft; }
+double Ctrl::GetMoveUp()    { return Ctrl::moveUp; }
+double Ctrl::GetMoveRight() { return Ctrl::moveRight; }
+double Ctrl::GetMoveDown()  { return Ctrl::moveDown; }
+double Ctrl::GetMoveLeft()  { return Ctrl::moveLeft; }
 
-double Ctrl::getZoomIn()    { return Ctrl::zoomIn; }
-double Ctrl::getZoomOut()   { return Ctrl::zoomOut; }
+double Ctrl::GetZoomIn()    { return Ctrl::zoomIn; }
+double Ctrl::GetZoomOut()   { return Ctrl::zoomOut; }
 
-bool Ctrl::getIsMoving()    { return Ctrl::isMoving; }
-int Ctrl::getDeltaX()       { return Ctrl::deltaX; }
-int Ctrl::getDeltaY()       { return Ctrl::deltaY; }
+bool Ctrl::GetIsMoving()    { return Ctrl::isMoving; }
+int Ctrl::GetDeltaX()       { return Ctrl::deltaX; }
+int Ctrl::GetDeltaY()       { return Ctrl::deltaY; }
 
-bool Ctrl::getIsPinching()  { return Ctrl::isPinching; }
-int Ctrl::getDeltaPinch()   { return Ctrl::deltaPinch; }
+bool Ctrl::GetIsPinching()  { return Ctrl::isPinching; }
+int Ctrl::GetDeltaPinch()   { return Ctrl::deltaPinch; }
 
-bool Ctrl::getIsWheel()     { return Ctrl::isWheel; }
+bool Ctrl::GetIsWheel()     { return Ctrl::isWheel; }
 
-SDL_Point Ctrl::getMouse()  { return Ctrl::mouse; }
+SDL_Point Ctrl::GetMouse()  { return Ctrl::mouse; }

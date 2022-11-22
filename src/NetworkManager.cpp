@@ -104,7 +104,7 @@ NetworkManager::~NetworkManager()
     curl_global_cleanup();
 }
 
-void NetworkManager::setRepo(std::string repo)
+void NetworkManager::SetRepo(std::string repo)
 {
     NetworkManager::repo = repo;
 }

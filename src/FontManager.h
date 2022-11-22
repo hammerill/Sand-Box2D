@@ -30,7 +30,7 @@ public:
     static void Render(SDL_Renderer* renderer, const char* text, int x = 0, int y = 0, float scale = 1, Uint8 r = 0xFF, Uint8 g = 0xFF, Uint8 b = 0xFF);
 
     /// @brief Did FontManager load font and is it able to render text?
-    static bool getLoaded();
+    static bool GetLoaded();
 
     /// @brief Constant scale of font width. If you use scale 1 at Render(), it will use scale 1 * FontWidth (8)
     /// If 2, 2 * FontWidth (16) and etc.

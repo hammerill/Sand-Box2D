@@ -15,7 +15,7 @@ void BasePObj::LoadTexture(SDL_Renderer* renderer)
     BasePObj::texture = SDL_CreateTextureFromSurface(renderer, IMG_Load(BasePObj::pathToTexture));
 }
 
-b2Body* BasePObj::getBody()
+b2Body* BasePObj::GetBody()
 {
     return BasePObj::body;
 }

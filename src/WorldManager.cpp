@@ -26,7 +26,7 @@ WorldManager::~WorldManager()
 {
     for (int i = WorldManager::objects.size() - 1; i >= 0; i--)
     {
-        WorldManager::deleteObject(i);
+        WorldManager::DeleteObject(i);
     }
 
     SDL_DestroyRenderer(WorldManager::renderer);
@@ -71,8 +71,8 @@ void WorldManager::initVideo(const char* path_to_icon)
     SDL_RenderSetLogicalSize(WorldManager::renderer, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT);
 }
 
-void WorldManager::addObject(BasePObj* obj) { WorldManager::order.push_back(obj); }
-void WorldManager::deleteObject(int index)
+void WorldManager::AddObject(BasePObj* obj) { WorldManager::order.push_back(obj); }
+void WorldManager::DeleteObject(int index)
 {
     delete WorldManager::objects[index]; // Call a destructor.
     WorldManager::objects.erase(WorldManager::objects.begin() + index); // Remove from vector.
@@ -81,7 +81,7 @@ void WorldManager::deleteObject(int index)
 void ProceedPObj(JsonPObj* pObject, WorldManager* wm)
 {
     // Gonna delete this hardcoded stuff later.
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(wm->getRenderer(), IMG_Load("assets/img/box.png"));
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(wm->GetRenderer(), IMG_Load("assets/img/box.png"));
     // Also, I think that I should rewrite the whole JSON level loading system, bc rn it's very repetitive
 
     if (pObject->type == "platform")
@@ -90,7 +90,7 @@ void ProceedPObj(JsonPObj* pObject, WorldManager* wm)
         PObjPlatform* platform = new PObjPlatform(  jsonPlatform->x1, jsonPlatform->y1,
                                                     jsonPlatform->x2, jsonPlatform->y2,
                                                     jsonPlatform->r, jsonPlatform->g, jsonPlatform->b);
-        wm->addObject(platform);
+        wm->AddObject(platform);
     }
     else if (pObject->type == "box")
     {
@@ -98,7 +98,7 @@ void ProceedPObj(JsonPObj* pObject, WorldManager* wm)
         PObjBox* box = new PObjBox( texture, jsonBox->x, jsonBox->y, 
                                     jsonBox->w, jsonBox->h, jsonBox->angle,
                                     jsonBox->vel_x, jsonBox->vel_y);
-        wm->addObject(box);
+        wm->AddObject(box);
     }
     else if (pObject->type == "circle")
     {
@@ -107,7 +107,7 @@ void ProceedPObj(JsonPObj* pObject, WorldManager* wm)
                                             jsonCircle->vel_x, jsonCircle->vel_y, 
                                             jsonCircle->r, jsonCircle->g, jsonCircle->b,
                                             jsonCircle->r_angle, jsonCircle->g_angle, jsonCircle->b_angle);
-        wm->addObject(circle);
+        wm->AddObject(circle);
     }
 }
 
@@ -119,12 +119,12 @@ bool WorldManager::Step()
 
     Ctrl::Check();
 
-    if (Ctrl::getExit())
+    if (Ctrl::GetExit())
     {
         return false;
     }
 
-    if (Ctrl::getFullscreen())
+    if (Ctrl::GetFullscreen())
     {
         if (WorldManager::holdingFullscreenButton == false)
         {
@@ -138,7 +138,7 @@ bool WorldManager::Step()
     else    
         WorldManager::holdingFullscreenButton = false;
 
-    if (Ctrl::getDebug())
+    if (Ctrl::GetDebug())
     {
         if (WorldManager::holdingDebugButton == false)
         {
@@ -149,55 +149,55 @@ bool WorldManager::Step()
     else    
         WorldManager::holdingDebugButton = false;
 
-    WorldManager::y_offset += Ctrl::getMoveUp() * WorldManager::move_speed;
-    WorldManager::x_offset -= Ctrl::getMoveRight() * WorldManager::move_speed;
-    WorldManager::y_offset -= Ctrl::getMoveDown() * WorldManager::move_speed;
-    WorldManager::x_offset += Ctrl::getMoveLeft() * WorldManager::move_speed;
+    WorldManager::y_offset += Ctrl::GetMoveUp() * WorldManager::move_speed;
+    WorldManager::x_offset -= Ctrl::GetMoveRight() * WorldManager::move_speed;
+    WorldManager::y_offset -= Ctrl::GetMoveDown() * WorldManager::move_speed;
+    WorldManager::x_offset += Ctrl::GetMoveLeft() * WorldManager::move_speed;
 
-    if (Ctrl::getIsMoving())
+    if (Ctrl::GetIsMoving())
     {
-        WorldManager::x_offset += Ctrl::getDeltaX();
-        WorldManager::y_offset += Ctrl::getDeltaY();
+        WorldManager::x_offset += Ctrl::GetDeltaX();
+        WorldManager::y_offset += Ctrl::GetDeltaY();
     }
 
-    if (Ctrl::getIsPinching() && ((WorldManager::zoom + Ctrl::getDeltaPinch()) > 10))
+    if (Ctrl::GetIsPinching() && ((WorldManager::zoom + Ctrl::GetDeltaPinch()) > 10))
     {
-        correctOffset(  Ctrl::getMouse(),
-                        Ctrl::getDeltaPinch());
-        WorldManager::zoom += Ctrl::getDeltaPinch();
+        correctOffset(  Ctrl::GetMouse(),
+                        Ctrl::GetDeltaPinch());
+        WorldManager::zoom += Ctrl::GetDeltaPinch();
     }
 
     SDL_Point scr_center = {WorldManager::WINDOW_WIDTH / 2, WorldManager::WINDOW_HEIGHT / 2};
 
     if (WorldManager::zoom <= 1)
     {
-        correctOffset(  Ctrl::getIsWheel() ? Ctrl::getMouse() : scr_center,
+        correctOffset(  Ctrl::GetIsWheel() ? Ctrl::GetMouse() : scr_center,
                         WorldManager::zoom - 1);
         WorldManager::zoom = 1;
     }
     else
     {
-        correctOffset(  Ctrl::getIsWheel() ? Ctrl::getMouse() : scr_center,
-                        Ctrl::getZoomOut() * WorldManager::zoom_speed * -1 * WorldManager::zoom);
-        WorldManager::zoom -= Ctrl::getZoomOut() * WorldManager::zoom_speed * WorldManager::zoom;
+        correctOffset(  Ctrl::GetIsWheel() ? Ctrl::GetMouse() : scr_center,
+                        Ctrl::GetZoomOut() * WorldManager::zoom_speed * -1 * WorldManager::zoom);
+        WorldManager::zoom -= Ctrl::GetZoomOut() * WorldManager::zoom_speed * WorldManager::zoom;
     }
 
     if (WorldManager::zoom >= 1000)
     {
-        correctOffset(  Ctrl::getIsWheel() ? Ctrl::getMouse() : scr_center,
+        correctOffset(  Ctrl::GetIsWheel() ? Ctrl::GetMouse() : scr_center,
                         1000 - WorldManager::zoom);
         WorldManager::zoom = 1000;
     }
     else
     {
-        correctOffset(  Ctrl::getIsWheel() ? Ctrl::getMouse() : scr_center,
-                        Ctrl::getZoomIn() * WorldManager::zoom_speed * WorldManager::zoom);
-        WorldManager::zoom += Ctrl::getZoomIn() * WorldManager::zoom_speed * WorldManager::zoom;
+        correctOffset(  Ctrl::GetIsWheel() ? Ctrl::GetMouse() : scr_center,
+                        Ctrl::GetZoomIn() * WorldManager::zoom_speed * WorldManager::zoom);
+        WorldManager::zoom += Ctrl::GetZoomIn() * WorldManager::zoom_speed * WorldManager::zoom;
     }
 
     WorldManager::world->Step(1.0f / 60.0f, 6, 2);
 
-    if (Ctrl::getReset())
+    if (Ctrl::GetReset())
     {
         for (size_t i = 0; i < WorldManager::objects.size(); i++)
         {
@@ -210,21 +210,21 @@ bool WorldManager::Step()
     {
         if (--(WorldManager::cyclesDelays[i]) <= 0)
         {
-            for (size_t j = 0; j < WorldManager::level.getCycles()[i].objects.size(); j++)
+            for (size_t j = 0; j < WorldManager::level.GetCycles()[i].objects.size(); j++)
             {
-                ProceedPObj(WorldManager::level.getCycles()[i].objects[j], this);
+                ProceedPObj(WorldManager::level.GetCycles()[i].objects[j], this);
             }
-            WorldManager::cyclesDelays[i] = WorldManager::level.getCycles()[i].delay;
+            WorldManager::cyclesDelays[i] = WorldManager::level.GetCycles()[i].delay;
         }
     }    
     /////////
 
     
     // LATER IT WILL BE CONSIDERED DEPRECATED AND DESTROYED
-    if (Ctrl::getReloadLevel() && !oldReload){
+    if (Ctrl::GetReloadLevel() && !oldReload){
         WorldManager::LoadLevel(WorldManager::level);
         
-//         NetworkManager::setRepo("https://raw.githubusercontent.com/Hammerill/Sand-Box2D-levels/main/levels");
+//         NetworkManager::SetRepo("https://raw.githubusercontent.com/Hammerill/Sand-Box2D-levels/main/levels");
 // #ifdef Vita
 //         NetworkManager::DownloadFile("ux0:Data/Sand-Box2D/levels", "index.json");
 //         NetworkManager::DownloadFile("ux0:Data/Sand-Box2D/levels", "default_level/default_level.json");
@@ -234,7 +234,7 @@ bool WorldManager::Step()
 // #endif
     }
     
-    oldReload = Ctrl::getReloadLevel();
+    oldReload = Ctrl::GetReloadLevel();
     ///////////////////////////////////////////////////////
 
     for (int i = WorldManager::order.size() - 1; i >= 0; i--)
@@ -246,12 +246,12 @@ bool WorldManager::Step()
 
     for (size_t i = 0; i < WorldManager::objects.size(); i++)
     { // Out of bounds check.
-        if (WorldManager::objects[i]->getBody()->GetPosition().x > 100 ||
-            WorldManager::objects[i]->getBody()->GetPosition().y > 100 ||
-            WorldManager::objects[i]->getBody()->GetPosition().x < -100 ||
-            WorldManager::objects[i]->getBody()->GetPosition().y < -100 )
+        if (WorldManager::objects[i]->GetBody()->GetPosition().x > 100 ||
+            WorldManager::objects[i]->GetBody()->GetPosition().y > 100 ||
+            WorldManager::objects[i]->GetBody()->GetPosition().x < -100 ||
+            WorldManager::objects[i]->GetBody()->GetPosition().y < -100 )
         {
-            WorldManager::deleteObject(i);
+            WorldManager::DeleteObject(i);
         }
     }
 
@@ -279,9 +279,9 @@ void WorldManager::Render()
         }        
     }
 
-    if (WorldManager::isDebug && Font::getLoaded())
+    if (WorldManager::isDebug && Font::GetLoaded())
     {
-        SDL_Point mouse = Ctrl::getMouse();
+        SDL_Point mouse = Ctrl::GetMouse();
 
         std::vector<std::string> debugStrings;
 
@@ -292,17 +292,17 @@ void WorldManager::Render()
         debugStrings.push_back("Zoom = " + std::to_string(WorldManager::zoom));
         debugStrings.push_back("Mouse X = " + std::to_string(mouse.x));
         debugStrings.push_back("Mouse Y = " + std::to_string(mouse.y));
-        debugStrings.push_back("Delta X = " + std::to_string(Ctrl::getDeltaX()));
-        debugStrings.push_back("Delta Y = " + std::to_string(Ctrl::getDeltaY()));
-        debugStrings.push_back("IsMoving? = " + std::to_string(Ctrl::getIsMoving()));
-        debugStrings.push_back("Delta pinch = " + std::to_string(Ctrl::getDeltaPinch()));
-        debugStrings.push_back("IsPinching? = " + std::to_string(Ctrl::getIsPinching()));
-        debugStrings.push_back("Zoom In = " + std::to_string(Ctrl::getZoomIn()));
-        debugStrings.push_back("Zoom Out = " + std::to_string(Ctrl::getZoomOut()));
+        debugStrings.push_back("Delta X = " + std::to_string(Ctrl::GetDeltaX()));
+        debugStrings.push_back("Delta Y = " + std::to_string(Ctrl::GetDeltaY()));
+        debugStrings.push_back("IsMoving? = " + std::to_string(Ctrl::GetIsMoving()));
+        debugStrings.push_back("Delta pinch = " + std::to_string(Ctrl::GetDeltaPinch()));
+        debugStrings.push_back("IsPinching? = " + std::to_string(Ctrl::GetIsPinching()));
+        debugStrings.push_back("Zoom In = " + std::to_string(Ctrl::GetZoomIn()));
+        debugStrings.push_back("Zoom Out = " + std::to_string(Ctrl::GetZoomOut()));
         debugStrings.push_back("Objects count = " + std::to_string(WorldManager::world->GetBodyCount()));
         debugStrings.push_back("Objects rendered = " + std::to_string(renderedItemsCount));
 
-        WorldManager::renderDebugScreen(debugStrings);        
+        WorldManager::RenderDebugScreen(debugStrings);        
     }
 
     SDL_RenderPresent(WorldManager::renderer);
@@ -356,7 +356,7 @@ void WorldManager::LoadLevel(Level level)
     // OBJECTS
     for (int i = WorldManager::objects.size() - 1; i >= 0; i--)
     { // Remove current loaded objects
-        WorldManager::deleteObject(i);
+        WorldManager::DeleteObject(i);
     }
     
     for (size_t i = 0; i < WorldManager::level.objects.size(); i++)
@@ -368,14 +368,14 @@ void WorldManager::LoadLevel(Level level)
     // CYCLES (everything other at the end of the Step())
     WorldManager::cyclesDelays = std::vector<int>();
 
-    for (size_t i = 0; i < WorldManager::level.getCycles().size(); i++)
+    for (size_t i = 0; i < WorldManager::level.GetCycles().size(); i++)
     {
         WorldManager::cyclesDelays.push_back(1);
     }    
     /////////
 }
 
-SDL_Renderer* WorldManager::getRenderer() { return WorldManager::renderer; }
+SDL_Renderer* WorldManager::GetRenderer() { return WorldManager::renderer; }
 
 void WorldManager::goFullscreen(bool isToFullscreen)
 {
@@ -407,7 +407,7 @@ void WorldManager::goFullscreen(bool isToFullscreen)
     }
 }
 
-void WorldManager::renderDebugScreen(std::vector<std::string> debugStrings)
+void WorldManager::RenderDebugScreen(std::vector<std::string> debugStrings)
 {
     float debugScale = 2;
 

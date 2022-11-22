@@ -171,7 +171,7 @@ bool Level::LoadFile(std::string base, std::string filepath)
     }
 }
 
-std::vector<LoadedCycle> Level::getCycles()
+std::vector<LoadedCycle> Level::GetCycles()
 {
     std::vector<LoadedCycle> result = std::vector<LoadedCycle>();
 

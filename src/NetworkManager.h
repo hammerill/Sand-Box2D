@@ -33,12 +33,12 @@ public:
 
     /// @brief Set "repo".
     /// @param repo URL which targets us to rawgithub where levels are containing.
-    static void setRepo(std::string repo);
+    static void SetRepo(std::string repo);
 
     /// @brief Download file.
     /// @param base where is directory of all the levels stored on the platform are located?
     /// Will download file there.
-    /// @param filepath path to the file to be downloaded, relatively to the "repo" (see setRepo()).
+    /// @param filepath path to the file to be downloaded, relatively to the "repo" (see SetRepo()).
     /// @return response code (CURLcode).
     static CURLcode DownloadFile(std::string base, std::string filepath);
 };
