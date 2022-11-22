@@ -1,5 +1,8 @@
 #include "WorldManager.h"
 
+// #include "Settings.h"
+// Settings settings = Settings("./settings.json", "./assets/default_settings.json");
+
 WorldManager::WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, const char* path_to_font, bool fpsCorrection, const char* path_to_icon, int fullscreenScale, float move_speed, float zoom_speed)
 {
     WorldManager::START_WINDOW_WIDTH = WINDOW_WIDTH;
@@ -404,6 +407,8 @@ void WorldManager::goFullscreen(bool isToFullscreen)
         SDL_RenderSetLogicalSize(WorldManager::renderer, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT);
 
         SDL_SetWindowFullscreen(WorldManager::window, 0);
+
+        // SDL_ShowSimpleMessageBox(0, 0, settings.Get("test").asString().c_str(), 0);
     }
 }
 

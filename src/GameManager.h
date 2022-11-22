@@ -1,6 +1,6 @@
 #pragma once
 
-/// @brief Class that manage everything.
+/// @brief Class that manages everything.
 class GameManager
 {
 private:
@@ -12,7 +12,9 @@ public:
     /// Leave nullptr if you're setting icon in CMake.
     /// @param path_to_settings path to the JSON where user settings are stored.
     /// If doesn't exist - it'll create it. If leave nullptr, settings affect only current session.
-    GameManager(const char* path_to_font = nullptr, const char* path_to_icon = nullptr, const char* path_to_settings = nullptr);
+    /// @param path_to_def_settings path to the JSON where default settings are stored.
+    /// If leave nullptr, all default settings will be considered as 0.
+    GameManager(const char* path_to_font = nullptr, const char* path_to_icon = nullptr, const char* path_to_settings = nullptr, const char* path_to_def_settings = nullptr);
     ~GameManager();
 
     /// @brief Perform one step and call step functions on all the objects. To render them call Render().
