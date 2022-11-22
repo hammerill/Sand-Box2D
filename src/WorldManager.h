@@ -50,9 +50,7 @@ private:
     float x_offset = 0, y_offset = 0, zoom = 80;
     float move_speed, zoom_speed;
 
-    bool holdingFullscreenButton = false;
     bool isFullscreen = false;
-    bool holdingDebugButton = false;
     bool isDebug = false;
 
     /// @brief Current loaded level.

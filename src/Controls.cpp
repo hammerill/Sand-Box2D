@@ -63,10 +63,10 @@ void Controls::Check()
 
         // Formula to calculate distance between two points
         Controls::deltaPinch =  sqrt(
-                                pow((touchxy[0].report[1].x / 2) - (touchxy[0].report[0].x / 2), 2)
-                                +
-                                pow((touchxy[0].report[1].y / 2) - (touchxy[0].report[0].y / 2), 2)
-                            );
+                                    pow((touchxy[0].report[1].x / 2) - (touchxy[0].report[0].x / 2), 2)
+                                    +
+                                    pow((touchxy[0].report[1].y / 2) - (touchxy[0].report[0].y / 2), 2)
+                                );
 
         if (Controls::isMoving && Controls::isPinching) 
         {
@@ -275,7 +275,7 @@ bool Controls::GetExit()        { return Controls::exit; }
 bool Controls::GetReset()       { return Controls::reset; }
 bool Controls::GetFullscreen()  { return Controls::fullscreen; }
 bool Controls::GetDebug()       { return Controls::debug; }
-bool Controls::GetReloadLevel()  { return Controls::reloadLevel; }
+bool Controls::GetReloadLevel() { return Controls::reloadLevel; }
 
 double Controls::GetMoveUp()    { return Controls::moveUp; }
 double Controls::GetMoveRight() { return Controls::moveRight; }

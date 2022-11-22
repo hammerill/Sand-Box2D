@@ -4,7 +4,7 @@
 // Settings settings = Settings("./settings.json", "./assets/default_settings.json");
 
 // GONNA BE DEPRECATED SOON
-Controls ctrl;
+Controls ctrl, old_ctrl;
 ///////////////////////////
 
 WorldManager::WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, const char* path_to_font, bool fpsCorrection, const char* path_to_icon, int fullscreenScale, float move_speed, float zoom_speed)
@@ -124,6 +124,7 @@ bool WorldManager::Step()
     if (WorldManager::speedCorrection)
         WorldManager::b = WorldManager::a;
 
+    old_ctrl = ctrl;
     ctrl.Check();
 
     if (ctrl.GetExit())
@@ -131,30 +132,16 @@ bool WorldManager::Step()
         return false;
     }
 
-    if (ctrl.GetFullscreen())
+    if (ctrl.GetFullscreen() && !old_ctrl.GetFullscreen())
     {
-        if (WorldManager::holdingFullscreenButton == false)
-        {
-            WorldManager::isFullscreen = !WorldManager::isFullscreen;
-
-            WorldManager::goFullscreen(WorldManager::isFullscreen);
-            
-            WorldManager::holdingFullscreenButton = true;
-        }        
+        WorldManager::isFullscreen = !WorldManager::isFullscreen;
+        WorldManager::goFullscreen(WorldManager::isFullscreen);
     }
-    else    
-        WorldManager::holdingFullscreenButton = false;
 
-    if (ctrl.GetDebug())
+    if (ctrl.GetDebug() && !old_ctrl.GetDebug())
     {
-        if (WorldManager::holdingDebugButton == false)
-        {
-            WorldManager::isDebug = !WorldManager::isDebug;            
-            WorldManager::holdingDebugButton = true;
-        }        
-    }
-    else    
-        WorldManager::holdingDebugButton = false;
+        WorldManager::isDebug = !WorldManager::isDebug;
+    }        
 
     WorldManager::y_offset += ctrl.GetMoveUp() * WorldManager::move_speed;
     WorldManager::x_offset -= ctrl.GetMoveRight() * WorldManager::move_speed;
