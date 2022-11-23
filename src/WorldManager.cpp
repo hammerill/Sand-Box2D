@@ -5,6 +5,8 @@
 
 // GONNA BE DEPRECATED SOON
 Controls ctrl, old_ctrl;
+
+WindowParams windowed = {WINDOWED, 960, 544}, fullscreen = WindowParams();
 ///////////////////////////
 
 WorldManager::WorldManager(const char* path_to_font, bool fpsCorrection, const char* path_to_icon, float move_speed, float zoom_speed)
@@ -23,8 +25,7 @@ WorldManager::WorldManager(const char* path_to_font, bool fpsCorrection, const c
         Font::LoadFont(path_to_font);
     
     WorldManager::renderer = Renderer();
-    WorldManager::renderer.InitVideo(path_to_icon);
-    WorldManager::renderer.ChangeRes();
+    WorldManager::renderer.InitVideo(fullscreen, path_to_icon);
 }
 WorldManager::~WorldManager()
 {
@@ -59,9 +60,7 @@ bool WorldManager::Step()
     if (ctrl.GetFullscreen() && !old_ctrl.GetFullscreen())
     {
         auto cur_mode = WorldManager::renderer.GetWindowMode();
-        WorldManager::renderer.ChangeRes(   cur_mode != WINDOWED ? WINDOWED : FULLSCREEN_SIMPLE,
-                                            cur_mode != WINDOWED ? 960 : 0,
-                                            cur_mode != WINDOWED ? 544 : 0);
+        WorldManager::renderer.ChangeRes(cur_mode != WINDOWED ? windowed : fullscreen);
     }
 
     if (ctrl.GetDebug() && !old_ctrl.GetDebug())

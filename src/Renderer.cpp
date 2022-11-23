@@ -6,7 +6,7 @@ Renderer::~Renderer()
     SDL_DestroyWindow(Renderer::window);
 }
 
-void Renderer::InitVideo(const char* path_to_icon)
+void Renderer::InitVideo(WindowParams params, const char* path_to_icon)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
     
@@ -21,19 +21,21 @@ void Renderer::InitVideo(const char* path_to_icon)
     }
 
     Renderer::renderer = SDL_CreateRenderer(Renderer::window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
+    Renderer::ChangeRes(params);
 }
 
 SDL_Renderer* Renderer::GetRenderer()   { return renderer; }
 SDL_Window* Renderer::GetWindow()       { return window; }
 
-void Renderer::ChangeRes(WindowMode mode, int width, int height, int fullscreen_scale)
+void Renderer::ChangeRes(WindowParams params)
 {
-    Renderer::window_mode = mode;
+    Renderer::window_mode = params.mode;
     switch (Renderer::window_mode)
     {
     case WINDOWED:
-        Renderer::window_width = width;
-        Renderer::window_height = height;
+        Renderer::window_width = params.width;
+        Renderer::window_height = params.height;
 
         SDL_SetWindowSize(Renderer::window, Renderer::window_width, Renderer::window_height);
         SDL_RenderSetLogicalSize(Renderer::renderer, Renderer::window_width, Renderer::window_height);
@@ -44,7 +46,7 @@ void Renderer::ChangeRes(WindowMode mode, int width, int height, int fullscreen_
         break;
     case FULLSCREEN_SIMPLE:
     case FULLSCREEN_REAL:
-        if (width == 0 && height == 0)
+        if (params.width == 0 && params.height == 0)
         {
             SDL_DisplayMode dm;
             SDL_GetCurrentDisplayMode(0, &dm);
@@ -53,16 +55,16 @@ void Renderer::ChangeRes(WindowMode mode, int width, int height, int fullscreen_
         }
         else
         {
-            Renderer::window_width = width;
-            Renderer::window_height = height;
+            Renderer::window_width = params.width;
+            Renderer::window_height = params.height;
         }
 
-        SDL_SetWindowSize(Renderer::window, Renderer::window_width * fullscreen_scale, Renderer::window_height * fullscreen_scale);
+        SDL_SetWindowSize(Renderer::window, Renderer::window_width * params.scale, Renderer::window_height * params.scale);
 
         SDL_RenderSetLogicalSize(Renderer::renderer, Renderer::window_width, Renderer::window_height);
         
         SDL_SetWindowFullscreen(Renderer::window,
-                                mode == FULLSCREEN_SIMPLE ?
+                                params.mode == FULLSCREEN_SIMPLE ?
                                 SDL_WINDOW_FULLSCREEN_DESKTOP :
                                 SDL_WINDOW_FULLSCREEN);
         

@@ -11,6 +11,22 @@ enum WindowMode
     FULLSCREEN_REAL         // Game will run in real fullscreen mode (it can change video mode at running machine).
 };
 
+/// @brief Everything you need to describe window.
+struct WindowParams
+{
+    /// @brief Defines game window mode (see enum WindowMode).
+    WindowMode mode = FULLSCREEN_SIMPLE;
+
+    /// @brief Desired size of the window.
+    /// If you're going to fullscreen and leave 0, it considered as size of the screen.
+    int width = 0, height = 0;
+
+    /// @brief if go fullscreen, how much we should scale game to screen?
+    /// If 1 - don't scale (pixel to pixel). If 2 - each 2x2 pixels sector in the screen
+    /// will represent 1 pixel from the game.
+    int scale = 1;
+};
+
 /// @brief Class that manages window and its renderer.
 class Renderer
 {
@@ -27,24 +43,19 @@ private:
 public:
     ~Renderer();
 
-    /// @brief Init video. After calling this function it's obligatory to call ChangeRes().
+    /// @brief Init video.
+    /// @param params declare settings of your window here (see struct WindowParams).
+    /// You can change them later using ChangeRes().
     /// @param path_to_icon path to the icon that will be set to program instance.
     /// Leave nullptr if you're setting icon in CMake.
-    void InitVideo(const char* path_to_icon = nullptr);
+    void InitVideo(WindowParams params, const char* path_to_icon = nullptr);
 
     SDL_Renderer* GetRenderer();
     SDL_Window* GetWindow();
 
     /// @brief Change game resolution and go/exit fullscreen if need.
-    /// @param mode defines game window mode (see enum WindowMode).
-    /// @param width desired width of the window.
-    /// If you're going to fullscreen and leave 0, it considered as width of the screen.
-    /// @param height desired height of the window.
-    /// If you're going to fullscreen and leave 0, it considered as height of the screen.
-    /// @param fullscreen_scale if go fullscreen, how much we should scale game to screen?
-    /// If 1 - don't scale (pixel to pixel). If 2 - each 2x2 pixels sector in the screen
-    /// will represent 1 pixel from the game.
-    void ChangeRes(WindowMode mode = FULLSCREEN_SIMPLE, int width = 0, int height = 0, int fullscreen_scale = 1);
+    /// @param params declare settings of your window here (see struct WindowParams).
+    void ChangeRes(WindowParams params);
 
     WindowMode GetWindowMode();
 
