@@ -4,7 +4,7 @@
 const double stickDeadZone = 10;
 const double stickCenter = 128;
 
-SceCtrlData ctrl;
+SceCtrlData vita_ctrl;
 SceTouchData touchxy[SCE_TOUCH_PORT_MAX_NUM];
 
 SDL_Point old_mouse;
@@ -23,12 +23,12 @@ Controls::~Controls() {}
 
 void Controls::Check()
 {
-    sceCtrlPeekBufferPositive(0, &ctrl, 1);
+    sceCtrlPeekBufferPositive(0, &vita_ctrl, 1);
     sceTouchPeek(0, &touchxy[0], 1);
 
-    Controls::reset = ctrl.buttons & SCE_CTRL_CROSS;
-    Controls::debug = ctrl.buttons & SCE_CTRL_TRIANGLE;
-    Controls::reloadLevel = ctrl.buttons & SCE_CTRL_CIRCLE;
+    Controls::reset = vita_ctrl.buttons & SCE_CTRL_CROSS;
+    Controls::debug = vita_ctrl.buttons & SCE_CTRL_TRIANGLE;
+    Controls::reloadLevel = vita_ctrl.buttons & SCE_CTRL_CIRCLE;
 
     if (touchxy[0].reportNum == 1)
     {
@@ -114,46 +114,46 @@ void Controls::Check()
     }
     
 
-    if (ctrl.buttons & SCE_CTRL_UP) /////////////////////////////////// UP
+    if (vita_ctrl.buttons & SCE_CTRL_UP) /////////////////////////////////// UP
         Controls::moveUp = 1;
-    else if (ctrl.ly < stickCenter - stickDeadZone)
-        Controls::moveUp = (stickCenter - ctrl.ly) / stickCenter;
+    else if (vita_ctrl.ly < stickCenter - stickDeadZone)
+        Controls::moveUp = (stickCenter - vita_ctrl.ly) / stickCenter;
     else
         Controls::moveUp = 0;
     
-    if (ctrl.buttons & SCE_CTRL_RIGHT) /////////////////////////////////// RIGHT
+    if (vita_ctrl.buttons & SCE_CTRL_RIGHT) /////////////////////////////////// RIGHT
         Controls::moveRight = 1;
-    else if (ctrl.lx > stickCenter + stickDeadZone)
-        Controls::moveRight = (ctrl.lx - stickCenter) / stickCenter;
+    else if (vita_ctrl.lx > stickCenter + stickDeadZone)
+        Controls::moveRight = (vita_ctrl.lx - stickCenter) / stickCenter;
     else
         Controls::moveRight = 0;
 
-    if (ctrl.buttons & SCE_CTRL_DOWN) /////////////////////////////////// DOWN
+    if (vita_ctrl.buttons & SCE_CTRL_DOWN) /////////////////////////////////// DOWN
         Controls::moveDown = 1;
-    else if (ctrl.ly > stickCenter + stickDeadZone)
-        Controls::moveDown = (ctrl.ly - stickCenter) / stickCenter;
+    else if (vita_ctrl.ly > stickCenter + stickDeadZone)
+        Controls::moveDown = (vita_ctrl.ly - stickCenter) / stickCenter;
     else
         Controls::moveDown = 0;
     
-    if (ctrl.buttons & SCE_CTRL_LEFT) /////////////////////////////////// LEFT
+    if (vita_ctrl.buttons & SCE_CTRL_LEFT) /////////////////////////////////// LEFT
         Controls::moveLeft = 1;
-    else if (ctrl.lx < stickCenter - stickDeadZone)
-        Controls::moveLeft = (stickCenter - ctrl.lx) / stickCenter;
+    else if (vita_ctrl.lx < stickCenter - stickDeadZone)
+        Controls::moveLeft = (stickCenter - vita_ctrl.lx) / stickCenter;
     else
         Controls::moveLeft = 0;
 
 
-    if (ctrl.buttons & SCE_CTRL_RTRIGGER) /////////////////////////////////// ZOOMIN
+    if (vita_ctrl.buttons & SCE_CTRL_RTRIGGER) /////////////////////////////////// ZOOMIN
         Controls::zoomIn = 1;
-    else if (ctrl.ry > stickCenter + stickDeadZone)
-        Controls::zoomIn = (ctrl.ry - stickCenter) / stickCenter;
+    else if (vita_ctrl.ry > stickCenter + stickDeadZone)
+        Controls::zoomIn = (vita_ctrl.ry - stickCenter) / stickCenter;
     else
         Controls::zoomIn = 0;
 
-    if (ctrl.buttons & SCE_CTRL_LTRIGGER) /////////////////////////////////// ZOOMOUT
+    if (vita_ctrl.buttons & SCE_CTRL_LTRIGGER) /////////////////////////////////// ZOOMOUT
         Controls::zoomOut = 1;
-    else if (ctrl.ry < stickCenter - stickDeadZone)
-        Controls::zoomOut = (stickCenter - ctrl.ry) / stickCenter;
+    else if (vita_ctrl.ry < stickCenter - stickDeadZone)
+        Controls::zoomOut = (stickCenter - vita_ctrl.ry) / stickCenter;
     else
         Controls::zoomOut = 0;
 }
