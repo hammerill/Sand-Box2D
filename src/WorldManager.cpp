@@ -27,7 +27,7 @@ WorldManager::WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, const char* path
     if (path_to_font != nullptr)
         Font::LoadFont(path_to_font);
     
-    WorldManager::initVideo(path_to_icon);
+    WorldManager::InitVideo(path_to_icon);
 }
 WorldManager::~WorldManager()
 {
@@ -41,7 +41,7 @@ WorldManager::~WorldManager()
     delete[] WorldManager::world;
 }
 
-void WorldManager::initVideo(const char* path_to_icon)
+void WorldManager::InitVideo(const char* path_to_icon)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
     

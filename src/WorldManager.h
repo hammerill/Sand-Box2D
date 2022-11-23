@@ -42,7 +42,7 @@ private:
 
     SDL_Window* window;
 
-    void initVideo(const char* path_to_icon = nullptr);
+    void InitVideo(const char* path_to_icon = nullptr);
 
     unsigned int a, b = 0;
     double delta = 0;
