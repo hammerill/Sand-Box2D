@@ -172,8 +172,6 @@ void Controls::Check()
         Controls::zoomOut = 0;
     }
 
-    Controls::fullscreen = false;
-
     while(SDL_PollEvent(&e))
     {
         switch (e.type)
@@ -194,6 +192,7 @@ void Controls::Check()
             break;
         case SDL_MOUSEBUTTONUP:
             Controls::isMoving = false;
+            Controls::fullscreen = false;
             break;
         case SDL_MOUSEMOTION:
             Controls::deltaX = e.motion.xrel;
