@@ -144,7 +144,7 @@ std::vector<BasePObj*> Level::GetPObjects()
     auto objects = std::vector<BasePObj*>();
 
     Json::Value jsonObjects = Level::jsonLevel["objects"];
-    for (int i = 0; i < jsonObjects.size(); i++)
+    for (unsigned int i = 0; i < jsonObjects.size(); i++)
     {
         objects.push_back(Level::ParseJsonPObj(jsonObjects[i]));
     }
@@ -159,7 +159,7 @@ std::vector<JsonCycle> Level::GetCycles()
     try
     {
         Json::Value jsonCycles = Level::jsonLevel["cycles"];
-        for (int i = 0; i < jsonCycles.size(); i++)
+        for (unsigned int i = 0; i < jsonCycles.size(); i++)
         {
             auto cycle = JsonCycle();
 
@@ -167,7 +167,7 @@ std::vector<JsonCycle> Level::GetCycles()
 
             auto objects = std::vector<BasePObj*>();
             Json::Value jsonCycleObjects = jsonCycles[i]["objects"];
-            for (int j = 0; j < jsonCycleObjects.size(); j++)
+            for (unsigned int j = 0; j < jsonCycleObjects.size(); j++)
             {
                 objects.push_back(Level::ParseJsonPObj(jsonCycleObjects[j]));
             }
