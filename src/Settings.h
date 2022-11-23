@@ -17,14 +17,11 @@ public:
     /// At every Set() call will write updated parameter to file if it's successfully loaded.
     /// Will also call Set() when setting default value to
     /// parameter which was requested through Get() and doesn't have value.
-    /// @param base where is base data directory located?
     /// @param path_to_settings path to the JSON where user settings are stored.
     /// If doesn't exist - it'll create it. If leave empty, settings affect only current session.
-    /// WARNING: Considered as relative to "base".
     /// @param path_to_def_settings path to the JSON where default settings are stored.
     /// If leave empty, all default settings will be considered as 0.
-    /// WARNING: NOT considered as relative to "base".
-    Settings(std::string base, std::string path_to_settings = "", std::string path_to_def_settings = "");
+    Settings(const char* path_to_settings = nullptr, const char* path_to_def_settings = nullptr);
 
     /// @brief Set some value at the settings.
     /// Will affect current session and write it to the file if it's loaded.
