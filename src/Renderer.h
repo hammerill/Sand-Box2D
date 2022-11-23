@@ -22,15 +22,15 @@ private:
 
     WindowMode window_mode = FULLSCREEN_SIMPLE;
 
-    void InitVideo(const char* path_to_icon = nullptr);
+    const char* path_to_icon;
 
 public:
-    /// @brief Init video and create Renderer instance.
-    /// Starts at simple fullscreen, can be changed later calling ChangeRes().
+    ~Renderer();
+
+    /// @brief Init video. After calling this function it's obligatory to call ChangeRes().
     /// @param path_to_icon path to the icon that will be set to program instance.
     /// Leave nullptr if you're setting icon in CMake.
-    Renderer(const char* path_to_icon = nullptr);
-    ~Renderer();
+    void InitVideo(const char* path_to_icon = nullptr);
 
     SDL_Renderer* GetRenderer();
     SDL_Window* GetWindow();

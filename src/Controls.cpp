@@ -259,6 +259,10 @@ void Controls::Check()
                 Controls::isWheel = false;
                 break;
 
+            case SDLK_ESCAPE:
+                Controls::exit = true;
+                break;
+
             default:
                 break;
             }

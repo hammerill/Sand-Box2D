@@ -7,11 +7,8 @@
 Controls ctrl, old_ctrl;
 ///////////////////////////
 
-WorldManager::WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, const char* path_to_font, bool fpsCorrection, const char* path_to_icon, int fullscreenScale, float move_speed, float zoom_speed)
+WorldManager::WorldManager(const char* path_to_font, bool fpsCorrection, const char* path_to_icon, float move_speed, float zoom_speed)
 {
-    WorldManager::START_WINDOW_WIDTH = WINDOW_WIDTH;
-    WorldManager::START_WINDOW_HEIGHT = WINDOW_HEIGHT;
-
     WorldManager::speedCorrection = fpsCorrection;
 
     WorldManager::move_speed = move_speed;
@@ -22,12 +19,12 @@ WorldManager::WorldManager(int WINDOW_WIDTH, int WINDOW_HEIGHT, const char* path
 
     WorldManager::objects = std::vector<BasePObj*>();
 
-    WorldManager::fullscreenScale = fullscreenScale;
-
     if (path_to_font != nullptr)
         Font::LoadFont(path_to_font);
     
-    WorldManager::InitVideo(path_to_icon);
+    WorldManager::renderer = Renderer();
+    WorldManager::renderer.InitVideo(path_to_icon);
+    WorldManager::renderer.ChangeRes();
 }
 WorldManager::~WorldManager()
 {
@@ -36,46 +33,7 @@ WorldManager::~WorldManager()
         WorldManager::DeleteObject(i);
     }
 
-    SDL_DestroyRenderer(WorldManager::renderer);
-	SDL_DestroyWindow(WorldManager::window);
     delete[] WorldManager::world;
-}
-
-void WorldManager::InitVideo(const char* path_to_icon)
-{
-    SDL_Init(SDL_INIT_EVERYTHING);
-    
-    SDL_DisplayMode dm;
-    SDL_GetCurrentDisplayMode(0, &dm);
-    WorldManager::SCREEN_WIDTH = dm.w;
-    WorldManager::SCREEN_HEIGHT = dm.h;
-
-    if (WorldManager::START_WINDOW_WIDTH == 0 || WorldManager::START_WINDOW_HEIGHT == 0)
-    {
-        WorldManager::START_WINDOW_WIDTH = WorldManager::SCREEN_WIDTH / 1.5;
-        WorldManager::START_WINDOW_HEIGHT = WorldManager::SCREEN_HEIGHT / 1.5;
-
-        WorldManager::WINDOW_WIDTH = START_WINDOW_WIDTH;
-        WorldManager::WINDOW_HEIGHT = START_WINDOW_HEIGHT;
-    }
-    else
-    {
-        WorldManager::WINDOW_WIDTH = START_WINDOW_WIDTH;
-        WorldManager::WINDOW_HEIGHT = START_WINDOW_HEIGHT;
-    }
-
-    WorldManager::window = SDL_CreateWindow("Sand-Box2D", SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
-    
-    if (path_to_icon != nullptr)
-    {
-        SDL_Surface* icon = IMG_Load(path_to_icon);
-        SDL_SetWindowIcon(WorldManager::window, icon);
-    }
-
-    WorldManager::renderer = SDL_CreateRenderer(WorldManager::window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-
-    SDL_RenderSetLogicalSize(WorldManager::renderer, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT);
 }
 
 void WorldManager::AddObject(BasePObj* obj) { WorldManager::order.push_back(obj); }
@@ -100,8 +58,10 @@ bool WorldManager::Step()
 
     if (ctrl.GetFullscreen() && !old_ctrl.GetFullscreen())
     {
-        WorldManager::isFullscreen = !WorldManager::isFullscreen;
-        WorldManager::goFullscreen(WorldManager::isFullscreen);
+        auto cur_mode = WorldManager::renderer.GetWindowMode();
+        WorldManager::renderer.ChangeRes(   cur_mode != WINDOWED ? WINDOWED : FULLSCREEN_SIMPLE,
+                                            cur_mode != WINDOWED ? 960 : 0,
+                                            cur_mode != WINDOWED ? 544 : 0);
     }
 
     if (ctrl.GetDebug() && !old_ctrl.GetDebug())
@@ -122,35 +82,35 @@ bool WorldManager::Step()
 
     if (ctrl.GetIsPinching() && ((WorldManager::zoom + ctrl.GetDeltaPinch()) > 10))
     {
-        correctOffset(  ctrl.GetMouse(),
+        CorrectOffset(  ctrl.GetMouse(),
                         ctrl.GetDeltaPinch());
         WorldManager::zoom += ctrl.GetDeltaPinch();
     }
 
-    SDL_Point scr_center = {WorldManager::WINDOW_WIDTH / 2, WorldManager::WINDOW_HEIGHT / 2};
+    SDL_Point scr_center = {WorldManager::renderer.GetWidth() / 2, WorldManager::renderer.GetHeight() / 2};
 
     if (WorldManager::zoom <= 1)
     {
-        correctOffset(  ctrl.GetIsWheel() ? ctrl.GetMouse() : scr_center,
+        CorrectOffset(  ctrl.GetIsWheel() ? ctrl.GetMouse() : scr_center,
                         WorldManager::zoom - 1);
         WorldManager::zoom = 1;
     }
     else
     {
-        correctOffset(  ctrl.GetIsWheel() ? ctrl.GetMouse() : scr_center,
+        CorrectOffset(  ctrl.GetIsWheel() ? ctrl.GetMouse() : scr_center,
                         ctrl.GetZoomOut() * WorldManager::zoom_speed * -1 * WorldManager::zoom);
         WorldManager::zoom -= ctrl.GetZoomOut() * WorldManager::zoom_speed * WorldManager::zoom;
     }
 
     if (WorldManager::zoom >= 1000)
     {
-        correctOffset(  ctrl.GetIsWheel() ? ctrl.GetMouse() : scr_center,
+        CorrectOffset(  ctrl.GetIsWheel() ? ctrl.GetMouse() : scr_center,
                         1000 - WorldManager::zoom);
         WorldManager::zoom = 1000;
     }
     else
     {
-        correctOffset(  ctrl.GetIsWheel() ? ctrl.GetMouse() : scr_center,
+        CorrectOffset(  ctrl.GetIsWheel() ? ctrl.GetMouse() : scr_center,
                         ctrl.GetZoomIn() * WorldManager::zoom_speed * WorldManager::zoom);
         WorldManager::zoom += ctrl.GetZoomIn() * WorldManager::zoom_speed * WorldManager::zoom;
     }
@@ -202,7 +162,7 @@ bool WorldManager::Step()
     for (int i = WorldManager::order.size() - 1; i >= 0; i--)
     { // Load order.
         WorldManager::objects.push_back(WorldManager::order[i]);
-        WorldManager::objects[WorldManager::objects.size() - 1]->Register(WorldManager::world, WorldManager::renderer);
+        WorldManager::objects[WorldManager::objects.size() - 1]->Register(WorldManager::world, WorldManager::renderer.GetRenderer());
         WorldManager::order.pop_back();        
     }
 
@@ -223,19 +183,19 @@ bool WorldManager::Step()
 int renderedItemsCount;
 void WorldManager::Render()
 {
-    SDL_SetRenderDrawBlendMode(WorldManager::renderer, SDL_BLENDMODE_NONE);
-    SDL_SetRenderDrawColor(WorldManager::renderer, 0x32, 0x32, 0x32, 0);
-    SDL_RenderClear(WorldManager::renderer);
+    SDL_SetRenderDrawBlendMode(WorldManager::renderer.GetRenderer(), SDL_BLENDMODE_NONE);
+    SDL_SetRenderDrawColor(WorldManager::renderer.GetRenderer(), 0x32, 0x32, 0x32, 0);
+    SDL_RenderClear(WorldManager::renderer.GetRenderer());
 
     renderedItemsCount = 0;
     for (size_t i = 0; i < WorldManager::objects.size(); i++)   
     {
-        if (WorldManager::objects[i]->Render(   WorldManager::renderer, 
+        if (WorldManager::objects[i]->Render(   WorldManager::renderer.GetRenderer(), 
                                                 WorldManager::x_offset, 
                                                 WorldManager::y_offset, 
                                                 WorldManager::zoom,
-                                                WorldManager::SCREEN_WIDTH,
-                                                WorldManager::SCREEN_HEIGHT))
+                                                WorldManager::renderer.GetWidth(),
+                                                WorldManager::renderer.GetHeight()))
         {
             renderedItemsCount++;
         }        
@@ -267,7 +227,7 @@ void WorldManager::Render()
         WorldManager::RenderDebugScreen(debugStrings);        
     }
 
-    SDL_RenderPresent(WorldManager::renderer);
+    SDL_RenderPresent(WorldManager::renderer.GetRenderer());
 }
 
 void WorldManager::Cycle()
@@ -307,13 +267,13 @@ void WorldManager::LoadLevel(Level level)
 
     if (camera.type == "static")
     {
-        WorldManager::zoom = WorldManager::WINDOW_HEIGHT / camera.height;
+        WorldManager::zoom = WorldManager::renderer.GetHeight() / camera.height;
 
         WorldManager::x_offset =    -(camera.x * WorldManager::zoom)
-                                    +(WorldManager::WINDOW_WIDTH / 2);
+                                    +(WorldManager::renderer.GetWidth() / 2);
 
         WorldManager::y_offset =    -(camera.y * WorldManager::zoom)
-                                    +(WorldManager::WINDOW_HEIGHT / 2);
+                                    +(WorldManager::renderer.GetHeight() / 2);
     }
     /////////
     
@@ -340,39 +300,7 @@ void WorldManager::LoadLevel(Level level)
     /////////
 }
 
-SDL_Renderer* WorldManager::GetRenderer() { return WorldManager::renderer; }
-
-void WorldManager::goFullscreen(bool isToFullscreen)
-{
-    SDL_DisplayMode dm;
-    SDL_GetCurrentDisplayMode(0, &dm);
-    WorldManager::SCREEN_WIDTH = dm.w;
-    WorldManager::SCREEN_HEIGHT = dm.h;
-    
-    if (isToFullscreen)
-    {
-        SDL_SetWindowSize(WorldManager::window, WorldManager::SCREEN_WIDTH, WorldManager::SCREEN_HEIGHT);
-
-        WorldManager::WINDOW_WIDTH = WorldManager::SCREEN_WIDTH / WorldManager::fullscreenScale;
-        WorldManager::WINDOW_HEIGHT = WorldManager::SCREEN_HEIGHT / WorldManager::fullscreenScale;
-
-        SDL_RenderSetLogicalSize(WorldManager::renderer, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT);
-
-        SDL_SetWindowFullscreen(WorldManager::window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-    }
-    else
-    {
-        WorldManager::WINDOW_WIDTH = START_WINDOW_WIDTH;
-        WorldManager::WINDOW_HEIGHT = START_WINDOW_HEIGHT;
-
-        SDL_SetWindowSize(WorldManager::window, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT);
-        SDL_RenderSetLogicalSize(WorldManager::renderer, WorldManager::WINDOW_WIDTH, WorldManager::WINDOW_HEIGHT);
-
-        SDL_SetWindowFullscreen(WorldManager::window, 0);
-
-        // SDL_ShowSimpleMessageBox(0, 0, settings.Get("test").asString().c_str(), 0);
-    }
-}
+SDL_Renderer* WorldManager::GetRenderer() { return WorldManager::renderer.GetRenderer(); }
 
 void WorldManager::RenderDebugScreen(std::vector<std::string> debugStrings)
 {
@@ -387,18 +315,18 @@ void WorldManager::RenderDebugScreen(std::vector<std::string> debugStrings)
 
     SDL_Rect debugBg {0, 0, debug_w, debug_h};
 
-    SDL_SetRenderDrawBlendMode(WorldManager::renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetRenderDrawColor(WorldManager::renderer, 4, 4, 4, 0xA0);
+    SDL_SetRenderDrawBlendMode(WorldManager::renderer.GetRenderer(), SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(WorldManager::renderer.GetRenderer(), 4, 4, 4, 0xA0);
 
-    SDL_RenderFillRect(WorldManager::renderer, &debugBg);
+    SDL_RenderFillRect(WorldManager::renderer.GetRenderer(), &debugBg);
 
     for (size_t i = 0; i < debugStrings.size(); i++)
     {
-        Font::Render(WorldManager::renderer, debugStrings[i].c_str(), Font::FontWidth * debugScale, Font::FontWidth * debugScale * (i+1), debugScale);
+        Font::Render(WorldManager::renderer.GetRenderer(), debugStrings[i].c_str(), Font::FontWidth * debugScale, Font::FontWidth * debugScale * (i+1), debugScale);
     }
 }
 
-void WorldManager::correctOffset(SDL_Point mouse, float zoom_change)
+void WorldManager::CorrectOffset(SDL_Point mouse, float zoom_change)
 {
     WorldManager::x_offset += ((WorldManager::x_offset - mouse.x) / WorldManager::zoom) * zoom_change;
     WorldManager::y_offset += ((WorldManager::y_offset - mouse.y) / WorldManager::zoom) * zoom_change;

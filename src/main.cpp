@@ -16,7 +16,7 @@ int WINDOW_HEIGHT = 0;
 
 int main(int argv, char** args)
 {    
-    WorldManager* wm = new WorldManager(WINDOW_WIDTH, WINDOW_HEIGHT, "assets/fonts/PressStart2P-vaV7.ttf", isLinux, isLinux ? "assets/img/icon.png" : nullptr);
+    WorldManager* wm = new WorldManager("assets/fonts/PressStart2P-vaV7.ttf", isLinux, isLinux ? "assets/img/icon.png" : nullptr);
 
     Level level;
     level.LoadFile("./assets", "default_level/default_level.json", wm->GetRenderer());

@@ -1,10 +1,5 @@
 #include "Renderer.h"
 
-Renderer::Renderer(const char* path_to_icon)
-{
-    Renderer::InitVideo(path_to_icon);
-}
-
 Renderer::~Renderer()
 {
     SDL_DestroyRenderer(Renderer::renderer);
@@ -16,6 +11,8 @@ void Renderer::InitVideo(const char* path_to_icon)
     SDL_Init(SDL_INIT_EVERYTHING);
     
     Renderer::window = SDL_CreateWindow("Sand-Box2D", 0, 0, 0, 0, SDL_WINDOW_SHOWN);
+    // Renderer::window = SDL_CreateWindow("Sand-Box2D", SDL_WINDOWPOS_CENTERED,
+    //     SDL_WINDOWPOS_CENTERED, 960, 544, SDL_WINDOW_SHOWN);
 
     if (path_to_icon != nullptr)
     {
@@ -24,8 +21,6 @@ void Renderer::InitVideo(const char* path_to_icon)
     }
 
     Renderer::renderer = SDL_CreateRenderer(Renderer::window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-
-    Renderer::ChangeRes();
 }
 
 SDL_Renderer* Renderer::GetRenderer()   { return renderer; }
@@ -33,7 +28,8 @@ SDL_Window* Renderer::GetWindow()       { return window; }
 
 void Renderer::ChangeRes(WindowMode mode, int width, int height, int fullscreen_scale)
 {
-    switch (mode)
+    Renderer::window_mode = mode;
+    switch (Renderer::window_mode)
     {
     case WINDOWED:
         Renderer::window_width = width;
@@ -65,10 +61,10 @@ void Renderer::ChangeRes(WindowMode mode, int width, int height, int fullscreen_
 
         SDL_RenderSetLogicalSize(Renderer::renderer, Renderer::window_width, Renderer::window_height);
         
-        if (mode == FULLSCREEN_SIMPLE)
-            SDL_SetWindowFullscreen(Renderer::window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-        else
-            SDL_SetWindowFullscreen(Renderer::window, SDL_WINDOW_FULLSCREEN);
+        SDL_SetWindowFullscreen(Renderer::window,
+                                mode == FULLSCREEN_SIMPLE ?
+                                SDL_WINDOW_FULLSCREEN_DESKTOP :
+                                SDL_WINDOW_FULLSCREEN);
         
         break;
     default:
