@@ -19,7 +19,7 @@
 #endif
 
 /// @brief Static class for downloading files.
-class NetworkManager
+class Network
 {
 private:
     static CURL* curl;
@@ -28,8 +28,8 @@ private:
     static std::string repo;
 
 public:
-    NetworkManager();
-    ~NetworkManager();
+    Network();
+    ~Network();
 
     /// @brief Set "repo".
     /// @param repo URL which targets us to rawgithub where levels are containing.

@@ -188,13 +188,13 @@ bool WorldManager::Step()
     if (ctrl.GetReloadLevel() && !old_ctrl.GetReloadLevel()){
         WorldManager::LoadLevel(WorldManager::level);
         
-//         NetworkManager::SetRepo("https://raw.githubusercontent.com/Hammerill/Sand-Box2D-levels/main/levels");
+//         Network::SetRepo("https://raw.githubusercontent.com/Hammerill/Sand-Box2D-levels/main/levels");
 // #ifdef Vita
-//         NetworkManager::DownloadFile("ux0:Data/Sand-Box2D/levels", "index.json");
-//         NetworkManager::DownloadFile("ux0:Data/Sand-Box2D/levels", "default_level/default_level.json");
+//         Network::DownloadFile("ux0:Data/Sand-Box2D/levels", "index.json");
+//         Network::DownloadFile("ux0:Data/Sand-Box2D/levels", "default_level/default_level.json");
 // #else
-//         NetworkManager::DownloadFile("./levels", "index.json");
-//         NetworkManager::DownloadFile("./levels", "default_level/default_level.json");
+//         Network::DownloadFile("./levels", "index.json");
+//         Network::DownloadFile("./levels", "default_level/default_level.json");
 // #endif
     }
     ///////////////////////////////////////////////////////

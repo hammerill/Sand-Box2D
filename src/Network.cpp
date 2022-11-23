@@ -1,9 +1,9 @@
-#include "NetworkManager.h"
+#include "Network.h"
 
-CURL* NetworkManager::curl;
-CURLcode NetworkManager::res;
+CURL* Network::curl;
+CURLcode Network::res;
 
-std::string NetworkManager::repo;
+std::string Network::repo;
 
 #ifdef Vita
 
@@ -95,22 +95,22 @@ size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream)
 
 #endif
 
-NetworkManager::NetworkManager()
+Network::Network()
 {
     curl_global_init(CURL_GLOBAL_ALL);
 }
-NetworkManager::~NetworkManager()
+Network::~Network()
 {
     curl_global_cleanup();
 }
 
-void NetworkManager::SetRepo(std::string repo)
+void Network::SetRepo(std::string repo)
 {
-    NetworkManager::repo = repo;
+    Network::repo = repo;
 }
-CURLcode NetworkManager::DownloadFile(std::string base, std::string filepath)
+CURLcode Network::DownloadFile(std::string base, std::string filepath)
 {
-    NetworkManager::curl = curl_easy_init();
+    Network::curl = curl_easy_init();
 
     mkDirs(base);
 
@@ -120,15 +120,15 @@ CURLcode NetworkManager::DownloadFile(std::string base, std::string filepath)
     }
     openFile(base + "/" + filepath);
 
-    curl_easy_setopt(NetworkManager::curl, CURLOPT_URL, (NetworkManager::repo + "/" + filepath).c_str());
-    curl_easy_setopt(NetworkManager::curl, CURLOPT_WRITEDATA, getFile());
-    curl_easy_setopt(NetworkManager::curl, CURLOPT_WRITEFUNCTION, write_data);
-    curl_easy_setopt(NetworkManager::curl, CURLOPT_SSL_VERIFYPEER, 0L);
+    curl_easy_setopt(Network::curl, CURLOPT_URL, (Network::repo + "/" + filepath).c_str());
+    curl_easy_setopt(Network::curl, CURLOPT_WRITEDATA, getFile());
+    curl_easy_setopt(Network::curl, CURLOPT_WRITEFUNCTION, write_data);
+    curl_easy_setopt(Network::curl, CURLOPT_SSL_VERIFYPEER, 0L);
 
-    NetworkManager::res = curl_easy_perform(NetworkManager::curl);
+    Network::res = curl_easy_perform(Network::curl);
 
-    curl_easy_cleanup(NetworkManager::curl);
+    curl_easy_cleanup(Network::curl);
     closeFile();
 
-    return NetworkManager::res;
+    return Network::res;
 }

@@ -18,7 +18,8 @@ public:
     ~GameManager();
 
     /// @brief Perform one step and call step functions on all the objects. To render them call Render().
-    void Step();
+    /// @return true if need to perform next step (continue). False if need to exit the game.
+    bool Step();
 
     /// @brief Call render functions on all the objects and then show them on the screen.
     void Render();
