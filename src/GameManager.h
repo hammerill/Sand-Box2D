@@ -4,19 +4,22 @@
 #include "Controls.h"
 #include "Settings.h"
 
-#include "MainMenu.h"
+// #include "MainMenu.h"
 #include "WorldManager.h"
 
 /// @brief Class that manages everything.
 class GameManager
 {
 private:
-    Renderer renderer;
+    Renderer* renderer;
     Controls ctrl, old_ctrl;
     Settings settings;
 
-    MainMenu main_menu;
-    WorldManager world_manager;
+    // MainMenu main_menu;
+    WorldManager* world_manager;
+
+    WindowParams fullscreen = {};
+    WindowParams windowed = {WINDOWED, 960, 544};
 
     unsigned int a, b = 0;
     double delta = 0;
@@ -28,7 +31,6 @@ public:
     /// @param path_to_def_settings path to the JSON where default settings are stored.
     /// If leave nullptr, all default settings will be considered as 0.
     GameManager(const char* path_to_settings = nullptr, const char* path_to_def_settings = nullptr);
-    ~GameManager();
 
     /// @brief Perform one step and call step functions on all the objects. To render them call Render().
     /// @return true if need to perform next step (continue). False if need to exit the game.

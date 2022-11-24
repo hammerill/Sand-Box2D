@@ -19,9 +19,6 @@ class WorldManager
 private:
     /// @brief Main Box2D world.
     b2World* world;
-
-    // Game Renderer manager.
-    Renderer renderer;
     
     /// Array of physics objects of the world. BasePObj is an abstract class and this array
     /// should only contain realizations of it (for example, PObjBox).
@@ -30,12 +27,6 @@ private:
     /// Array of "ordered" physics objects that should be added to main ph. obj-s array when
     /// no world calculations are performing.
     std::vector<BasePObj*> order;
-
-    /// @brief Is WorldManager should adjust speed/FPS? Should be used only when there's need in this.
-    bool speedCorrection;
-
-    unsigned int a, b = 0;
-    double delta = 0;
 
     float x_offset = 0, y_offset = 0, zoom = 80;
     float move_speed, zoom_speed;
@@ -57,13 +48,10 @@ private:
     void CorrectOffset(SDL_Point mouse, float zoom_change);
 
 public:
-    /// @brief Init video, Box2D world and create WorldManager instance.
-    /// @param path_to_font filepath to the font (*.ttf) file. If leave nullptr, WM wouldn't render any text.
-    /// @param fpsCorrection is WorldManager should adjust speed/FPS? Should be used only when there's need in this.
-    /// @param path_to_icon path to the icon that WM will set to program instance. Leave nullptr if you're setting icon in CMake.
+    /// @brief Init Box2D world and create WorldManager instance.
     /// @param move_speed amount of pixels added to camera offset variable in one frame when pressed relevant button.
     /// @param zoom_speed amount of coefficiency multiplied to camera zoom variable in one frame when pressed relevant button.
-    WorldManager(const char* path_to_font = nullptr, bool fpsCorrection = false, const char* path_to_icon = nullptr, float move_speed = 10, float zoom_speed = 0.03);
+    WorldManager(float move_speed = 10, float zoom_speed = 0.03);
     ~WorldManager();
 
     /// @brief Add physics object realization into the BasePObj array.
@@ -75,26 +63,21 @@ public:
     void DeleteObject(int index);
 
     /// @brief Perform step of the world and logic, read keys and process them.
-    /// @return running status (true - still running; false - stop).
-    bool Step();
+    /// @param renderer link to renderer object (not link to SDL_Renderer) where to render.
+    /// @param ctrl buttons pressed in this frame.
+    /// @param old_ctrl buttons pressed in previous frame.
+    void Step(Renderer* renderer, Controls ctrl, Controls old_ctrl);
     
     /// @brief Render all the physics objects and show them.
-    void Render();
-
-    /// @brief Run main cycle of the program, exit only by initiative of user.
-    void Cycle();
+    void Render(Renderer* renderer, Controls ctrl);
 
     /// @brief Load level (object of class Level filled with required fields).
     /// First, it will destroy current loaded level (if it exists), then it will load attached level.
     /// @param level Level to be loaded.
-    void LoadLevel(Level level);
+    /// @param renderer link to renderer object (not link to SDL_Renderer) where to render.
+    void LoadLevel(Level level, Renderer* renderer);
 
     /// @brief Render debug screen at upper-left corner of a window.
     /// @param debugStrings information to be shown.
-    void RenderDebugScreen(std::vector<std::string> debugStrings);
-
-    /// @brief Get rendering context.
-    /// IMPORTANT: Gonna be deprecated soon (whole project architecture is going to change).
-    /// @return link to the rendering context.
-    SDL_Renderer* GetRenderer();
+    void RenderDebugScreen(std::vector<std::string> debugStrings, Renderer* renderer);
 };
