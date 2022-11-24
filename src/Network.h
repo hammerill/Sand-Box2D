@@ -2,21 +2,7 @@
 
 #include <curl/curl.h>
 
-#ifdef Vita
-#include <psp2/io/stat.h>
-#include <psp2/io/dirent.h>
-#include <psp2/io/fcntl.h>
-#include "psp2/kernel/clib.h"
-
-#include <malloc.h>
-#include <stdio.h>
-#include <string.h>
-#include <string>
-#else
-#include <filesystem>
-#include <stdio.h>
-#include <string>
-#endif
+#include "Files.h"
 
 /// @brief Static class for downloading files.
 class Network

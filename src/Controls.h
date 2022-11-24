@@ -26,15 +26,12 @@ protected:
     double zoomOut = 0;
 
     bool isMoving = false;
-    int deltaX = 0;
-    int deltaY = 0;
+    SDL_Point mouse;
 
     bool isPinching = false;
-    int deltaPinch = 0;
+    int pinch = 0;
 
     bool isWheel = false;
-
-    SDL_Point mouse;
 
     SDL_Event e;
 
@@ -85,30 +82,17 @@ public:
     
     /// @brief Is user pressing left mouse button or touchscreen right now in order to move camera?
     bool GetIsMoving();
-    
-    /// @brief Get delta X.
-    /// @return amount of pixels that user moved with mouse (or swiped) on X relatively to previous frame.
-    /// @example Users mouse speed 3 pixels/frame. This function will return 3 if they also move mouse 
-    /// strictly horizontally right or -3 if strictly horizontally left.
-    int GetDeltaX();
-    /// @brief Get delta Y.
-    /// @return amount of pixels that user moved with mouse (or swiped) on Y relatively to previous frame.
-    /// @example Users mouse speed 3 pixels/frame. This function will return 3 if they also move mouse 
-    /// strictly vertically down or -3 if strictly vertically up.
-    int GetDeltaY();
-
-    /// @brief Is user zooming screen using touchscreen right now?
-    bool GetIsPinching();
-    
-    /// @brief Get delta of zoom. Caution, this function is pixel-specific, and so should be properly
-    /// handled at the getting side.
-    /// @return amount of pixels by how much user pinched screen relatively to previous frame.
-    int GetDeltaPinch();
-
-    /// @brief Is user changing zoom right now using mouse wheel?
-    bool GetIsWheel();
-
     /// @brief Get current mouse (or touchscreen) position.
     /// @return SDL_Point object with fields X and Y.
     SDL_Point GetMouse();
+
+    /// @brief Is user zooming screen using touchscreen right now?
+    bool GetIsPinching();
+    /// @brief Get delta of zoom. Caution, this function is pixel-specific, and so should be properly
+    /// handled at the getting side.
+    /// @return amount of pixels by how much user pinched screen relatively to previous frame.
+    int GetPinch();
+
+    /// @brief Is user changing zoom right now using mouse wheel?
+    bool GetIsWheel();
 };

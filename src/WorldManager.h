@@ -31,6 +31,8 @@ private:
     float x_offset = 0, y_offset = 0, zoom = 80;
     float move_speed, zoom_speed;
 
+    int physics_quality;
+
     bool isDebug = false;
 
     /// @brief Current loaded level.
@@ -49,10 +51,17 @@ private:
 
 public:
     /// @brief Init Box2D world and create WorldManager instance.
+    /// @param physics_quality higher value - more precise but slower calculation.
     /// @param move_speed amount of pixels added to camera offset variable in one frame when pressed relevant button.
     /// @param zoom_speed amount of coefficiency multiplied to camera zoom variable in one frame when pressed relevant button.
-    WorldManager(float move_speed = 10, float zoom_speed = 0.03);
+    WorldManager(int physics_quality = 16, float move_speed = 10, float zoom_speed = 0.03);
     ~WorldManager();
+
+    /// @brief Load level (object of class Level filled with required fields).
+    /// First, it will destroy current loaded level (if it exists), then it will load attached level.
+    /// @param level Level to be loaded.
+    /// @param renderer link to renderer object (not link to SDL_Renderer) where to render.
+    void LoadLevel(Level level, Renderer* renderer);
 
     /// @brief Add physics object realization into the BasePObj array.
     /// @param obj link to the physics object realization to add.
@@ -70,12 +79,6 @@ public:
     
     /// @brief Render all the physics objects and show them.
     void Render(Renderer* renderer, Controls ctrl);
-
-    /// @brief Load level (object of class Level filled with required fields).
-    /// First, it will destroy current loaded level (if it exists), then it will load attached level.
-    /// @param level Level to be loaded.
-    /// @param renderer link to renderer object (not link to SDL_Renderer) where to render.
-    void LoadLevel(Level level, Renderer* renderer);
 
     /// @brief Render debug screen at upper-left corner of a window.
     /// @param debugStrings information to be shown.

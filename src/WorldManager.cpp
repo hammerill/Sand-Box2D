@@ -1,7 +1,8 @@
 #include "WorldManager.h"
 
-WorldManager::WorldManager(float move_speed, float zoom_speed)
+WorldManager::WorldManager(int physics_quality, float move_speed, float zoom_speed)
 {
+    WorldManager::physics_quality = physics_quality;
     WorldManager::move_speed = move_speed;
     WorldManager::zoom_speed = zoom_speed;
 
@@ -22,7 +23,52 @@ WorldManager::~WorldManager()
     delete WorldManager::world;
 }
 
-void WorldManager::AddObject(BasePObj* obj) { WorldManager::order.push_back(obj); }
+void WorldManager::LoadLevel(Level level, Renderer* renderer)
+{
+    WorldManager::level = level;
+
+    // CAMERA
+    auto camera = WorldManager::level.GetCamera();
+
+    if (camera.type == "static")
+    {
+        WorldManager::zoom = renderer->GetHeight() / camera.height;
+
+        WorldManager::x_offset =    -(camera.x * WorldManager::zoom)
+                                    +(renderer->GetWidth() / 2);
+
+        WorldManager::y_offset =    -(camera.y * WorldManager::zoom)
+                                    +(renderer->GetHeight() / 2);
+    }
+    /////////
+    
+    // OBJECTS
+    for (int i = WorldManager::objects.size() - 1; i >= 0; i--)
+    { // Remove current loaded objects
+        WorldManager::DeleteObject(i);
+    }
+    
+    auto objects = WorldManager::level.GetPObjects();
+    for (size_t i = 0; i < objects.size(); i++)
+    {
+        WorldManager::AddObject(objects[i]);
+    }
+    //////////
+
+    // CYCLES (everything other at the end of the Step())
+    WorldManager::cyclesDelays = std::vector<int>();
+
+    for (size_t i = 0; i < WorldManager::level.GetCycles().size(); i++)
+    {
+        WorldManager::cyclesDelays.push_back(1);
+    }    
+    /////////
+}
+
+void WorldManager::AddObject(BasePObj* obj)
+{
+    WorldManager::order.push_back(obj);
+}
 void WorldManager::DeleteObject(int index)
 {
     delete WorldManager::objects[index]; // Call a destructor.
@@ -43,15 +89,15 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
 
     if (ctrl.GetIsMoving())
     {
-        WorldManager::x_offset += ctrl.GetDeltaX();
-        WorldManager::y_offset += ctrl.GetDeltaY();
+        WorldManager::x_offset += (ctrl.GetMouse().x - old_ctrl.GetMouse().x);
+        WorldManager::y_offset += (ctrl.GetMouse().y - old_ctrl.GetMouse().y);
     }
 
-    if (ctrl.GetIsPinching() && ((WorldManager::zoom + ctrl.GetDeltaPinch()) > 10))
+    if (ctrl.GetIsPinching() && ((WorldManager::zoom + (ctrl.GetPinch() - old_ctrl.GetPinch())) > 10))
     {
         CorrectOffset(  ctrl.GetMouse(),
-                        ctrl.GetDeltaPinch());
-        WorldManager::zoom += ctrl.GetDeltaPinch();
+                        (ctrl.GetPinch() - old_ctrl.GetPinch()));
+        WorldManager::zoom += (ctrl.GetPinch() - old_ctrl.GetPinch());
     }
 
     SDL_Point scr_center = {renderer->GetWidth() / 2, renderer->GetHeight() / 2};
@@ -82,7 +128,7 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
         WorldManager::zoom += ctrl.GetZoomIn() * WorldManager::zoom_speed * WorldManager::zoom;
     }
 
-    WorldManager::world->Step(1.0f / 60.0f, 12*4, 4*4);
+    WorldManager::world->Step(1.0f / 60.0f, WorldManager::physics_quality * 3, WorldManager::physics_quality);
 
     if (ctrl.GetReset())
     {
@@ -149,6 +195,10 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
 int renderedItemsCount;
 void WorldManager::Render(Renderer* renderer, Controls ctrl)
 {
+    SDL_SetRenderDrawBlendMode(renderer->GetRenderer(), SDL_BLENDMODE_NONE);
+    SDL_SetRenderDrawColor(renderer->GetRenderer(), 0x32, 0x32, 0x32, 0); //BG OPTION TO WORK ON
+    SDL_RenderClear(renderer->GetRenderer());
+
     renderedItemsCount = 0;
     for (size_t i = 0; i < WorldManager::objects.size(); i++)   
     {
@@ -176,10 +226,8 @@ void WorldManager::Render(Renderer* renderer, Controls ctrl)
         debugStrings.push_back("Zoom = " + std::to_string(WorldManager::zoom));
         debugStrings.push_back("Mouse X = " + std::to_string(mouse.x));
         debugStrings.push_back("Mouse Y = " + std::to_string(mouse.y));
-        debugStrings.push_back("Delta X = " + std::to_string(ctrl.GetDeltaX()));
-        debugStrings.push_back("Delta Y = " + std::to_string(ctrl.GetDeltaY()));
         debugStrings.push_back("IsMoving? = " + std::to_string(ctrl.GetIsMoving()));
-        debugStrings.push_back("Delta pinch = " + std::to_string(ctrl.GetDeltaPinch()));
+        debugStrings.push_back("Pinch = " + std::to_string(ctrl.GetPinch()));
         debugStrings.push_back("IsPinching? = " + std::to_string(ctrl.GetIsPinching()));
         debugStrings.push_back("Zoom In = " + std::to_string(ctrl.GetZoomIn()));
         debugStrings.push_back("Zoom Out = " + std::to_string(ctrl.GetZoomOut()));
@@ -188,48 +236,6 @@ void WorldManager::Render(Renderer* renderer, Controls ctrl)
 
         WorldManager::RenderDebugScreen(debugStrings, renderer);        
     }
-}
-
-void WorldManager::LoadLevel(Level level, Renderer* renderer)
-{
-    WorldManager::level = level;
-
-    // CAMERA
-    auto camera = WorldManager::level.GetCamera();
-
-    if (camera.type == "static")
-    {
-        WorldManager::zoom = renderer->GetHeight() / camera.height;
-
-        WorldManager::x_offset =    -(camera.x * WorldManager::zoom)
-                                    +(renderer->GetWidth() / 2);
-
-        WorldManager::y_offset =    -(camera.y * WorldManager::zoom)
-                                    +(renderer->GetHeight() / 2);
-    }
-    /////////
-    
-    // OBJECTS
-    for (int i = WorldManager::objects.size() - 1; i >= 0; i--)
-    { // Remove current loaded objects
-        WorldManager::DeleteObject(i);
-    }
-    
-    auto objects = WorldManager::level.GetPObjects();
-    for (size_t i = 0; i < objects.size(); i++)
-    {
-        WorldManager::AddObject(objects[i]);
-    }
-    //////////
-
-    // CYCLES (everything other at the end of the Step())
-    WorldManager::cyclesDelays = std::vector<int>();
-
-    for (size_t i = 0; i < WorldManager::level.GetCycles().size(); i++)
-    {
-        WorldManager::cyclesDelays.push_back(1);
-    }    
-    /////////
 }
 
 void WorldManager::RenderDebugScreen(std::vector<std::string> debugStrings, Renderer* renderer)

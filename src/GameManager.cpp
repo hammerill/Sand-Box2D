@@ -2,13 +2,18 @@
 
 GameManager::GameManager(const char* path_to_settings, const char* path_to_def_settings)
 {
+    if (std::string(path_to_settings).find_last_of("\\/") != std::string::npos)
+    {
+        Files::MakeDirs(std::string(path_to_settings).substr(0, std::string(path_to_settings).find_last_of("\\/")));
+    }
+
     GameManager::settings = Settings(path_to_settings, path_to_def_settings);
 
     GameManager::renderer = new Renderer();
     GameManager::renderer->InitVideo(fullscreen, GameManager::settings.Get("path_to_icon").asString() == "" ? nullptr : 
                                                 GameManager::settings.Get("path_to_icon").asString().c_str());
     
-    GameManager::world_manager = new WorldManager();
+    GameManager::world_manager = new WorldManager(GameManager::settings.Get("physics_quality").asInt());
 
     Level level;
     level.LoadFile( GameManager::settings.Get("path_to_def_level_base").asString(), 
@@ -44,10 +49,6 @@ bool GameManager::Step()
 
 void GameManager::Render()
 {
-    SDL_SetRenderDrawBlendMode(GameManager::renderer->GetRenderer(), SDL_BLENDMODE_NONE);
-    SDL_SetRenderDrawColor(GameManager::renderer->GetRenderer(), 0x32, 0x32, 0x32, 0); //BG OPTION TO WORK ON
-    SDL_RenderClear(GameManager::renderer->GetRenderer());
-
     // RENDER
     world_manager->Render(GameManager::renderer, GameManager::ctrl);
     /////////
@@ -58,6 +59,10 @@ void GameManager::Render()
 void GameManager::Cycle()
 {
     bool isRunning = true;
+
+    // Network::SetRepo(GameManager::settings.Get("url_levels").asString());
+    // Network::DownloadFile(GameManager::settings.Get("path_to_levels").asString(), "index.json");
+    // Network::DownloadFile(GameManager::settings.Get("path_to_levels").asString(), "default_level/default_level.json");
 
     if (GameManager::settings.Get("speed_correction").asBool())
     {

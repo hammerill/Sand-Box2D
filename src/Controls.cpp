@@ -7,10 +7,17 @@ const double stickCenter = 128;
 SceCtrlData vita_ctrl;
 SceTouchData touchxy[SCE_TOUCH_PORT_MAX_NUM];
 
-SDL_Point old_mouse;
-int old_pinch;
+struct TouchSchema
+{
+    bool move = false;
+    bool pinch = false;
+};
+bool operator==(const TouchSchema& ls, const TouchSchema& rs)
+{
+    return ls.move == rs.move && ls.pinch == rs.pinch;
+}
 
-bool isInPinchVelState = false;
+TouchSchema old, now;
 
 Controls::Controls()
 {
@@ -26,6 +33,10 @@ void Controls::Check()
     sceCtrlPeekBufferPositive(0, &vita_ctrl, 1);
     sceTouchPeek(0, &touchxy[0], 1);
 
+    old = now; // It looks so artistically.
+    now = { touchxy[0].reportNum == 1 || touchxy[0].reportNum == 2,
+            touchxy[0].reportNum == 2};
+
     Controls::reset = vita_ctrl.buttons & SCE_CTRL_CROSS;
     Controls::debug = vita_ctrl.buttons & SCE_CTRL_TRIANGLE;
     Controls::reloadLevel = vita_ctrl.buttons & SCE_CTRL_CIRCLE;
@@ -34,24 +45,16 @@ void Controls::Check()
     {
         Controls::mouse = SDL_Point {touchxy[0].report[0].x / 2, touchxy[0].report[0].y / 2};
 
-        if (Controls::isMoving && !Controls::isPinching && !isInPinchVelState) 
+        if (old == now)
         {
-            Controls::deltaX = Controls::mouse.x - old_mouse.x;
-            Controls::deltaY = Controls::mouse.y - old_mouse.y;
-
-            old_mouse = Controls::mouse;
+            Controls::isMoving = true;
+            Controls::isPinching = false;
         }
         else
         {
-            old_mouse = Controls::mouse;
-
-            Controls::deltaX = 0;
-            Controls::deltaY = 0;
+            Controls::isMoving = false;
+            Controls::isPinching = false;
         }
-
-        Controls::isMoving = true;
-        Controls::isPinching = false;
-        isInPinchVelState = false;
     }
     else if (touchxy[0].reportNum == 2)
     {
@@ -62,54 +65,26 @@ void Controls::Check()
         };
 
         // Formula to calculate distance between two points
-        Controls::deltaPinch =  sqrt(
+        Controls::pinch =  sqrt(
                                     pow((touchxy[0].report[1].x / 2) - (touchxy[0].report[0].x / 2), 2)
                                     +
                                     pow((touchxy[0].report[1].y / 2) - (touchxy[0].report[0].y / 2), 2)
                                 );
-
-        if (Controls::isMoving && Controls::isPinching) 
+        
+        if (old == now)
         {
-            Controls::deltaX = Controls::mouse.x - old_mouse.x;
-            Controls::deltaY = Controls::mouse.y - old_mouse.y;
-
-            Controls::deltaPinch -= old_pinch;
-
-            old_mouse = Controls::mouse;
-            old_pinch += Controls::deltaPinch;
+            Controls::isMoving = true;
+            Controls::isPinching = true;
         }
         else
         {
-            old_mouse = Controls::mouse;
-            old_pinch = Controls::deltaPinch;
-
-            Controls::deltaX = 0;
-            Controls::deltaY = 0;
-            Controls::deltaPinch = 0;
+            Controls::isMoving = false;
+            Controls::isPinching = false;
         }
-
-        Controls::isMoving = true;
-        Controls::isPinching = true;
     }
     else
     {
-        const int touchVel = 7;
-
-        Controls::deltaX -= Controls::deltaX / touchVel;
-        Controls::deltaY -= Controls::deltaY / touchVel;
-
-        if (    Controls::deltaX <= touchVel && Controls::deltaY <= touchVel
-            &&  Controls::deltaX >=-touchVel && Controls::deltaY >=-touchVel)
-        {
-            Controls::isMoving = false;
-            isInPinchVelState = false;
-
-            Controls::deltaX = 0;
-            Controls::deltaY = 0;
-        }
-        else
-            isInPinchVelState = true;
-
+        Controls::isMoving = false;
         Controls::isPinching = false;
     }
     
@@ -163,9 +138,6 @@ Controls::~Controls() {}
 
 void Controls::Check()
 {
-    Controls::deltaX = 0; 
-    Controls::deltaY = 0;
-
     if (Controls::isWheel)
     {
         Controls::zoomIn = 0; 
@@ -195,9 +167,6 @@ void Controls::Check()
             Controls::fullscreen = false;
             break;
         case SDL_MOUSEMOTION:
-            Controls::deltaX = e.motion.xrel;
-            Controls::deltaY = e.motion.yrel;
-            
             Controls::mouse = SDL_Point {e.motion.x, e.motion.y};
             break;
 
@@ -289,12 +258,9 @@ double Controls::GetZoomIn()    { return Controls::zoomIn; }
 double Controls::GetZoomOut()   { return Controls::zoomOut; }
 
 bool Controls::GetIsMoving()    { return Controls::isMoving; }
-int Controls::GetDeltaX()       { return Controls::deltaX; }
-int Controls::GetDeltaY()       { return Controls::deltaY; }
+SDL_Point Controls::GetMouse()  { return Controls::mouse; }
 
 bool Controls::GetIsPinching()  { return Controls::isPinching; }
-int Controls::GetDeltaPinch()   { return Controls::deltaPinch; }
+int Controls::GetPinch()        { return Controls::pinch; }
 
 bool Controls::GetIsWheel()     { return Controls::isWheel; }
-
-SDL_Point Controls::GetMouse()  { return Controls::mouse; }

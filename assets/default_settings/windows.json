@@ -5,5 +5,6 @@
     "path_to_icon": "",
     "speed_correction": false,
     "path_to_def_level_base": "./assets",
-    "path_to_def_level": "default_level/default_level.json"
+    "path_to_def_level": "default_level/default_level.json",
+    "physics_quality": 16
 }
