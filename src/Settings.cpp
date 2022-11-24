@@ -58,7 +58,10 @@ void Settings::Clear()
 {
     Settings::settings = Json::Value();
 
-    std::ofstream ofs;
-    ofs.open(Settings::path_to_settings, std::ofstream::out | std::ofstream::trunc);
-    ofs.close();
+    if (Settings::path_to_settings != nullptr)
+    {
+        std::ofstream ofs;
+        ofs.open(Settings::path_to_settings, std::ofstream::out | std::ofstream::trunc);
+        ofs.close();
+    }
 }
