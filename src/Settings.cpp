@@ -53,3 +53,12 @@ Json::Value Settings::Get(std::string key)
 
     return Settings::settings[key];
 }
+
+void Settings::Clear()
+{
+    Settings::settings = Json::Value();
+
+    std::ofstream ofs;
+    ofs.open(Settings::path_to_settings, std::ofstream::out | std::ofstream::trunc);
+    ofs.close();
+}

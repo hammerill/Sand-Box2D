@@ -33,4 +33,7 @@ public:
     /// @param key Name of the parameter to be returned.
     /// @return Value of the parameter. If it's not set - set to default value and return it.
     Json::Value Get(std::string key);
+
+    /// @brief Clear all the settings (reset them to default).
+    void Clear();
 };
