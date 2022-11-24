@@ -1,6 +1,10 @@
 #pragma once
 
+#ifdef Linux
+#include <json/json.h>
+#else
 #include <jsoncpp/json/json.h>
+#endif
 
 #include <iostream>
 #include <fstream>
