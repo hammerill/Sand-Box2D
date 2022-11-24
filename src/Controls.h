@@ -88,9 +88,8 @@ public:
 
     /// @brief Is user zooming screen using touchscreen right now?
     bool GetIsPinching();
-    /// @brief Get delta of zoom. Caution, this function is pixel-specific, and so should be properly
-    /// handled at the getting side.
-    /// @return amount of pixels by how much user pinched screen relatively to previous frame.
+    /// @brief Get pinch value. It's a distance between two fingers.
+    /// @return amount of pixels of distance between two fingers.
     int GetPinch();
 
     /// @brief Is user changing zoom right now using mouse wheel?
