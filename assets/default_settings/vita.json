@@ -7,5 +7,5 @@
     "path_to_def_level_base": "./assets",
     "path_to_def_level": "default_level/default_level.json",
     "physics_quality": 2,
-    "moving_inertia_frames": 10
+    "moving_inertia_frames": 15
 }
