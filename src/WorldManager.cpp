@@ -1,8 +1,9 @@
 #include "WorldManager.h"
 
-WorldManager::WorldManager(int physics_quality, float move_speed, float zoom_speed)
+WorldManager::WorldManager(int physics_quality, int moving_inertia_frames, float move_speed, float zoom_speed)
 {
     WorldManager::physics_quality = physics_quality;
+    WorldManager::moving_inertia_frames = moving_inertia_frames;
     WorldManager::move_speed = move_speed;
     WorldManager::zoom_speed = zoom_speed;
 
@@ -75,6 +76,18 @@ void WorldManager::DeleteObject(int index)
     WorldManager::objects.erase(WorldManager::objects.begin() + index); // Remove from vector.
 }
 
+template<typename T>
+double getAverage(std::vector<T> const& v)
+{
+    if (v.empty())
+        return 0;
+ 
+    return std::reduce(v.begin(), v.end(), 0.0) / v.size();
+}
+
+std::vector<int> last_frames_speed_x = std::vector<int>();
+std::vector<int> last_frames_speed_y = std::vector<int>();
+
 void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
 {
     if (ctrl.GetDebug() && !old_ctrl.GetDebug())
@@ -87,10 +100,25 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
     WorldManager::y_offset -= ctrl.GetMoveDown() * WorldManager::move_speed;
     WorldManager::x_offset += ctrl.GetMoveLeft() * WorldManager::move_speed;
 
+    if (last_frames_speed_x.size() > (size_t)(WorldManager::moving_inertia_frames))
+    {
+        last_frames_speed_x.erase(last_frames_speed_x.begin());
+        last_frames_speed_y.erase(last_frames_speed_y.begin());
+    }
+
     if (ctrl.GetIsMoving())
     {
         WorldManager::x_offset += (ctrl.GetMouse().x - old_ctrl.GetMouse().x);
         WorldManager::y_offset += (ctrl.GetMouse().y - old_ctrl.GetMouse().y);
+        last_frames_speed_x.push_back(ctrl.GetMouse().x - old_ctrl.GetMouse().x);
+        last_frames_speed_y.push_back(ctrl.GetMouse().y - old_ctrl.GetMouse().y);
+    }
+    else
+    {
+        WorldManager::x_offset += getAverage(last_frames_speed_x);
+        WorldManager::y_offset += getAverage(last_frames_speed_y);
+        last_frames_speed_x.push_back(0);
+        last_frames_speed_y.push_back(0);
     }
 
     if (ctrl.GetIsPinching() && ((WorldManager::zoom + (ctrl.GetPinch() - old_ctrl.GetPinch())) > 10))

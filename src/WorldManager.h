@@ -12,6 +12,7 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <numeric>
 
 /// @brief Class for managing either SDL2 window, renderer and Box2D world with physics objects within it.
 class WorldManager
@@ -30,6 +31,8 @@ private:
 
     float x_offset = 0, y_offset = 0, zoom = 80;
     float move_speed, zoom_speed;
+
+    int moving_inertia_frames;
 
     int physics_quality;
 
@@ -54,7 +57,7 @@ public:
     /// @param physics_quality higher value - more precise but slower calculation.
     /// @param move_speed amount of pixels added to camera offset variable in one frame when pressed relevant button.
     /// @param zoom_speed amount of coefficiency multiplied to camera zoom variable in one frame when pressed relevant button.
-    WorldManager(int physics_quality = 16, float move_speed = 10, float zoom_speed = 0.03);
+    WorldManager(int physics_quality = 16, int moving_inertia_frames = 10, float move_speed = 10, float zoom_speed = 0.03);
     ~WorldManager();
 
     /// @brief Load level (object of class Level filled with required fields).

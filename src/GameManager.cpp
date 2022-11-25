@@ -10,15 +10,23 @@ GameManager::GameManager(const char* path_to_settings, const char* path_to_def_s
     GameManager::settings = Settings(path_to_settings, path_to_def_settings);
 
     GameManager::renderer = new Renderer();
-    GameManager::renderer->InitVideo(fullscreen, GameManager::settings.Get("path_to_icon").asString() == "" ? nullptr : 
-                                                GameManager::settings.Get("path_to_icon").asString().c_str());
+    GameManager::renderer->InitVideo(
+        fullscreen,
+        GameManager::settings.Get("path_to_icon").asString() == "" ? nullptr : 
+        GameManager::settings.Get("path_to_icon").asString().c_str()
+    );
     
-    GameManager::world_manager = new WorldManager(GameManager::settings.Get("physics_quality").asInt());
+    GameManager::world_manager = new WorldManager(
+        GameManager::settings.Get("physics_quality").asInt(),
+        GameManager::settings.Get("moving_inertia_frames").asInt()
+    );
 
     Level level;
-    level.LoadFile( GameManager::settings.Get("path_to_def_level_base").asString(), 
-                    GameManager::settings.Get("path_to_def_level").asString(),
-                    GameManager::renderer->GetRenderer());
+    level.LoadFile(
+        GameManager::settings.Get("path_to_def_level_base").asString(), 
+        GameManager::settings.Get("path_to_def_level").asString(),
+        GameManager::renderer->GetRenderer()
+    );
 
     GameManager::world_manager->LoadLevel(level, GameManager::renderer);
 }
