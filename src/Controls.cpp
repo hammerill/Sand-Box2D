@@ -37,9 +37,10 @@ void Controls::Check()
     now = { touchxy[0].reportNum == 1 || touchxy[0].reportNum == 2,
             touchxy[0].reportNum == 2};
 
-    Controls::reset = vita_ctrl.buttons & SCE_CTRL_CROSS;
+    Controls::reset = vita_ctrl.buttons & SCE_CTRL_SQUARE;
     Controls::debug = vita_ctrl.buttons & SCE_CTRL_TRIANGLE;
     Controls::reloadLevel = vita_ctrl.buttons & SCE_CTRL_CIRCLE;
+    Controls::exit = vita_ctrl.buttons & (SCE_CTRL_START | SCE_CTRL_SELECT);
 
     if (touchxy[0].reportNum == 1)
     {
@@ -89,30 +90,22 @@ void Controls::Check()
     }
     
 
-    if (vita_ctrl.buttons & SCE_CTRL_UP) /////////////////////////////////// UP
-        Controls::moveUp = 1;
-    else if (vita_ctrl.ly < stickCenter - stickDeadZone)
+    if (vita_ctrl.ly < stickCenter - stickDeadZone) /////////////////////////////////// MOVEUP
         Controls::moveUp = (stickCenter - vita_ctrl.ly) / stickCenter;
     else
         Controls::moveUp = 0;
     
-    if (vita_ctrl.buttons & SCE_CTRL_RIGHT) /////////////////////////////////// RIGHT
-        Controls::moveRight = 1;
-    else if (vita_ctrl.lx > stickCenter + stickDeadZone)
+    if (vita_ctrl.lx > stickCenter + stickDeadZone) /////////////////////////////////// MOVERIGHT
         Controls::moveRight = (vita_ctrl.lx - stickCenter) / stickCenter;
     else
         Controls::moveRight = 0;
 
-    if (vita_ctrl.buttons & SCE_CTRL_DOWN) /////////////////////////////////// DOWN
-        Controls::moveDown = 1;
-    else if (vita_ctrl.ly > stickCenter + stickDeadZone)
+    if (vita_ctrl.ly > stickCenter + stickDeadZone) /////////////////////////////////// MOVEDOWN
         Controls::moveDown = (vita_ctrl.ly - stickCenter) / stickCenter;
     else
         Controls::moveDown = 0;
     
-    if (vita_ctrl.buttons & SCE_CTRL_LEFT) /////////////////////////////////// LEFT
-        Controls::moveLeft = 1;
-    else if (vita_ctrl.lx < stickCenter - stickDeadZone)
+    if (vita_ctrl.lx < stickCenter - stickDeadZone) /////////////////////////////////// MOVELEFT
         Controls::moveLeft = (stickCenter - vita_ctrl.lx) / stickCenter;
     else
         Controls::moveLeft = 0;
@@ -205,16 +198,16 @@ void Controls::Check()
                 Controls::reloadLevel = e.type == SDL_KEYDOWN; 
                 break;
 
-            case SDLK_UP: case SDLK_w:
+            case SDLK_UP:
                 Controls::moveUp = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
-            case SDLK_RIGHT: case SDLK_d:
+            case SDLK_RIGHT:
                 Controls::moveRight = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
-            case SDLK_DOWN: case SDLK_s:
+            case SDLK_DOWN:
                 Controls::moveDown = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
-            case SDLK_LEFT: case SDLK_a:
+            case SDLK_LEFT:
                 Controls::moveLeft = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
 
