@@ -29,7 +29,7 @@ public:
     /// @param path_to_settings path to the JSON where user settings are stored.
     /// If doesn't exist - it'll create it. If leave nullptr, settings affect only current session.
     /// @param path_to_def_settings path to the JSON where default settings are stored.
-    /// If leave nullptr, all default settings will be considered as 0.
+    /// If leave nullptr, all default settings will be considered as 0 (which is unstable).
     GameManager(const char* path_to_settings = nullptr, const char* path_to_def_settings = nullptr);
 
     /// @brief Perform one step and call step functions on all the objects. To render them call Render().
