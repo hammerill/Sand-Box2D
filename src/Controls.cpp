@@ -40,6 +40,14 @@ void Controls::Check()
     Controls::reset = vita_ctrl.buttons & SCE_CTRL_SQUARE;
     Controls::debug = vita_ctrl.buttons & SCE_CTRL_TRIANGLE;
     Controls::reloadLevel = vita_ctrl.buttons & SCE_CTRL_CIRCLE;
+
+    Controls::actionUp = vita_ctrl.buttons & SCE_CTRL_UP;
+    Controls::actionRight = vita_ctrl.buttons & SCE_CTRL_RIGHT;
+    Controls::actionDown = vita_ctrl.buttons & SCE_CTRL_DOWN;
+    Controls::actionLeft = vita_ctrl.buttons & SCE_CTRL_LEFT;
+    
+    Controls::actionEnter = vita_ctrl.buttons & SCE_CTRL_CROSS;
+
     Controls::exit = vita_ctrl.buttons & (SCE_CTRL_START | SCE_CTRL_SELECT);
 
     if (touchxy[0].reportNum == 1)
@@ -211,6 +219,23 @@ void Controls::Check()
                 Controls::moveLeft = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
 
+            case SDLK_w:
+                Controls::actionUp = e.type == SDL_KEYDOWN ? 1 : 0;
+                break;
+            case SDLK_d:
+                Controls::actionRight = e.type == SDL_KEYDOWN ? 1 : 0;
+                break;
+            case SDLK_s:
+                Controls::actionDown = e.type == SDL_KEYDOWN ? 1 : 0;
+                break;
+            case SDLK_a:
+                Controls::actionLeft = e.type == SDL_KEYDOWN ? 1 : 0;
+                break;
+                
+            case SDLK_SPACE:
+                Controls::actionEnter = e.type == SDL_KEYDOWN ? 1 : 0;
+                break;
+
             case SDLK_e:
                 Controls::zoomIn = e.type == SDL_KEYDOWN ? 1 : 0;
                 Controls::isWheel = false;
@@ -257,3 +282,10 @@ bool Controls::GetIsPinching()  { return Controls::isPinching; }
 int Controls::GetPinch()        { return Controls::pinch; }
 
 bool Controls::GetIsWheel()     { return Controls::isWheel; }
+
+bool Controls::GetActionUp()    { return Controls::actionUp; }
+bool Controls::GetActionRight() { return Controls::actionRight; }
+bool Controls::GetActionDown()  { return Controls::actionDown; }
+bool Controls::GetActionLeft()  { return Controls::actionLeft; }
+
+bool Controls::GetActionEnter() { return Controls::actionEnter; }

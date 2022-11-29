@@ -261,6 +261,13 @@ void WorldManager::Render(Renderer* renderer, Controls ctrl)
         debugStrings.push_back("Zoom Out = " + std::to_string(ctrl.GetZoomOut()));
         debugStrings.push_back("Objects count = " + std::to_string(WorldManager::world->GetBodyCount()));
         debugStrings.push_back("Objects rendered = " + std::to_string(renderedItemsCount));
+        debugStrings.push_back("");
+        debugStrings.push_back("ACTIONS");
+        debugStrings.push_back("Up = " + std::to_string(ctrl.GetActionUp()));
+        debugStrings.push_back("Right = " + std::to_string(ctrl.GetActionRight()));
+        debugStrings.push_back("Down = " + std::to_string(ctrl.GetActionDown()));
+        debugStrings.push_back("Left = " + std::to_string(ctrl.GetActionLeft()));
+        debugStrings.push_back("Enter = " + std::to_string(ctrl.GetActionEnter()));
 
         WorldManager::RenderDebugScreen(debugStrings, renderer);        
     }

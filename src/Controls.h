@@ -33,7 +33,15 @@ protected:
 
     bool isWheel = false;
 
+    bool actionUp = false;
+    bool actionRight = false;
+    bool actionDown = false;
+    bool actionLeft = false;
+    
+    bool actionEnter = false;
+
     SDL_Event e;
+    
 
 public:
     Controls();
@@ -94,4 +102,13 @@ public:
 
     /// @brief Is user changing zoom right now using mouse wheel?
     bool GetIsWheel();
+
+    // ACTIONS
+    bool GetActionUp();
+    bool GetActionRight();
+    bool GetActionDown();
+    bool GetActionLeft();
+
+    bool GetActionEnter();
+    //////////
 };
