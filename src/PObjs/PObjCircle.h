@@ -63,9 +63,6 @@ public:
     /// @param renderer the rendering context.
     void Register(b2World* world, SDL_Renderer* renderer = nullptr);
 
-    /// @brief Set default position of the circle.
-    void Reset();
-
     /// @brief Render this circle.
     /// @param renderer the rendering context.
     /// @param x_offset camera X offset in pixels.

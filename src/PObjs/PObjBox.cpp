@@ -14,8 +14,6 @@ PObjBox::PObjBox(const char* path_to_texture, float x_box, float y_box, float w_
     PObjBox::bodyDef.angle = PObjBox::angle; 
     PObjBox::bodyDef.position.Set(PObjBox::x, PObjBox::y);
 
-    PObjBox::vel.Set(vel_x, vel_y);
-
     PObjBox::boxShape.SetAsBox(PObjBox::w / 2.0f, PObjBox::h / 2.0f);
     
     PObjBox::fixtureDef.shape = &(PObjBox::boxShape);
@@ -39,8 +37,6 @@ PObjBox::PObjBox(SDL_Texture* texture, float x_box, float y_box, float w_box, fl
     PObjBox::bodyDef.angle = PObjBox::angle; 
     PObjBox::bodyDef.position.Set(PObjBox::x, PObjBox::y);
 
-    PObjBox::vel.Set(vel_x, vel_y);
-
     PObjBox::boxShape.SetAsBox(PObjBox::w / 2.0f, PObjBox::h / 2.0f);
     
     PObjBox::fixtureDef.shape = &(PObjBox::boxShape);
@@ -58,11 +54,6 @@ PObjBox::~PObjBox()
     PObjBox::body->GetWorld()->DestroyBody(PObjBox::body);
 }
 
-void PObjBox::Reset()
-{
-    PObjBox::body->SetTransform(b2Vec2(PObjBox::x, PObjBox::y), PObjBox::angle);
-    PObjBox::body->SetLinearVelocity(PObjBox::vel);
-}
 bool PObjBox::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)
 {
     b2Vec2 pos = PObjBox::body->GetPosition();

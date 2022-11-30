@@ -12,10 +12,10 @@
 class BasePObj
 {
 protected:
-    /// @brief By multiplying this with value in radians
-    /// you will get a value in degrees.
-    /// @example RAD * RAD2DEG == DEG
-    /// @example DEG / RAD2DEG == RAD
+    /// By multiplying this with value in radians you will get a value in degrees.
+    ///
+    /// RAD * RAD2DEG == DEG
+    /// DEG / RAD2DEG == RAD
     const float RAD2DEG = 180 / M_PI;
 
     /// @brief Texture of the PObj.
@@ -25,8 +25,6 @@ protected:
     b2Body* body;
     /// @brief Body definition of the PObj.
     b2BodyDef bodyDef;
-    /// @brief Starting velocity of the PObj.
-    b2Vec2 vel;
     /// @brief Fixture definition of the PObj.
     b2FixtureDef fixtureDef;
 
@@ -47,9 +45,6 @@ public:
     void LoadTexture(SDL_Renderer* renderer);
 
     b2Body* GetBody();
-
-    /// @brief Set default position and angle of PObj.
-    virtual void Reset() = 0;
     
     /// @brief Render this PObj.
     /// @param renderer the rendering context.

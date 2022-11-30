@@ -25,7 +25,6 @@ PObjPlatform::~PObjPlatform()
     PObjPlatform::body->GetWorld()->DestroyBody(PObjPlatform::body);
 }
 
-void PObjPlatform::Reset() {}
 bool PObjPlatform::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)
 {
     b2Vec2 begin =  {(PObjPlatform::x1 * zoom) + x_offset, (PObjPlatform::y1 * zoom) + y_offset};

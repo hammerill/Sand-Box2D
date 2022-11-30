@@ -12,7 +12,6 @@ class Controls
 {
 protected:
     bool exit = false;
-    bool reset = false;
     bool fullscreen = false;
     bool debug = false;
     bool reloadLevel = false;
@@ -53,8 +52,6 @@ public:
 
     /// @brief Is user does want to close the program? Should be handled.
     bool GetExit();
-    /// @brief Is user does want to reset the position and/or angles of ph. objects?
-    bool GetReset();
     /// @brief Is user does want to go/exit fullscreen mode?
     bool GetFullscreen();
     /// @brief Is user does want to activate/deactivate debug mode?

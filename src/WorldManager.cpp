@@ -158,14 +158,6 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
 
     WorldManager::world->Step(1.0f / 60.0f, WorldManager::physics_quality * 3, WorldManager::physics_quality);
 
-    if (ctrl.GetReset())
-    {
-        for (size_t i = 0; i < WorldManager::objects.size(); i++)
-        {
-            WorldManager::objects[i]->Reset();
-        }
-    }
-
     // CYCLES
     auto cycles = WorldManager::level.GetCycles();
     for (size_t i = 0; i < WorldManager::cyclesDelays.size(); i++)

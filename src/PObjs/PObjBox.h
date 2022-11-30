@@ -57,9 +57,6 @@ public:
     /// @param renderer the rendering context.
     void Register(b2World* world, SDL_Renderer* renderer);
 
-    /// @brief Set default position and angle of the box.
-    void Reset();
-
     /// @brief Render this box.
     /// @param renderer the rendering context.
     /// @param x_offset camera X offset in pixels.

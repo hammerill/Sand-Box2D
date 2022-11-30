@@ -40,21 +40,19 @@ Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/discus
 
 ## Controls
 ### For Desktops
-- <kbd>R</kbd> - reset physics objects angles and/or positions.
+- <kbd>WASD</kbd> and <kbd>Space</kbd> or <kbd>R</kbd> - actions (not implemented yet).
 - <kbd>Arrows</kbd> - move camera.
 - <kbd>Q</kbd>/<kbd>E</kbd> - adjust zoom.
 - <kbd>Tab</kbd> - on/off debug screen.
-- <kbd>WASD</kbd> and <kbd>Space</kbd> - actions (not implemented yet).
 - <kbd>F</kbd> - go/exit fullscreen (gonna be moved to options menu soon).
 - <kbd>X</kbd> - reload current level (gonna be moved to options menu soon).
 - Also, you can consider using mouse for camera controls and to go/exit fullscreen mode.
 
 ### For PS Vita
-- <kbd>Square</kbd> - reset physics objects angles and/or positions.
+- <kbd>DPAD</kbd> and <kbd>Cross</kbd> - actions (not implemented yet).
 - <kbd>Left Stick</kbd> - move camera.
 - <kbd>Right Stick</kbd> or <kbd>L</kbd>/<kbd>R</kbd> - adjust zoom.
 - <kbd>Triangle</kbd> - on/off debug screen.
-- <kbd>DPAD</kbd> and <kbd>Cross</kbd> - actions (not implemented yet).
 - <kbd>Circle</kbd> - reload current level (gonna be moved to options menu soon).
 - Also, you can consider using touchscreen for camera controls.
 

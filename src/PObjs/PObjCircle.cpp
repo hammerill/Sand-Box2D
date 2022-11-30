@@ -16,8 +16,6 @@ PObjCircle::PObjCircle( float x, float y, float radius, float vel_x, float vel_y
     PObjCircle::g_angle = g_angle;
     PObjCircle::b_angle = b_angle;
 
-    PObjCircle::vel.Set(vel_x, vel_y);
-
     PObjCircle::bodyDef.type = b2_dynamicBody;
     PObjCircle::bodyDef.position.Set(PObjCircle::x, PObjCircle::y);
     PObjCircle::bodyDef.angle = 0;
@@ -36,11 +34,6 @@ PObjCircle::~PObjCircle()
     PObjCircle::body->GetWorld()->DestroyBody(PObjCircle::body);
 }
 
-void PObjCircle::Reset()
-{
-    PObjCircle::body->SetTransform(b2Vec2(PObjCircle::x, PObjCircle::y), 0);
-    PObjCircle::body->SetLinearVelocity(PObjCircle::vel);
-}
 bool PObjCircle::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)
 {
     b2Vec2 pos = PObjCircle::body->GetPosition();

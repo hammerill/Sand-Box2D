@@ -36,8 +36,7 @@ void Controls::Check()
     old = now; // It looks so artistically.
     now = { touchxy[0].reportNum == 1 || touchxy[0].reportNum == 2,
             touchxy[0].reportNum == 2};
-
-    Controls::reset = vita_ctrl.buttons & SCE_CTRL_SQUARE;
+    
     Controls::debug = vita_ctrl.buttons & SCE_CTRL_TRIANGLE;
     Controls::reloadLevel = vita_ctrl.buttons & SCE_CTRL_CIRCLE;
 
@@ -193,9 +192,6 @@ void Controls::Check()
         case SDL_KEYDOWN: case SDL_KEYUP:
             switch (e.key.keysym.sym)
             {
-            case SDLK_r:
-                Controls::reset = e.type == SDL_KEYDOWN; // If keydown - reset continues (true), if keyup (!keydown) - reset stops (false)
-                break;
             case SDLK_f:
                 Controls::fullscreen = e.type == SDL_KEYDOWN; 
                 break;
@@ -232,7 +228,7 @@ void Controls::Check()
                 Controls::actionLeft = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
                 
-            case SDLK_SPACE:
+            case SDLK_SPACE: case SDLK_r:
                 Controls::actionEnter = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
 
@@ -262,7 +258,6 @@ void Controls::Check()
 #endif
 
 bool Controls::GetExit()        { return Controls::exit; }
-bool Controls::GetReset()       { return Controls::reset; }
 bool Controls::GetFullscreen()  { return Controls::fullscreen; }
 bool Controls::GetDebug()       { return Controls::debug; }
 bool Controls::GetReloadLevel() { return Controls::reloadLevel; }

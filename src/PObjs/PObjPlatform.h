@@ -44,8 +44,6 @@ public:
     template<typename T>
     T GetParam(const char* name);
 
-    void Reset();
-
     /// @brief Render this platform.
     /// @param renderer the rendering context.
     /// @param x_offset camera X offset in pixels.
