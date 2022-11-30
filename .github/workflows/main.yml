@@ -11,7 +11,7 @@ env:
   VITASDK: /usr/local/vitasdk
 
 jobs:
-  VitaBuild:
+  Vita:
     runs-on: ubuntu-latest
       
     steps:
@@ -24,7 +24,7 @@ jobs:
           ./bootstrap-vitasdk.sh
           ./install-all.sh
       
-      - name: First build step
+      - name: First build step (ignore CMake error)
         continue-on-error: true
         run: |
           cd
@@ -35,8 +35,7 @@ jobs:
         
       - name: Second build step
         run: |
-          cd
-          cd Sand-Box2D/build
+          cd ~/Sand-Box2D/build
           cmake ..
           make -j4
       
@@ -45,4 +44,4 @@ jobs:
         with:
           name: VPK
           path: |
-            *.vpk
+            ~/Sand-Box2D/build/*.vpk
