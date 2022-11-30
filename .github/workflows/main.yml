@@ -35,6 +35,8 @@ jobs:
         
       - name: Second build step
         run: |
+          cd
+          cd Sand-Box2D/build
           cmake ..
           make -j4
       
