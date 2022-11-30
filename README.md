@@ -31,11 +31,7 @@ have rewritten it from zero using OOP, and now you're free to play this game and
 
 ## Future plans
 
-- ~~Add support for loading custom levels~~
-  <svg width="12" height="12" viewBox="0 0 16 16" style="background-color: #3FB950;">
-    <path fill-rule="evenodd" d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"></path>
-  </svg>
-Done!
+- ~~Add support for loading custom levels~~ ✅ Done!
 - Make a main menu, where player can:
   * Download, manage and start levels;
   * Adjust settings;
