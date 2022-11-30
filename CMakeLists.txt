@@ -31,6 +31,7 @@ if(BUILD_WINDOWS)
 	target_link_libraries(${CMAKE_PROJECT_NAME}
 		jsoncpp
 		curl
+		box2d
 
 		SDL2_image
 		SDL2_mixer
@@ -41,7 +42,6 @@ if(BUILD_WINDOWS)
 		SDL2main
 
 		SDL2
-		box2d
 	)
 
 	file(COPY assets DESTINATION .)
@@ -58,14 +58,13 @@ elseif(BUILD_LINUX)
 	target_link_libraries(${CMAKE_PROJECT_NAME}
 		jsoncpp
 		curl
+		box2d
 
 		SDL2_image
 		SDL2_mixer
 		SDL2_ttf
 		SDL2_gfx
 		SDL2
-
-		box2d
 	)
 
 	file(COPY assets DESTINATION .)
@@ -73,8 +72,6 @@ elseif(BUILD_LINUX)
 elseif(BUILD_VITA)
 	message(STATUS "Building for Vita")
 	add_definitions(-DVita)
-
-	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES} ${SOURCES_POBJS})
 
 	if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
 	  if(DEFINED ENV{VITASDK})
@@ -84,7 +81,7 @@ elseif(BUILD_VITA)
 	  endif()
 	endif()
 
-	project(Sand-Box2D)
+	project(Sand-Box2D C CXX)
 	include("${VITASDK}/share/vita.cmake" REQUIRED)
 
 	set(VITA_APPNAME  "Sand-Box2D")
@@ -94,17 +91,14 @@ elseif(BUILD_VITA)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -pthread -std=c++17")
 	set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
 
+	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES} ${SOURCES_POBJS})
+
 	find_package(CURL REQUIRED)
 	find_package(OpenSSL REQUIRED)
 
-	target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
-		"$ENV{VITASDK}/arm-vita-eabi/include/"
-	)
-
-	include_directories(src)
-
 	target_link_libraries(${CMAKE_PROJECT_NAME}
 		jsoncpp
+		box2d
 
 		${CURL_LIBRARIES}
 		${OPENSSL_LIBRARIES}
@@ -138,8 +132,6 @@ elseif(BUILD_VITA)
 		SceSysmodule_stub
 		SceTouch_stub
 		SceMotion_stub
-
-		box2d
 	)
 
 	vita_create_self(${CMAKE_PROJECT_NAME}.self ${CMAKE_PROJECT_NAME})

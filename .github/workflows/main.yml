@@ -7,7 +7,6 @@ on:
     types: [ run_build ]
 
 env:
-  BUILD_TYPE: Release
   VITASDK: /usr/local/vitasdk
 
 jobs:
@@ -24,18 +23,12 @@ jobs:
           ./bootstrap-vitasdk.sh
           ./install-all.sh
       
-      - name: First build step (ignore CMake error)
-        continue-on-error: true
+      - name: Build project
         run: |
           git clone https://github.com/Hammerill/Sand-Box2D && cd Sand-Box2D
           mkdir build
           cd build
           cmake .. -DBUILD_WINDOWS=OFF -DBUILD_VITA=ON
-        
-      - name: Second build step
-        run: |
-          cd Sand-Box2D/build
-          cmake ..
           make -j4
       
       - name: Output VPK

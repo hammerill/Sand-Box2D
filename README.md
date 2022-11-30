@@ -121,26 +121,21 @@ or copy its contents (*.dll) to the same directory where .exe file should be (bu
 
 ### For PS Vita
 Build for PS Vita should be performed in Linux environment (or in MSYS2 in Windows, see step 1).
+Also, you can consider auto build system provided by GitHub [actions](https://github.com/Hammerill/Sand-Box2D/actions).
 1. Install [VITASDK](https://vitasdk.org/).
-2. Ensure you have "curl" and "openssl" packages installed:
-  ```bash
-  vdpm curl
-  vdpm openssl
-  ```
-3. Clone repo:
+2. Clone repo:
   ```bash
   git clone https://github.com/Hammerill/Sand-Box2D && cd Sand-Box2D
   ```
-4. Build:
+3. Build:
   ```bash
   mkdir build
   cd build
   cmake .. -DBUILD_WINDOWS=OFF -DBUILD_VITA=ON
-  cmake ..
   make -j4
   ```
-5. .vpk file should appear. Copy this file to your hacked PS Vita and install via VitaShell.
-6. Bubble "Sand-Box2D" will appear, you can now launch this game.
+4. .vpk file should appear. Copy this file to your hacked PS Vita and install via VitaShell.
+5. Bubble "Sand-Box2D" will appear, you can now launch this game.
 
 ## Credits
 - [eder13](https://github.com/eder13) - base project (Box2D-SDL2-Demo) author.
