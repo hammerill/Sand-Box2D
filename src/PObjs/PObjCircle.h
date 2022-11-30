@@ -44,6 +44,18 @@ public:
                 uint8_t b_angle = 0);
                 
     ~PObjCircle();
+
+    /// @brief Set some parameter of this Circle. For example, X or Y pos.
+    /// @param name name of the parameter to be setted. For example, "x" or "y".
+    /// @param value value of the parameter to be setted. Can be any type (int, const char*, etc...)
+    template<typename T>
+    void SetParam(const char* name, T value);
+
+    /// @brief Get some parameter of this Circle. For example, X or Y pos.
+    /// @param name name of the parameter to be getted. For example, "x" or "y".
+    /// @return value of any type. Call like this - Circle.GetParam<float>("x");
+    template<typename T>
+    T GetParam(const char* name);
     
     /// Register this circle in the world. Should be 
     /// called only when no world calculations are performing.
