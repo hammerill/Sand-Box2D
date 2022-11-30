@@ -11,7 +11,7 @@ env:
   VITASDK: /usr/local/vitasdk
 
 jobs:
-  PS Vita Build:
+  VitaBuild:
     runs-on: ubuntu-latest
 
     steps:
