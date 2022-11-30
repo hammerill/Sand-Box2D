@@ -121,7 +121,9 @@ or copy its contents (*.dll) to the same directory where .exe file should be (bu
 
 ### For PS Vita
 Build for PS Vita should be performed in Linux environment (or in MSYS2 in Windows, see step 1).
+
 Also, you can consider auto build system provided by GitHub [actions](https://github.com/Hammerill/Sand-Box2D/actions).
+
 1. Install [VITASDK](https://vitasdk.org/).
 2. Clone repo:
   ```bash
