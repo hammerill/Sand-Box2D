@@ -13,8 +13,10 @@ env:
 jobs:
   VitaBuild:
     runs-on: ubuntu-latest
-
+      
     steps:
+      - uses: actions/checkout@v3
+
       - name: Install VitaSDK
         run: |
           git clone https://github.com/vitasdk/vdpm
@@ -37,7 +39,7 @@ jobs:
           make -j4
       
       - name: Output VPK
-        uses: actions/upload-artifact
+        uses: actions/upload-artifact@v3
         with:
           name: VPK
           path: |
