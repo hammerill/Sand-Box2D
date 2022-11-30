@@ -1,15 +1,10 @@
 ![Logo](./pics/Logo-wide.jpg)
 <h1 align="center">
-  An open source cross-platform game based on Box2D with SDL2.
+  An open source cross-platform game based on Box2D with SDL2
 </h1>
 
 Sand-Box2D is a game where you can try out possibilities of the Box2D physics engine,
 can [make your own levels](https://github.com/Hammerill/Sand-Box2D-levels) and share them with others.
-
-Supported platforms:
-- Windows;
-- Linux;
-- PS Vita.
 
 This project was developed mainly for educational purposes.
 I've started developing it for myself just to understand basis of Box2D, how to link it with SDL2 and etc. 
@@ -17,11 +12,58 @@ But then, I've realized it could be more than just some rewritten code: a game.
 So, I took [this project](https://github.com/eder13/Box2D-SDL2-Demo) as the base,
 have rewritten it from zero using OOP, and now you're free to play this game and use its code at way as you want.
 
+<h2 align="center">
+  Get it for your platform
+</h2>
+<center>
+  <a href="#on-windows">
+    <span style=" width: 75px;
+                  height: 75px;
+                  background-color: #CCC;
+                  border-radius: 50%;
+                  display: inline-block;
+                  padding: 25px;
+                  margin: 10px;"
+          onmouseover="this.style.backgroundColor='#FFF'"
+          onmouseout="this.style.backgroundColor='#CCC'">
+      <img src="./pics/icons/windows.svg" width="75" height="75">
+    </span>
+  </a>
+  <a href="#on-linux">
+    <span style=" width: 75px;
+                  height: 75px;
+                  background-color: #CCC;
+                  border-radius: 50%;
+                  display: inline-block;
+                  padding: 25px;
+                  margin: 10px;"
+          onmouseover="this.style.backgroundColor='#FFF'"
+          onmouseout="this.style.backgroundColor='#CCC'">
+      <img src="./pics/icons/linux.svg" width="75" height="75">
+    </span>
+  </a>
+  <a href="#for-ps-vita-1">
+    <span style=" width: 75px;
+                  height: 75px;
+                  background-color: #CCC;
+                  border-radius: 50%;
+                  display: inline-block;
+                  padding: 25px;
+                  margin: 10px;"
+          onmouseover="this.style.backgroundColor='#FFF'"
+          onmouseout="this.style.backgroundColor='#CCC'">
+      <img src="./pics/icons/playstation.svg" width="75" height="75">
+    </span>
+  </a>
+</center>
+
+<hr>
+
 ## Contents
-- [Future plans](#future-plans)
 - [Controls](#controls)
   * [For Desktops](#for-desktops)
   * [For PS Vita](#for-ps-vita)
+- [Future plans](#future-plans)
 - [Future architecture](#future-architecture)
 - [Build](#build)
   * [On Windows](#on-windows)
@@ -29,17 +71,7 @@ have rewritten it from zero using OOP, and now you're free to play this game and
   * [For PS Vita](#for-ps-vita-1)
 - [Credits](#credits)
 
-## Future plans
-
-- ~~Add support for loading custom levels~~ ✅ Done!
-- Make a main menu, where player can:
-  * Download, manage and start levels;
-  * Adjust settings;
-  * Access menu "About".
-- Implement level editor (right now to make levels you need to manually edit JSON).
-- Add support of a lot of objects (joints included).
-
-Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/discussions)!
+<hr>
 
 ## Controls
 ### For Desktops
@@ -58,6 +90,17 @@ Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/discus
 - <kbd>Triangle</kbd> - on/off debug screen.
 - <kbd>Circle</kbd> - reload current level (gonna be moved to options menu soon).
 - Also, you can consider using touchscreen for camera controls.
+
+## Future plans
+- ~~Add support for loading custom levels~~ ✅ Done!
+- Make a main menu, where player can:
+  * Download, manage and start levels;
+  * Adjust settings;
+  * Access menu "About".
+- Implement level editor (right now to make levels you need to manually edit JSON).
+- Add support of a lot of objects (joints included).
+
+Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/discussions)!
 
 ## Future architecture
 ![Arch](./pics/project-arch.drawio.svg)
