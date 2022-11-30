@@ -27,7 +27,6 @@ jobs:
       - name: First build step (ignore CMake error)
         continue-on-error: true
         run: |
-          cd
           git clone https://github.com/Hammerill/Sand-Box2D && cd Sand-Box2D
           mkdir build
           cd build
@@ -35,13 +34,13 @@ jobs:
         
       - name: Second build step
         run: |
-          cd ~/Sand-Box2D/build
+          cd Sand-Box2D/build
           cmake ..
           make -j4
       
       - name: Output VPK
         uses: actions/upload-artifact@v3
         with:
-          name: VPK
+          name: Sand-Box2D.vpk
           path: |
-            ~/Sand-Box2D/build/*.vpk
+            Sand-Box2D/build/*.vpk
