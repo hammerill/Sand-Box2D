@@ -15,47 +15,17 @@ have rewritten it from zero using OOP, and now you're free to play this game and
 <h2 align="center">
   Get it for your platform
 </h2>
-<center>
+<p align="center">
   <a href="#on-windows">
-    <span style=" width: 75px;
-                  height: 75px;
-                  background-color: #CCC;
-                  border-radius: 50%;
-                  display: inline-block;
-                  padding: 25px;
-                  margin: 10px;"
-          onmouseover="this.style.backgroundColor='#FFF'"
-          onmouseout="this.style.backgroundColor='#CCC'">
-      <img src="./pics/icons/windows.svg" width="75" height="75">
-    </span>
+    <img src="./pics/icons/windows.png" width="75" height="75" style="margin: 25px;">
   </a>
   <a href="#on-linux">
-    <span style=" width: 75px;
-                  height: 75px;
-                  background-color: #CCC;
-                  border-radius: 50%;
-                  display: inline-block;
-                  padding: 25px;
-                  margin: 10px;"
-          onmouseover="this.style.backgroundColor='#FFF'"
-          onmouseout="this.style.backgroundColor='#CCC'">
-      <img src="./pics/icons/linux.svg" width="75" height="75">
-    </span>
+    <img src="./pics/icons/linux.png" width="75" height="75" style="margin: 25px;">
   </a>
   <a href="#for-ps-vita-1">
-    <span style=" width: 75px;
-                  height: 75px;
-                  background-color: #CCC;
-                  border-radius: 50%;
-                  display: inline-block;
-                  padding: 25px;
-                  margin: 10px;"
-          onmouseover="this.style.backgroundColor='#FFF'"
-          onmouseout="this.style.backgroundColor='#CCC'">
-      <img src="./pics/icons/playstation.svg" width="75" height="75">
-    </span>
+    <img src="./pics/icons/playstation.png" width="75" height="75" style="margin: 25px;">
   </a>
-</center>
+</p>
 
 <hr>
 
