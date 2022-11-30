@@ -1,4 +1,4 @@
-name: Github Actions Auto Build for Vita
+name: Auto Build for Vita
 
 on:
   push:
@@ -15,8 +15,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-
       - name: Install VitaSDK
         run: |
           git clone https://github.com/vitasdk/vdpm
@@ -24,14 +22,7 @@ jobs:
           ./bootstrap-vitasdk.sh
           ./install-all.sh
       
-      - name: Install CURL and OpenSSL
-        run: |
-          export VITASDK=/usr/local/vitasdk
-          export PATH=$VITASDK/bin:$PATH
-          vdpm curl
-          vdpm openssl
-      
-      - name: Build project
+      - name: First build step
         continue-on-error: true
         run: |
           cd
@@ -39,15 +30,14 @@ jobs:
           mkdir build
           cd build
           cmake .. -DBUILD_WINDOWS=OFF -DBUILD_VITA=ON
+        
+      - name: Second build step
+        run: |
           cmake ..
           make -j4
       
-      - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-      
-      - name: Output VPK as an artifact
-        uses: actions/upload-artifact@v3
+      - name: Output VPK
+        uses: actions/upload-artifact
         with:
           name: VPK
           path: |
