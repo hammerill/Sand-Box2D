@@ -1,4 +1,4 @@
-name: Github Actions Auto Build
+name: Github Actions Auto Build for Vita
 
 on:
   push:
@@ -11,7 +11,7 @@ env:
   VITASDK: /usr/local/vitasdk
 
 jobs:
-  AutoBuild:
+  PS Vita Build:
     runs-on: ubuntu-latest
 
     steps:
@@ -32,6 +32,7 @@ jobs:
           vdpm openssl
       
       - name: Build project
+        continue-on-error: true
         run: |
           cd
           git clone https://github.com/Hammerill/Sand-Box2D && cd Sand-Box2D
@@ -45,7 +46,7 @@ jobs:
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
       
-      - name: Output VPK as artifact
+      - name: Output VPK as an artifact
         uses: actions/upload-artifact@v3
         with:
           name: VPK
