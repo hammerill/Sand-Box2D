@@ -3,7 +3,7 @@
   An open source cross-platform game based on Box2D with SDL2
 </h1>
 
-Sand-Box2D is a game where you can try out possibilities of the Box2D physics engine,
+[Sand-Box2D](https://github.com/Hammerill/Sand-Box2D) is a game where you can try out possibilities of the Box2D physics engine,
 can [make your own levels](https://github.com/Hammerill/Sand-Box2D-levels) and share them with others.
 
 This project was developed mainly for educational purposes.
@@ -15,19 +15,19 @@ have rewritten it from zero using OOP, and now you're free to play this game and
 <h2 align="center">
   Get it for your platform
 </h2>
-<p align="center">
-  <a href="#on-windows">
-    <img src="./pics/icons/windows.png" width="75" height="75" style="margin: 25px;">
-  </a>
-  <a href="#on-linux">
-    <img src="./pics/icons/linux.png" width="75" height="75" style="margin: 25px;">
-  </a>
-  <a href="#for-ps-vita-1">
-    <img src="./pics/icons/playstation.png" width="75" height="75" style="margin: 25px;">
-  </a>
-</p>
-
-<hr>
+<div align="center">
+  <code>
+    <a href="#on-windows">
+      <img src="./pics/icons/windows.png" width="100" height="100">
+    </a>
+    <a href="#on-linux">
+      <img src="./pics/icons/linux.png" width="100" height="100">
+    </a>
+    <a href="#for-ps-vita-1">
+      <img src="./pics/icons/playstation.png" width="100" height="100">
+    </a>
+  </code>
+</div>
 
 ## Contents
 - [Controls](#controls)
