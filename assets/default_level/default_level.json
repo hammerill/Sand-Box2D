@@ -7,6 +7,84 @@
         "y": 3.5,
         "height": 8
     },
+    "actions": {
+        "up": {
+            "keydown_hold": [
+                {
+                    "id": 10,
+                    "type": "add",
+                    "param": "vel_y",
+                    "value": -0.1
+                }
+            ]
+        },
+        "right": {
+            "keydown_hold": [
+                {
+                    "id": 10,
+                    "type": "add",
+                    "param": "vel_x",
+                    "value": 0.1
+                }
+            ]
+        },
+        "down": {
+            "keydown_hold": [
+                {
+                    "id": 10,
+                    "type": "add",
+                    "param": "vel_y",
+                    "value": 0.1
+                }
+            ]
+        },
+        "left": {
+            "keydown_hold": [
+                {
+                    "id": 10,
+                    "type": "add",
+                    "param": "vel_x",
+                    "value": -0.1
+                }
+            ]
+        },
+        "enter": {
+            "keydown_once": [
+                {
+                    "id": 10,
+                    "type": "set",
+                    "param": "vel_x",
+                    "value": 0
+                },
+                {
+                    "id": 10,
+                    "type": "set",
+                    "param": "vel_y",
+                    "value": 0
+                },
+                {
+                    "id": 10,
+                    "type": "set",
+                    "param": "angle",
+                    "value": 0
+                }
+            ],
+            "keyup": [
+                {
+                    "id": 10,
+                    "type": "set",
+                    "param": "vel_x",
+                    "value": "-10:10"
+                },
+                {
+                    "id": 10,
+                    "type": "set",
+                    "param": "vel_y",
+                    "value": "-10:10"
+                }
+            ]
+        }
+    },
     "objects": [
         {
             "type": "platform",
@@ -37,6 +115,18 @@
             "r": 255,
             "g": 255,
             "b": 0
+        },
+        {
+            "type": "box",
+            "id": 10,
+            "x": 6,
+            "y": 5,
+            "w": 2,
+            "h": 2,
+            "angle": 0,
+            "vel_x": 0,
+            "vel_y": 0,
+            "texture": "./box.png"
         }
     ],
     "cycles": [
