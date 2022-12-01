@@ -4,6 +4,8 @@
 #include <SDL2/SDL_image.h>
 #include <box2d/box2d.h>
 
+#include <iostream>
+
 #ifndef M_PI
 #define M_PI           3.14159265358979323846264338327950288  /* pi */
 #endif
@@ -19,7 +21,7 @@ protected:
     const float RAD2DEG = 180 / M_PI;
 
     /// @brief Texture of the PObj.
-    SDL_Texture* texture;
+    SDL_Texture* texture = nullptr;
 
     /// @brief Link to the main body of the PObj.
     b2Body* body;
@@ -28,8 +30,8 @@ protected:
     /// @brief Fixture definition of the PObj.
     b2FixtureDef fixtureDef;
 
-    /// @brief Path to the image file of texture.
-    const char* pathToTexture = nullptr;
+    /// @brief Starting velocity of the PObj.
+    b2Vec2 vel;
 
 public:
     virtual ~BasePObj() {};
@@ -39,10 +41,6 @@ public:
     /// @param world link to the world where PObj should be registered.
     /// @param renderer the rendering context.
     void Register(b2World* world, SDL_Renderer* renderer = nullptr);
-
-    /// @brief Load a texture for PObj.
-    /// @param renderer the rendering context.
-    void LoadTexture(SDL_Renderer* renderer);
 
     b2Body* GetBody();
     

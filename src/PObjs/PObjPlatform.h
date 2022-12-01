@@ -2,13 +2,20 @@
 
 #include "BasePObj.h"
 
+struct PlatformDesc
+{
+    float x1 = 0, y1 = 0;
+    float x2 = 0, y2 = 0;
+};
+
 /// Child class of the BasePObj which represents static yellow stick. 
 /// Or main platform.
 class PObjPlatform: public BasePObj
 {
 private:
-    /// @brief Start and end positions of platform.
-    float x1, y1, x2, y2;
+    /// @brief What values you should declare for create Platform?
+    /// Used only while creating Platform.
+    PlatformDesc platformDesc;
 
     /// @brief Color.
     uint8_t r, g, b;
@@ -17,32 +24,20 @@ private:
     b2EdgeShape platformShape;
 
 public:
-    /// @brief Create a new platform entity.
-    /// @param x1_plat position X of the start point of the platform.
-    /// @param y1_plat position Y of the start point of the platform.
-    /// @param x2_plat position X of the end point of the platform.
-    /// @param y2_plat position Y of the end point of the platform.
-    /// @param r color RED.
-    /// @param g color GREEN.
-    /// @param b color BLUE.
-    PObjPlatform(float x1_plat, float y1_plat, float x2_plat, float y2_plat,
-                    uint8_t r = 0xFF,
-                    uint8_t g = 0xFF,
-                    uint8_t b = 0);
-    
+    PObjPlatform(PlatformDesc platformDesc);
     ~PObjPlatform();
 
-    /// @brief Set some parameter of this Platform. For example, X or Y pos.
-    /// @param name name of the parameter to be setted. For example, "x" or "y".
-    /// @param value value of the parameter to be setted. Can be any type (int, const char*, etc...)
+    /// @brief Set some parameter of this Platform. For example, color.
+    /// @param name name of the parameter to be setted. For example, "r", "g" or "b".
+    /// @param value value of the parameter to be setted. Can be any type (uint8_t, etc...)
     template<typename T>
-    void SetParam(const char* name, T value);
+    void SetParam(std::string name, T value);
 
     /// @brief Get some parameter of this Platform. For example, X or Y pos.
     /// @param name name of the parameter to be getted. For example, "x" or "y".
     /// @return value of any type. Call like this - Platform.GetParam<float>("x");
     template<typename T>
-    T GetParam(const char* name);
+    T GetParam(std::string name);
 
     /// @brief Render this platform.
     /// @param renderer the rendering context.

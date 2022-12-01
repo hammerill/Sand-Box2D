@@ -4,14 +4,22 @@
 
 #include <SDL2/SDL2_gfxPrimitives.h>
 
+struct CircleDesc
+{
+    float x = 0, y = 0;
+    float radius = 0;
+    float angle = 0;
+    float vel_x = 0, vel_y = 0;
+};
+
 /// Child class of the BasePObj which represents circle 
 /// in the WorldManager environment.
 class PObjCircle: public BasePObj
 {
 private:
-    /// Default values of position and radius of circle entity.
-    /// Used while creating a circle or resetting it to default.
-    float x, y, radius, vel_x, vel_y;
+    /// @brief What values you should declare for create Circle?
+    /// Used only while creating Circle.
+    CircleDesc circleDesc;
 
     /// @brief Color of the circle entity.
     uint8_t r, g, b;
@@ -23,39 +31,20 @@ private:
     b2CircleShape circleShape;
 
 public:
-    /// @brief Create a new circle entity.
-    /// @param x position X of the circle center in Box2D meters.
-    /// @param y position Y of the circle center in Box2D meters.
-    /// @param radius radius of the circle in Box2D meters.
-    /// @param vel_x velocity on X of the circle.
-    /// @param vel_y velocity on Y of the circle.
-    /// @param r color RED.
-    /// @param g color GREEN.
-    /// @param b color BLUE.
-    /// @param r_angle color RED of angle render.
-    /// @param g_angle color GREEN of angle render.
-    /// @param b_angle color BLUE of angle render.
-    PObjCircle( float x, float y, float radius, float vel_x = 0, float vel_y = 0,
-                uint8_t r = 0xFF,
-                uint8_t g = 0x80,
-                uint8_t b = 0xFF,
-                uint8_t r_angle = 0,
-                uint8_t g_angle = 0,
-                uint8_t b_angle = 0);
-                
+    PObjCircle(CircleDesc circleDesc);
     ~PObjCircle();
 
     /// @brief Set some parameter of this Circle. For example, X or Y pos.
     /// @param name name of the parameter to be setted. For example, "x" or "y".
-    /// @param value value of the parameter to be setted. Can be any type (int, const char*, etc...)
+    /// @param value value of the parameter to be setted. Can be any type (int, std::string, etc...)
     template<typename T>
-    void SetParam(const char* name, T value);
+    void SetParam(std::string name, T value);
 
     /// @brief Get some parameter of this Circle. For example, X or Y pos.
     /// @param name name of the parameter to be getted. For example, "x" or "y".
     /// @return value of any type. Call like this - Circle.GetParam<float>("x");
     template<typename T>
-    T GetParam(const char* name);
+    T GetParam(std::string name);
     
     /// Register this circle in the world. Should be 
     /// called only when no world calculations are performing.

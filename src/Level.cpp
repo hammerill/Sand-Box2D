@@ -39,44 +39,55 @@ BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
     {
         if (jsonObj["type"] == "platform")
         {
-            return new PObjPlatform(Level::LoadNumber(jsonObj["x1"]),
-                                    Level::LoadNumber(jsonObj["y1"]),
-                                    Level::LoadNumber(jsonObj["x2"]),
-                                    Level::LoadNumber(jsonObj["y2"]),
+            PlatformDesc platformDesc =
+            {
+                Level::LoadNumber(jsonObj["x1"]),
+                Level::LoadNumber(jsonObj["y1"]),
+                Level::LoadNumber(jsonObj["x2"]),
+                Level::LoadNumber(jsonObj["y2"])
+            };
+            auto platform = new PObjPlatform(platformDesc);
 
-                                    Level::LoadNumber(jsonObj["r"]),
-                                    Level::LoadNumber(jsonObj["g"]),
-                                    Level::LoadNumber(jsonObj["b"]) );
+            platform->SetParam("r", (uint8_t)Level::LoadNumber(jsonObj["r"]));
+            platform->SetParam("g", (uint8_t)Level::LoadNumber(jsonObj["g"]));
+            platform->SetParam("b", (uint8_t)Level::LoadNumber(jsonObj["b"]));
+
+            return platform;
         }
         else if (jsonObj["type"] == "box")
         {
-            return new PObjBox( texture,
-                                Level::LoadNumber(jsonObj["x"]),
-                                Level::LoadNumber(jsonObj["y"]),
-                                Level::LoadNumber(jsonObj["w"]),
-                                Level::LoadNumber(jsonObj["h"]),
+            BoxDesc boxDesc = 
+            {
+                Level::LoadNumber(jsonObj["x"]), Level::LoadNumber(jsonObj["y"]),
+                Level::LoadNumber(jsonObj["w"]), Level::LoadNumber(jsonObj["h"]),
+                Level::LoadNumber(jsonObj["angle"]),
+                Level::LoadNumber(jsonObj["vel_x"]), Level::LoadNumber(jsonObj["vel_y"])
+            };
+            auto box = new PObjBox(boxDesc);
 
-                                Level::LoadNumber(jsonObj["angle"]),
+            box->SetParam("texture", texture);
 
-                                Level::LoadNumber(jsonObj["vel_x"]),
-                                Level::LoadNumber(jsonObj["vel_x"]) );
+            return box;
         }
         else if (jsonObj["type"] == "circle")
         {
-            return new PObjCircle(  Level::LoadNumber(jsonObj["x"]),
-                                    Level::LoadNumber(jsonObj["y"]),
-                                    Level::LoadNumber(jsonObj["radius"]),
-                                    
-                                    Level::LoadNumber(jsonObj["vel_x"]),
-                                    Level::LoadNumber(jsonObj["vel_y"]),
-                                    
-                                    Level::LoadNumber(jsonObj["r"]),
-                                    Level::LoadNumber(jsonObj["g"]),
-                                    Level::LoadNumber(jsonObj["b"]),
-                                    
-                                    Level::LoadNumber(jsonObj["r_angle"]),
-                                    Level::LoadNumber(jsonObj["g_angle"]),
-                                    Level::LoadNumber(jsonObj["b_angle"]) );
+            CircleDesc circleDesc = 
+            {
+                Level::LoadNumber(jsonObj["x"]), Level::LoadNumber(jsonObj["y"]),
+                Level::LoadNumber(jsonObj["radius"]),
+                Level::LoadNumber(jsonObj["angle"]),
+                Level::LoadNumber(jsonObj["vel_x"]), Level::LoadNumber(jsonObj["vel_y"])
+            };
+            auto circle = new PObjCircle(circleDesc);
+            
+            circle->SetParam("r", (uint8_t)Level::LoadNumber(jsonObj["r"]));
+            circle->SetParam("g", (uint8_t)Level::LoadNumber(jsonObj["g"]));
+            circle->SetParam("b", (uint8_t)Level::LoadNumber(jsonObj["b"]));
+            circle->SetParam("r_angle", (uint8_t)Level::LoadNumber(jsonObj["r_angle"]));
+            circle->SetParam("g_angle", (uint8_t)Level::LoadNumber(jsonObj["g_angle"]));
+            circle->SetParam("b_angle", (uint8_t)Level::LoadNumber(jsonObj["b_angle"]));
+
+            return circle;
         }
         else
             return nullptr;
@@ -89,12 +100,13 @@ BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
 
 Level::~Level()
 {
-    
+    // SDL_DestroyTexture(texture); 
+    // I need to think about how to load/unload textures later.
 }
 
-bool Level::LoadFile(std::string base, std::string filepath, SDL_Renderer* temp_rr)
+bool Level::LoadFile(std::string base, std::string filepath, SDL_Renderer* renderer)
 {
-    texture = SDL_CreateTextureFromSurface(temp_rr, IMG_Load("assets/img/box.png"));
+    texture = SDL_CreateTextureFromSurface(renderer, IMG_Load("assets/img/box.png"));
 
     Level::~Level();
 

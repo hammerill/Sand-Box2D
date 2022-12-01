@@ -1,18 +1,11 @@
 #include "PObjPlatform.h"
 
-PObjPlatform::PObjPlatform(float x1_plat, float y1_plat, float x2_plat, float y2_plat, uint8_t r, uint8_t g, uint8_t b)
+PObjPlatform::PObjPlatform(PlatformDesc platformDesc)
 {
-    PObjPlatform::x1 = x1_plat;
-    PObjPlatform::y1 = y1_plat;
-    PObjPlatform::x2 = x2_plat;
-    PObjPlatform::y2 = y2_plat;
+    PObjPlatform::platformDesc = platformDesc;
 
-    PObjPlatform::r = r;
-    PObjPlatform::g = g;
-    PObjPlatform::b = b;
-
-    b2Vec2 start_point = b2Vec2(PObjPlatform::x1, PObjPlatform::y1);
-    b2Vec2 end_point = b2Vec2(PObjPlatform::x2, PObjPlatform::y2);
+    b2Vec2 start_point = b2Vec2(PObjPlatform::platformDesc.x1, PObjPlatform::platformDesc.y1);
+    b2Vec2 end_point = b2Vec2(PObjPlatform::platformDesc.x2, PObjPlatform::platformDesc.y2);
     
     PObjPlatform::platformShape.SetTwoSided(start_point, end_point);
 
@@ -20,15 +13,44 @@ PObjPlatform::PObjPlatform(float x1_plat, float y1_plat, float x2_plat, float y2
 }
 PObjPlatform::~PObjPlatform()
 {
-    delete[] PObjPlatform::pathToTexture;
-
     PObjPlatform::body->GetWorld()->DestroyBody(PObjPlatform::body);
 }
 
+template<typename T>
+void PObjPlatform::SetParam(std::string name, T value)
+{
+    if constexpr(std::is_same<T, uint8_t>::value)
+    {
+        if (name == "r")
+            PObjPlatform::r = (uint8_t)value;
+        else if (name == "g")
+            PObjPlatform::g = (uint8_t)value;
+        else if (name == "b")
+            PObjPlatform::b = (uint8_t)value;
+    }
+}
+template void PObjPlatform::SetParam<uint8_t>(std::string name, uint8_t value);
+
+template<typename T>
+T PObjPlatform::GetParam(std::string name)
+{
+    if constexpr(std::is_same<T, uint8_t>::value)
+    {
+        if (name == "r")
+            return PObjPlatform::r;
+        else if (name == "g")
+            return PObjPlatform::g;
+        else if (name == "b")
+            return PObjPlatform::b;
+        return 0;
+    }
+}
+template uint8_t PObjPlatform::GetParam<uint8_t>(std::string name);
+
 bool PObjPlatform::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)
 {
-    b2Vec2 begin =  {(PObjPlatform::x1 * zoom) + x_offset, (PObjPlatform::y1 * zoom) + y_offset};
-    b2Vec2 end =    {(PObjPlatform::x2 * zoom) + x_offset, (PObjPlatform::y2 * zoom) + y_offset};
+    b2Vec2 begin =  {(PObjPlatform::platformDesc.x1 * zoom) + x_offset, (PObjPlatform::platformDesc.y1 * zoom) + y_offset};
+    b2Vec2 end =    {(PObjPlatform::platformDesc.x2 * zoom) + x_offset, (PObjPlatform::platformDesc.y2 * zoom) + y_offset};
 
     // Formula to calculate distance between two points
     float halfDistance =    sqrt(

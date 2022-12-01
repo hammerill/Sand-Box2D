@@ -2,54 +2,41 @@
 
 #include "BasePObj.h"
 
+struct BoxDesc
+{
+    float x = 0, y = 0;
+    float w = 1, h = 1;
+    float angle = 0;
+    float vel_x = 0, vel_y = 0;
+};
+
 /// Child class of the BasePObj which represents either box or 
 /// rectangle in the WorldManager environment.
 class PObjBox: public BasePObj
 {
 private:
-    /// Default values of position and angle of box entity.
-    /// Used while creating a box or resetting it to default.
-    float x, y, w, h, angle, vel_x, vel_y;
+    /// @brief What values you should declare for create Box?
+    /// Used only while creating Box.
+    BoxDesc boxDesc;
 
     /// @brief Shape of the box entity.
     b2PolygonShape boxShape;
 
 public:
-    /// @brief Create a new box entity.
-    /// @param path_to_texture path to the image file of texture.
-    /// @param x_box position X of the center of the box in Box2D meters.
-    /// @param y_box position Y of the center of the box in Box2D meters.
-    /// @param w_box width of the box in Box2D meters.
-    /// @param h_box height of the box in Box2D meters.
-    /// @param angle_box angle of the box in radians.
-    /// @param vel_x velocity on X of the box.
-    /// @param vel_y velocity on Y of the box.
-    PObjBox(const char* path_to_texture, float x_box, float y_box, float w_box, float h_box, float angle_box, float vel_x = 0, float vel_y = 0);
-    
-    /// @brief Create a new box entity.
-    /// @param texture link to the texture. Can be used in order to improve perfomance with many boxes with same texture.
-    /// @param x_box position X of the center of the box in Box2D meters.
-    /// @param y_box position Y of the center of the box in Box2D meters.
-    /// @param w_box width of the box in Box2D meters.
-    /// @param h_box height of the box in Box2D meters.
-    /// @param angle_box angle of the box in radians.
-    /// @param vel_x velocity on X of the box.
-    /// @param vel_y velocity on Y of the box.
-    PObjBox(SDL_Texture* texture, float x_box, float y_box, float w_box, float h_box, float angle_box, float vel_x = 0, float vel_y = 0);
-    
+    PObjBox(BoxDesc boxDesc);
     ~PObjBox();
 
     /// @brief Set some parameter of this Box. For example, X or Y pos.
     /// @param name name of the parameter to be setted. For example, "x" or "y".
-    /// @param value value of the parameter to be setted. Can be any type (int, const char*, etc...)
+    /// @param value value of the parameter to be setted. Can be any type (int, std::string, etc...)
     template<typename T>
-    void SetParam(const char* name, T value);
+    void SetParam(std::string name, T value);
 
     /// @brief Get some parameter of this Box. For example, X or Y pos.
     /// @param name name of the parameter to be getted. For example, "x" or "y".
     /// @return value of any type. Call like this - Box.GetParam<float>("x");
     template<typename T>
-    T GetParam(const char* name);
+    T GetParam(std::string name);
 
     /// Register this box in the world and set its texture. Should be 
     /// called only when no world calculations are performing.
