@@ -22,98 +22,88 @@ PObjCircle::~PObjCircle()
     PObjCircle::body->GetWorld()->DestroyBody(PObjCircle::body);
 }
 
-template<typename T>
-void PObjCircle::SetParam(std::string name, T value)
+void PObjCircle::SetParam(std::string name, Json::Value value)
 {
-    if constexpr(std::is_same<T, float>::value)
-    {
-        if (name == "x")
-        {
-            b2Vec2 pos = PObjCircle::body->GetPosition();
-            pos.x = (float)value;
-            PObjCircle::body->SetTransform(pos, PObjCircle::body->GetAngle());
-        }
-        else if (name == "y")
-        {
-            b2Vec2 pos = PObjCircle::body->GetPosition();
-            pos.y = (float)value;
-            PObjCircle::body->SetTransform(pos, PObjCircle::body->GetAngle());
-        }
-        else if (name == "angle")
-        {
-            b2Vec2 pos = PObjCircle::body->GetPosition();
-            PObjCircle::body->SetTransform(pos, (float)value / PObjCircle::RAD2DEG);
-        }
-        else if (name == "vel_x")
-        {
-            b2Vec2 vel = PObjCircle::body->GetLinearVelocity();
-            vel.x = (float)value;
-            PObjCircle::body->SetLinearVelocity(vel);
-        }
-        else if (name == "vel_y")
-        {
-            b2Vec2 vel = PObjCircle::body->GetLinearVelocity();
-            vel.y = (float)value;
-            PObjCircle::body->SetLinearVelocity(vel);
-        }
-    }
-    else if constexpr(std::is_same<T, uint8_t>::value)
-    {
-        if (name == "r")
-            PObjCircle::r = (uint8_t)value;
-        else if (name == "g")
-            PObjCircle::g = (uint8_t)value;
-        else if (name == "b")
-            PObjCircle::b = (uint8_t)value;
-        else if (name == "r_angle")
-            PObjCircle::r_angle = (uint8_t)value;
-        else if (name == "g_angle")
-            PObjCircle::g_angle = (uint8_t)value;
-        else if (name == "b_angle")
-            PObjCircle::b_angle = (uint8_t)value;
-    }
-}
-template void PObjCircle::SetParam<float>(std::string name, float value);
-template void PObjCircle::SetParam<uint8_t>(std::string name, uint8_t value);
+    if (name == "id")
+        PObjCircle::id = value.asInt();
 
-template<typename T>
-T PObjCircle::GetParam(std::string name)
-{
-    if constexpr(std::is_same<T, float>::value)
+    else if (name == "x")
     {
-        if (name == "x")
-            return PObjCircle::body->GetPosition().x;
-        else if (name == "y")
-            return PObjCircle::body->GetPosition().y;
-        else if (name == "radius")
-            return PObjCircle::circleDesc.radius;
-        else if (name == "angle")
-            return PObjCircle::body->GetAngle() * PObjCircle::RAD2DEG;
-        else if (name == "vel_x")
-            return PObjCircle::body->GetLinearVelocity().x;
-        else if (name == "vel_y")
-            return PObjCircle::body->GetLinearVelocity().y;
-        return 0;
+        b2Vec2 pos = PObjCircle::body->GetPosition();
+        pos.x = value.asFloat();
+        PObjCircle::body->SetTransform(pos, PObjCircle::body->GetAngle());
     }
-    else if constexpr(std::is_same<T, uint8_t>::value)
+    else if (name == "y")
     {
-        if (name == "r")
-            return PObjCircle::r;
-        else if (name == "g")
-            return PObjCircle::g;
-        else if (name == "b")
-            return PObjCircle::b;
-        else if (name == "r_angle")
-            return PObjCircle::r_angle;
-        else if (name == "g_angle")
-            return PObjCircle::g_angle;
-        else if (name == "b_angle")
-            return PObjCircle::b_angle;
-        return 0;
+        b2Vec2 pos = PObjCircle::body->GetPosition();
+        pos.y = value.asFloat();
+        PObjCircle::body->SetTransform(pos, PObjCircle::body->GetAngle());
     }
+    else if (name == "angle")
+    {
+        b2Vec2 pos = PObjCircle::body->GetPosition();
+        PObjCircle::body->SetTransform(pos, value.asFloat() / PObjCircle::RAD2DEG);
+    }
+    else if (name == "vel_x")
+    {
+        b2Vec2 vel = PObjCircle::body->GetLinearVelocity();
+        vel.x = value.asFloat();
+        PObjCircle::body->SetLinearVelocity(vel);
+    }
+    else if (name == "vel_y")
+    {
+        b2Vec2 vel = PObjCircle::body->GetLinearVelocity();
+        vel.y = value.asFloat();
+        PObjCircle::body->SetLinearVelocity(vel);
+    }
+
+    else if (name == "r")
+        PObjCircle::r = value.asUInt();
+    else if (name == "g")
+        PObjCircle::g = value.asUInt();
+    else if (name == "b")
+        PObjCircle::b = value.asUInt();
+    else if (name == "r_angle")
+        PObjCircle::r_angle = value.asUInt();
+    else if (name == "g_angle")
+        PObjCircle::g_angle = value.asUInt();
+    else if (name == "b_angle")
+        PObjCircle::b_angle = value.asUInt();
 }
-template float PObjCircle::GetParam<float>(std::string name);
-template uint8_t PObjCircle::GetParam<uint8_t>(std::string name);
+
+Json::Value PObjCircle::GetParam(std::string name)
+{
+    if (name == "id")
+        return Json::Value(PObjCircle::id);
+    
+    else if (name == "x")
+        return Json::Value(PObjCircle::body->GetPosition().x);
+    else if (name == "y")
+        return Json::Value(PObjCircle::body->GetPosition().y);
+    else if (name == "radius")
+        return Json::Value(PObjCircle::circleDesc.radius);
+    else if (name == "angle")
+        return Json::Value(PObjCircle::body->GetAngle() * PObjCircle::RAD2DEG);
+    else if (name == "vel_x")
+        return Json::Value(PObjCircle::body->GetLinearVelocity().x);
+    else if (name == "vel_y")
+        return Json::Value(PObjCircle::body->GetLinearVelocity().y);
+    
+    else if (name == "r")
+        return Json::Value(PObjCircle::r);
+    else if (name == "g")
+        return Json::Value(PObjCircle::g);
+    else if (name == "b")
+        return Json::Value(PObjCircle::b);
+    else if (name == "r_angle")
+        return Json::Value(PObjCircle::r_angle);
+    else if (name == "g_angle")
+        return Json::Value(PObjCircle::g_angle);
+    else if (name == "b_angle")
+        return Json::Value(PObjCircle::b_angle);
+
+    return 0;
+}
 
 bool PObjCircle::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)
 {

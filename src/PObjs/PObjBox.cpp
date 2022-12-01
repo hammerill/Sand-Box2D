@@ -22,80 +22,69 @@ PObjBox::~PObjBox()
     PObjBox::body->GetWorld()->DestroyBody(PObjBox::body);
 }
 
-template<typename T>
-void PObjBox::SetParam(std::string name, T value)
+void PObjBox::SetParam(std::string name, Json::Value value)
 {
-    if constexpr(std::is_same<T, float>::value)
+    if (name == "id")
+        PObjBox::id = value.asInt();
+    
+    else if (name == "x")
     {
-        if (name == "x")
-        {
-            b2Vec2 pos = PObjBox::body->GetPosition();
-            pos.x = (float)value;
-            PObjBox::body->SetTransform(pos, PObjBox::body->GetAngle());
-        }
-        else if (name == "y")
-        {
-            b2Vec2 pos = PObjBox::body->GetPosition();
-            pos.y = (float)value;
-            PObjBox::body->SetTransform(pos, PObjBox::body->GetAngle());
-        }
-        else if (name == "angle")
-        {
-            b2Vec2 pos = PObjBox::body->GetPosition();
-            PObjBox::body->SetTransform(pos, (float)value / PObjBox::RAD2DEG);
-        }
-        else if (name == "vel_x")
-        {
-            b2Vec2 vel = PObjBox::body->GetLinearVelocity();
-            vel.x = (float)value;
-            PObjBox::body->SetLinearVelocity(vel);
-        }
-        else if (name == "vel_y")
-        {
-            b2Vec2 vel = PObjBox::body->GetLinearVelocity();
-            vel.y = (float)value;
-            PObjBox::body->SetLinearVelocity(vel);
-        }
+        b2Vec2 pos = PObjBox::body->GetPosition();
+        pos.x = value.asFloat();
+        PObjBox::body->SetTransform(pos, PObjBox::body->GetAngle());
     }
-    else if constexpr(std::is_same<T, SDL_Texture*>::value)
+    else if (name == "y")
     {
-        if (name == "texture")
-            PObjBox::texture = (SDL_Texture*)value;
+        b2Vec2 pos = PObjBox::body->GetPosition();
+        pos.y = value.asFloat();
+        PObjBox::body->SetTransform(pos, PObjBox::body->GetAngle());
+    }
+    else if (name == "angle")
+    {
+        b2Vec2 pos = PObjBox::body->GetPosition();
+        PObjBox::body->SetTransform(pos, value.asFloat() / PObjBox::RAD2DEG);
+    }
+    else if (name == "vel_x")
+    {
+        b2Vec2 vel = PObjBox::body->GetLinearVelocity();
+        vel.x = value.asFloat();
+        PObjBox::body->SetLinearVelocity(vel);
+    }
+    else if (name == "vel_y")
+    {
+        b2Vec2 vel = PObjBox::body->GetLinearVelocity();
+        vel.y = value.asFloat();
+        PObjBox::body->SetLinearVelocity(vel);
     }
 }
-template void PObjBox::SetParam<float>(std::string name, float value);
-template void PObjBox::SetParam<SDL_Texture*>(std::string name, SDL_Texture* value);
 
-template<typename T>
-T PObjBox::GetParam(std::string name)
+Json::Value PObjBox::GetParam(std::string name)
 {
-    if constexpr(std::is_same<T, float>::value)
-    {
-        if (name == "x")
-            return PObjBox::body->GetPosition().x;
-        else if (name == "y")
-            return PObjBox::body->GetPosition().y;
-        else if (name == "w")
-            return PObjBox::boxDesc.w;
-        else if (name == "h")
-            return PObjBox::boxDesc.h;
-        else if (name == "angle")
-            return PObjBox::body->GetAngle() * PObjBox::RAD2DEG;
-        else if (name == "vel_x")
-            return PObjBox::body->GetLinearVelocity().x;
-        else if (name == "vel_y")
-            return PObjBox::body->GetLinearVelocity().y;
-        return 0;
-    }
-    else if constexpr(std::is_same<T, SDL_Texture*>::value)
-    {
-        if (name == "texture")
-            return PObjBox::texture;
-        return nullptr;
-    }
+    if (name == "id")
+        return Json::Value(PObjBox::id);
+    
+    else if (name == "x")
+        return Json::Value(PObjBox::body->GetPosition().x);
+    else if (name == "y")
+        return Json::Value(PObjBox::body->GetPosition().y);
+    else if (name == "w")
+        return Json::Value(PObjBox::boxDesc.w);
+    else if (name == "h")
+        return Json::Value(PObjBox::boxDesc.h);
+    else if (name == "angle")
+        return Json::Value(PObjBox::body->GetAngle() * PObjBox::RAD2DEG);
+    else if (name == "vel_x")
+        return Json::Value(PObjBox::body->GetLinearVelocity().x);
+    else if (name == "vel_y")
+        return Json::Value(PObjBox::body->GetLinearVelocity().y);
+    
+    return 0;
 }
-template float PObjBox::GetParam<float>(std::string name);
-template SDL_Texture* PObjBox::GetParam<SDL_Texture*>(std::string name);
+
+void PObjBox::SetTexture(SDL_Texture* texture)
+{
+    PObjBox::texture = texture;
+}
 
 bool PObjBox::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)
 {

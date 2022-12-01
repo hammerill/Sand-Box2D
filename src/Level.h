@@ -48,6 +48,9 @@ private:
     /// @return !!! 0 if something went wrong, otherwise number represented as float. 
     float LoadNumber(Json::Value input);
 
+    /// @brief Same as LoadNumber(), but it returns Json::Value.
+    Json::Value LoadNumAsJson(Json::Value input);
+
     /// @brief JSON value of loaded level. Getters of this class are parsing its contents.
     Json::Value jsonLevel;
 

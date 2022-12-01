@@ -27,17 +27,15 @@ public:
     PObjPlatform(PlatformDesc platformDesc);
     ~PObjPlatform();
 
-    /// @brief Set some parameter of this Platform. For example, color.
-    /// @param name name of the parameter to be setted. For example, "r", "g" or "b".
-    /// @param value value of the parameter to be setted. Can be any type (uint8_t, etc...)
-    template<typename T>
-    void SetParam(std::string name, T value);
+    /// @brief Set some parameter of this Platform. For example, X or Y pos.
+    /// @param name name of the parameter to be setted. For example, "x" or "y".
+    /// @param value value of the parameter to be setted.
+    void SetParam(std::string name, Json::Value value);
 
     /// @brief Get some parameter of this Platform. For example, X or Y pos.
     /// @param name name of the parameter to be getted. For example, "x" or "y".
-    /// @return value of any type. Call like this - Platform.GetParam<float>("x");
-    template<typename T>
-    T GetParam(std::string name);
+    /// @return Json::Value. Call its functions like AsFloat(), etc.
+    Json::Value GetParam(std::string name);
 
     /// @brief Render this platform.
     /// @param renderer the rendering context.

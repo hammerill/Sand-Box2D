@@ -16,36 +16,33 @@ PObjPlatform::~PObjPlatform()
     PObjPlatform::body->GetWorld()->DestroyBody(PObjPlatform::body);
 }
 
-template<typename T>
-void PObjPlatform::SetParam(std::string name, T value)
+void PObjPlatform::SetParam(std::string name, Json::Value value)
 {
-    if constexpr(std::is_same<T, uint8_t>::value)
-    {
-        if (name == "r")
-            PObjPlatform::r = (uint8_t)value;
-        else if (name == "g")
-            PObjPlatform::g = (uint8_t)value;
-        else if (name == "b")
-            PObjPlatform::b = (uint8_t)value;
-    }
-}
-template void PObjPlatform::SetParam<uint8_t>(std::string name, uint8_t value);
+    if (name == "id")
+        PObjPlatform::id = value.asInt();
 
-template<typename T>
-T PObjPlatform::GetParam(std::string name)
-{
-    if constexpr(std::is_same<T, uint8_t>::value)
-    {
-        if (name == "r")
-            return PObjPlatform::r;
-        else if (name == "g")
-            return PObjPlatform::g;
-        else if (name == "b")
-            return PObjPlatform::b;
-        return 0;
-    }
+    else if (name == "r")
+        PObjPlatform::r = value.asUInt();
+    else if (name == "g")
+        PObjPlatform::g = value.asUInt();
+    else if (name == "b")
+        PObjPlatform::b = value.asUInt();
 }
-template uint8_t PObjPlatform::GetParam<uint8_t>(std::string name);
+
+Json::Value PObjPlatform::GetParam(std::string name)
+{
+    if (name == "id")
+        return Json::Value(PObjPlatform::id);
+        
+    else if (name == "r")
+        return Json::Value(PObjPlatform::r);
+    else if (name == "g")
+        return Json::Value(PObjPlatform::g);
+    else if (name == "b")
+        return Json::Value(PObjPlatform::b);
+
+    return 0;
+}
 
 bool PObjPlatform::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)
 {

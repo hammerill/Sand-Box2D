@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <box2d/box2d.h>
+#include <jsoncpp/json/value.h>
 
 #include <iostream>
 
@@ -20,6 +21,9 @@ protected:
     /// DEG / RAD2DEG == RAD
     const float RAD2DEG = 180 / M_PI;
 
+    /// @brief ID of this PObj.
+    int id = -1;
+
     /// @brief Texture of the PObj.
     SDL_Texture* texture = nullptr;
 
@@ -35,6 +39,16 @@ protected:
 
 public:
     virtual ~BasePObj() {};
+
+    /// @brief Set some parameter of this PObj. For example, X or Y pos.
+    /// @param name name of the parameter to be setted. For example, "x" or "y".
+    /// @param value value of the parameter to be setted.
+    virtual void SetParam(std::string name, Json::Value value) = 0;
+
+    /// @brief Get some parameter of this PObj. For example, X or Y pos.
+    /// @param name name of the parameter to be getted. For example, "x" or "y".
+    /// @return Json::Value. Call its functions like AsFloat(), etc.
+    virtual Json::Value GetParam(std::string name) = 0;
     
     /// Register this PObj in the world and set its texture. Should be 
     /// called only when no world calculations are performing.

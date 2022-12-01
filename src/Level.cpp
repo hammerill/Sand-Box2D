@@ -30,6 +30,10 @@ float Level::LoadNumber(Json::Value input)
         return 0;
     }
 }
+Json::Value Level::LoadNumAsJson(Json::Value input)
+{
+    return Json::Value(Level::LoadNumber(input));
+}
 
 // Gonna delete this hardcoded stuff later.
 SDL_Texture* texture;
@@ -48,9 +52,12 @@ BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
             };
             auto platform = new PObjPlatform(platformDesc);
 
-            platform->SetParam("r", (uint8_t)Level::LoadNumber(jsonObj["r"]));
-            platform->SetParam("g", (uint8_t)Level::LoadNumber(jsonObj["g"]));
-            platform->SetParam("b", (uint8_t)Level::LoadNumber(jsonObj["b"]));
+            platform->SetParam("r", Level::LoadNumAsJson(jsonObj["r"]));
+            platform->SetParam("g", Level::LoadNumAsJson(jsonObj["g"]));
+            platform->SetParam("b", Level::LoadNumAsJson(jsonObj["b"]));
+
+            if (jsonObj.isMember("id"))
+                platform->SetParam("id", Level::LoadNumAsJson(jsonObj["id"]));
 
             return platform;
         }
@@ -65,7 +72,10 @@ BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
             };
             auto box = new PObjBox(boxDesc);
 
-            box->SetParam("texture", texture);
+            box->SetTexture(texture);
+
+            if (jsonObj.isMember("id"))
+                box->SetParam("id", Level::LoadNumAsJson(jsonObj["id"]));
 
             return box;
         }
@@ -80,12 +90,15 @@ BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
             };
             auto circle = new PObjCircle(circleDesc);
             
-            circle->SetParam("r", (uint8_t)Level::LoadNumber(jsonObj["r"]));
-            circle->SetParam("g", (uint8_t)Level::LoadNumber(jsonObj["g"]));
-            circle->SetParam("b", (uint8_t)Level::LoadNumber(jsonObj["b"]));
-            circle->SetParam("r_angle", (uint8_t)Level::LoadNumber(jsonObj["r_angle"]));
-            circle->SetParam("g_angle", (uint8_t)Level::LoadNumber(jsonObj["g_angle"]));
-            circle->SetParam("b_angle", (uint8_t)Level::LoadNumber(jsonObj["b_angle"]));
+            circle->SetParam("r", Level::LoadNumAsJson(jsonObj["r"]));
+            circle->SetParam("g", Level::LoadNumAsJson(jsonObj["g"]));
+            circle->SetParam("b", Level::LoadNumAsJson(jsonObj["b"]));
+            circle->SetParam("r_angle", Level::LoadNumAsJson(jsonObj["r_angle"]));
+            circle->SetParam("g_angle", Level::LoadNumAsJson(jsonObj["g_angle"]));
+            circle->SetParam("b_angle", Level::LoadNumAsJson(jsonObj["b_angle"]));
+
+            if (jsonObj.isMember("id"))
+                circle->SetParam("id", Level::LoadNumAsJson(jsonObj["id"]));
 
             return circle;
         }
