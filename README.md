@@ -45,7 +45,7 @@ have rewritten it from zero using OOP, and now you're free to play this game and
 
 ## Controls
 ### For Desktops
-- <kbd>WASD</kbd> and <kbd>Space</kbd> or <kbd>R</kbd> - actions (not implemented yet).
+- <kbd>WASD</kbd> and <kbd>Space</kbd> or <kbd>R</kbd> - actions.
 - <kbd>Arrows</kbd> - move camera.
 - <kbd>Q</kbd>/<kbd>E</kbd> - adjust zoom.
 - <kbd>Tab</kbd> - on/off debug screen.
@@ -54,7 +54,7 @@ have rewritten it from zero using OOP, and now you're free to play this game and
 - Also, you can consider using mouse for camera controls and to go/exit fullscreen mode.
 
 ### For PS Vita
-- <kbd>DPAD</kbd> and <kbd>Cross</kbd> - actions (not implemented yet).
+- <kbd>DPAD</kbd> and <kbd>Cross</kbd> - actions.
 - <kbd>Left Stick</kbd> - move camera.
 - <kbd>Right Stick</kbd> or <kbd>L</kbd>/<kbd>R</kbd> - adjust zoom.
 - <kbd>Triangle</kbd> - on/off debug screen.

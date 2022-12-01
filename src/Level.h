@@ -83,4 +83,21 @@ public:
     /// @return empty vector if something went wrong, otherwise filled JsonCycle vector
     /// (which contains delay info and PObjects array).
     std::vector<JsonCycle> GetCycles();
+
+    /// @brief Get JSON of the actions list. Its contents has to be 
+    /// parsed outside and PerformAction() method called.
+    /// @return actions list as Json value.
+    Json::Value GetActions();
+
+    /// @brief Get specified PObj by ID and return pointer to it.
+    /// @param id find PObj with which ID?
+    /// @param pobjs array of pointers to realizations of BasePObj where to find PObj.
+    /// @return link to the BasePObj realization (any PObj), nullptr if can't find.
+    BasePObj* GetObjectById(int id, std::vector<BasePObj*> pobjs);
+
+    /// @brief Perform specific level action.
+    /// @param action what action to perform?
+    /// @param pobjs array of pointers to realizations of BasePObj.
+    /// Necessary because we need to access PObjs involved in the action.
+    void PerformAction(Json::Value action, std::vector<BasePObj*> pobjs);
 };

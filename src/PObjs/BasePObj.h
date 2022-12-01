@@ -5,8 +5,6 @@
 #include <box2d/box2d.h>
 #include <jsoncpp/json/value.h>
 
-#include <iostream>
-
 #ifndef M_PI
 #define M_PI           3.14159265358979323846264338327950288  /* pi */
 #endif
@@ -57,6 +55,7 @@ public:
     void Register(b2World* world, SDL_Renderer* renderer = nullptr);
 
     b2Body* GetBody();
+    int GetId();
     
     /// @brief Render this PObj.
     /// @param renderer the rendering context.

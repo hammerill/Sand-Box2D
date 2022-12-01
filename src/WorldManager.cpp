@@ -64,6 +64,10 @@ void WorldManager::LoadLevel(Level level, Renderer* renderer)
         WorldManager::cyclesDelays.push_back(1);
     }    
     /////////
+
+    // ACTIONS (everything other at control handling sector)
+    WorldManager::actions = WorldManager::level.GetActions();
+    //////////
 }
 
 void WorldManager::AddObject(BasePObj* obj)
@@ -127,6 +131,43 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
                         (ctrl.GetPinch() - old_ctrl.GetPinch()));
         WorldManager::zoom += (ctrl.GetPinch() - old_ctrl.GetPinch());
     }
+
+    // ACTIONS (OOH, that's HUGE, I mean. What I'm gonna do with it to make it less DAT BEEG?)
+    if (ctrl.GetActionUp() && !old_ctrl.GetActionUp())
+        WorldManager::level.PerformAction(WorldManager::actions["up"]["keydown_once"], WorldManager::objects);
+    else if (ctrl.GetActionUp())
+        WorldManager::level.PerformAction(WorldManager::actions["up"]["keydown_hold"], WorldManager::objects);
+    else if (!ctrl.GetActionUp() && old_ctrl.GetActionUp())
+        WorldManager::level.PerformAction(WorldManager::actions["up"]["keyup"], WorldManager::objects);
+    
+    if (ctrl.GetActionRight() && !old_ctrl.GetActionRight())
+        WorldManager::level.PerformAction(WorldManager::actions["right"]["keydown_once"], WorldManager::objects);
+    else if (ctrl.GetActionRight())
+        WorldManager::level.PerformAction(WorldManager::actions["right"]["keydown_hold"], WorldManager::objects);
+    else if (!ctrl.GetActionRight() && old_ctrl.GetActionRight())
+        WorldManager::level.PerformAction(WorldManager::actions["right"]["keyup"], WorldManager::objects);
+    
+    if (ctrl.GetActionDown() && !old_ctrl.GetActionDown())
+        WorldManager::level.PerformAction(WorldManager::actions["down"]["keydown_once"], WorldManager::objects);
+    else if (ctrl.GetActionDown())
+        WorldManager::level.PerformAction(WorldManager::actions["down"]["keydown_hold"], WorldManager::objects);
+    else if (!ctrl.GetActionDown() && old_ctrl.GetActionDown())
+        WorldManager::level.PerformAction(WorldManager::actions["down"]["keyup"], WorldManager::objects);
+    
+    if (ctrl.GetActionLeft() && !old_ctrl.GetActionLeft())
+        WorldManager::level.PerformAction(WorldManager::actions["left"]["keydown_once"], WorldManager::objects);
+    else if (ctrl.GetActionLeft())
+        WorldManager::level.PerformAction(WorldManager::actions["left"]["keydown_hold"], WorldManager::objects);
+    else if (!ctrl.GetActionLeft() && old_ctrl.GetActionLeft())
+        WorldManager::level.PerformAction(WorldManager::actions["left"]["keyup"], WorldManager::objects);
+    
+    if (ctrl.GetActionEnter() && !old_ctrl.GetActionEnter())
+        WorldManager::level.PerformAction(WorldManager::actions["enter"]["keydown_once"], WorldManager::objects);
+    else if (ctrl.GetActionEnter())
+        WorldManager::level.PerformAction(WorldManager::actions["enter"]["keydown_hold"], WorldManager::objects);
+    else if (!ctrl.GetActionEnter() && old_ctrl.GetActionEnter())
+        WorldManager::level.PerformAction(WorldManager::actions["enter"]["keyup"], WorldManager::objects);
+    //////////
 
     SDL_Point scr_center = {renderer->GetWidth() / 2, renderer->GetHeight() / 2};
 

@@ -46,6 +46,9 @@ private:
     /// decreasing, if some of they reach 0, corresponding cycle will do step and that value updates).
     std::vector<int> cyclesDelays = std::vector<int>();
 
+    /// @brief List of actions to perform when clicked special buttons.
+    Json::Value actions = Json::Value();
+
     /// @brief This function will correct offset for X and Y when zooming to make 
     /// it look like zoom around mouse. Should be called strictly before changing zoom.
     /// @param mouse current mouse position.

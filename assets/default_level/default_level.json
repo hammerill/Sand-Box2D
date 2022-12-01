@@ -14,7 +14,7 @@
                     "id": 10,
                     "type": "add",
                     "param": "vel_y",
-                    "value": -0.1
+                    "value": -0.75
                 }
             ]
         },
@@ -24,7 +24,7 @@
                     "id": 10,
                     "type": "add",
                     "param": "vel_x",
-                    "value": 0.1
+                    "value": 0.75
                 }
             ]
         },
@@ -34,7 +34,7 @@
                     "id": 10,
                     "type": "add",
                     "param": "vel_y",
-                    "value": 0.1
+                    "value": 0.75
                 }
             ]
         },
@@ -44,7 +44,7 @@
                     "id": 10,
                     "type": "add",
                     "param": "vel_x",
-                    "value": -0.1
+                    "value": -0.75
                 }
             ]
         },
@@ -74,13 +74,13 @@
                     "id": 10,
                     "type": "set",
                     "param": "vel_x",
-                    "value": "-10:10"
+                    "value": "-100:100"
                 },
                 {
                     "id": 10,
                     "type": "set",
                     "param": "vel_y",
-                    "value": "-10:10"
+                    "value": "-100:100"
                 }
             ]
         }
@@ -121,8 +121,8 @@
             "id": 10,
             "x": 6,
             "y": 5,
-            "w": 2,
-            "h": 2,
+            "w": 2.5,
+            "h": 2.5,
             "angle": 0,
             "vel_x": 0,
             "vel_y": 0,

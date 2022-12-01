@@ -208,3 +208,40 @@ std::vector<JsonCycle> Level::GetCycles()
         
     return cycles;
 }
+
+Json::Value Level::GetActions()
+{
+    return Level::jsonLevel["actions"];
+}
+
+BasePObj* Level::GetObjectById(int id, std::vector<BasePObj*> pobjs)
+{
+    for (size_t i = 0; i < pobjs.size(); i++)
+    {
+        if (pobjs[i]->GetId() == id)
+            return pobjs[i];
+    }
+    return nullptr;
+}
+
+void PerformStep(BasePObj* pobj, std::string param, Json::Value value, std::string type = "set")
+{
+    if (type == "set")
+        pobj->SetParam(param, value);
+    else if (type == "add")
+        pobj->SetParam(param, Json::Value(pobj->GetParam(param).asFloat() + value.asFloat()));
+}
+void Level::PerformAction(Json::Value action, std::vector<BasePObj*> pobjs)
+{
+    for (unsigned int i = 0; i < action.size(); i++)
+    {
+        auto pobj = Level::GetObjectById(action[i]["id"].asInt(), pobjs);
+        if (pobj != nullptr)
+        {
+            PerformStep(pobj,
+                        action[i]["param"].asString(),
+                        Level::LoadNumAsJson(action[i]["value"]),
+                        action[i]["type"].asString());
+        }
+    }
+}
