@@ -44,6 +44,12 @@ Json::Value PObjPlatform::GetParam(std::string name)
     return 0;
 }
 
+void PObjPlatform::Register(b2World* world, SDL_Renderer* renderer)
+{
+    PObjPlatform::body = world->CreateBody(&(PObjPlatform::bodyDef));
+    PObjPlatform::body->CreateFixture(&(PObjPlatform::fixtureDef));
+}
+
 bool PObjPlatform::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)
 {
     b2Vec2 begin =  {(PObjPlatform::platformDesc.x1 * zoom) + x_offset, (PObjPlatform::platformDesc.y1 * zoom) + y_offset};

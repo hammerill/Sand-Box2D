@@ -8,6 +8,7 @@ struct BoxDesc
     float w = 1, h = 1;
     float angle = 0;
     float vel_x = 0, vel_y = 0;
+    float vel_ang = 0;
 };
 
 /// Child class of the BasePObj which represents either box or 
@@ -21,6 +22,11 @@ private:
 
     /// @brief Shape of the box entity.
     b2PolygonShape boxShape;
+
+    /// @brief Starting velocity of the Box.
+    b2Vec2 vel;
+    /// @brief Starting angular velocity of the Box.
+    float vel_ang;
 
 public:
     PObjBox(BoxDesc boxDesc);

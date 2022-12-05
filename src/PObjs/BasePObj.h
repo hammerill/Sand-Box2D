@@ -32,9 +32,6 @@ protected:
     /// @brief Fixture definition of the PObj.
     b2FixtureDef fixtureDef;
 
-    /// @brief Starting velocity of the PObj.
-    b2Vec2 vel;
-
 public:
     virtual ~BasePObj() {};
 
@@ -48,11 +45,11 @@ public:
     /// @return Json::Value. Call its functions like AsFloat(), etc.
     virtual Json::Value GetParam(std::string name) = 0;
     
-    /// Register this PObj in the world and set its texture. Should be 
+    /// Register this PObj in the world and set its parameters. Should be 
     /// called only when no world calculations are performing.
     /// @param world link to the world where PObj should be registered.
     /// @param renderer the rendering context.
-    void Register(b2World* world, SDL_Renderer* renderer = nullptr);
+    virtual void Register(b2World* world, SDL_Renderer* renderer = nullptr) = 0;
 
     b2Body* GetBody();
     int GetId();

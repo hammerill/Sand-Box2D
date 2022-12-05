@@ -10,9 +10,10 @@ struct CircleDesc
     float radius = 0;
     float angle = 0;
     float vel_x = 0, vel_y = 0;
+    float vel_ang = 0;
 };
 
-/// Child class of the BasePObj which represents circle 
+/// Child class of the BasePObj which represents Circle 
 /// in the WorldManager environment.
 class PObjCircle: public BasePObj
 {
@@ -21,14 +22,19 @@ private:
     /// Used only while creating Circle.
     CircleDesc circleDesc;
 
-    /// @brief Color of the circle entity.
+    /// @brief Color of the Circle.
     uint8_t r, g, b;
 
-    /// @brief Color of the circle entity angle renderer.
+    /// @brief Color of the Circle angle renderer.
     uint8_t r_angle, g_angle, b_angle;
 
-    /// @brief Shape of the circle entity.
+    /// @brief Shape of the Circle.
     b2CircleShape circleShape;
+
+    /// @brief Starting velocity of the Circle.
+    b2Vec2 vel;
+    /// @brief Starting angular velocity of the Circle.
+    float vel_ang;
 
 public:
     PObjCircle(CircleDesc circleDesc);
@@ -44,19 +50,19 @@ public:
     /// @return Json::Value. Call its functions like AsFloat(), etc.
     Json::Value GetParam(std::string name);
     
-    /// Register this circle in the world. Should be 
+    /// Register this Circle in the world. Should be 
     /// called only when no world calculations are performing.
-    /// @param world link to the world where circle should be registered.
+    /// @param world link to the world where Circle should be registered.
     /// @param renderer the rendering context.
     void Register(b2World* world, SDL_Renderer* renderer = nullptr);
 
-    /// @brief Render this circle.
+    /// @brief Render this Circle.
     /// @param renderer the rendering context.
     /// @param x_offset camera X offset in pixels.
     /// @param y_offset camera Y offset in pixels.
     /// @param zoom camera zoom coefficient.
     /// @param width screen width in pixels.
     /// @param height screen height in pixels.
-    /// @return true if circle rendered. False if didn't render because it's out of screen bounds. 
+    /// @return true if Circle rendered. False if didn't render because it's out of screen bounds. 
     bool Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width = 0, int height = 0);
 };

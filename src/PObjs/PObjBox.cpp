@@ -5,6 +5,7 @@ PObjBox::PObjBox(BoxDesc boxDesc)
     PObjBox::boxDesc = boxDesc;
 
     PObjBox::vel.Set(PObjBox::boxDesc.vel_x, PObjBox::boxDesc.vel_y);
+    PObjBox::vel_ang = boxDesc.vel_ang;
 
     PObjBox::bodyDef.type = b2_dynamicBody;
     PObjBox::bodyDef.angle = PObjBox::boxDesc.angle / PObjBox::RAD2DEG; 
@@ -56,6 +57,10 @@ void PObjBox::SetParam(std::string name, Json::Value value)
         vel.y = value.asFloat();
         PObjBox::body->SetLinearVelocity(vel);
     }
+    else if (name == "vel_ang")
+    {
+        PObjBox::body->SetAngularVelocity(value.asFloat());
+    }
 }
 
 Json::Value PObjBox::GetParam(std::string name)
@@ -77,6 +82,8 @@ Json::Value PObjBox::GetParam(std::string name)
         return Json::Value(PObjBox::body->GetLinearVelocity().x);
     else if (name == "vel_y")
         return Json::Value(PObjBox::body->GetLinearVelocity().y);
+    else if (name == "vel_ang")
+        return Json::Value(PObjBox::body->GetAngularVelocity());
     
     return 0;
 }
@@ -84,6 +91,14 @@ Json::Value PObjBox::GetParam(std::string name)
 void PObjBox::SetTexture(SDL_Texture* texture)
 {
     PObjBox::texture = texture;
+}
+
+void PObjBox::Register(b2World* world, SDL_Renderer* renderer)
+{
+    PObjBox::body = world->CreateBody(&(PObjBox::bodyDef));
+    PObjBox::body->SetLinearVelocity(PObjBox::vel);
+    PObjBox::body->SetAngularVelocity(PObjBox::vel_ang);
+    PObjBox::body->CreateFixture(&(PObjBox::fixtureDef));
 }
 
 bool PObjBox::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)

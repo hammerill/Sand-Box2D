@@ -5,6 +5,7 @@ PObjCircle::PObjCircle(CircleDesc circleDesc)
     PObjCircle::circleDesc = circleDesc;
 
     PObjCircle::vel.Set(PObjCircle::circleDesc.vel_x, PObjCircle::circleDesc.vel_y);
+    PObjCircle::vel_ang = circleDesc.vel_ang;
 
     PObjCircle::bodyDef.type = b2_dynamicBody;
     PObjCircle::bodyDef.position.Set(PObjCircle::circleDesc.x, PObjCircle::circleDesc.y);
@@ -56,6 +57,10 @@ void PObjCircle::SetParam(std::string name, Json::Value value)
         vel.y = value.asFloat();
         PObjCircle::body->SetLinearVelocity(vel);
     }
+    else if (name == "vel_ang")
+    {
+        PObjCircle::body->SetAngularVelocity(value.asFloat());
+    }
 
     else if (name == "r")
         PObjCircle::r = value.asUInt();
@@ -88,6 +93,8 @@ Json::Value PObjCircle::GetParam(std::string name)
         return Json::Value(PObjCircle::body->GetLinearVelocity().x);
     else if (name == "vel_y")
         return Json::Value(PObjCircle::body->GetLinearVelocity().y);
+    else if (name == "vel_ang")
+        return Json::Value(PObjCircle::body->GetAngularVelocity());
     
     else if (name == "r")
         return Json::Value(PObjCircle::r);
@@ -103,6 +110,14 @@ Json::Value PObjCircle::GetParam(std::string name)
         return Json::Value(PObjCircle::b_angle);
 
     return 0;
+}
+
+void PObjCircle::Register(b2World* world, SDL_Renderer* renderer)
+{
+    PObjCircle::body = world->CreateBody(&(PObjCircle::bodyDef));
+    PObjCircle::body->SetLinearVelocity(PObjCircle::vel);
+    PObjCircle::body->SetAngularVelocity(PObjCircle::vel_ang);
+    PObjCircle::body->CreateFixture(&(PObjCircle::fixtureDef));
 }
 
 bool PObjCircle::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)

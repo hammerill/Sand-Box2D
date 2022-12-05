@@ -68,7 +68,8 @@ BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
                 Level::LoadNumber(jsonObj["x"]), Level::LoadNumber(jsonObj["y"]),
                 Level::LoadNumber(jsonObj["w"]), Level::LoadNumber(jsonObj["h"]),
                 Level::LoadNumber(jsonObj["angle"]),
-                Level::LoadNumber(jsonObj["vel_x"]), Level::LoadNumber(jsonObj["vel_y"])
+                Level::LoadNumber(jsonObj["vel_x"]), Level::LoadNumber(jsonObj["vel_y"]),
+                Level::LoadNumber(jsonObj["vel_ang"])
             };
             auto box = new PObjBox(boxDesc);
 
@@ -86,7 +87,8 @@ BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
                 Level::LoadNumber(jsonObj["x"]), Level::LoadNumber(jsonObj["y"]),
                 Level::LoadNumber(jsonObj["radius"]),
                 Level::LoadNumber(jsonObj["angle"]),
-                Level::LoadNumber(jsonObj["vel_x"]), Level::LoadNumber(jsonObj["vel_y"])
+                Level::LoadNumber(jsonObj["vel_x"]), Level::LoadNumber(jsonObj["vel_y"]),
+                Level::LoadNumber(jsonObj["vel_ang"])
             };
             auto circle = new PObjCircle(circleDesc);
             

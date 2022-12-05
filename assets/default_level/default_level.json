@@ -25,6 +25,12 @@
                     "type": "add",
                     "param": "vel_x",
                     "value": 0.75
+                },
+                {
+                    "id": 10,
+                    "type": "add",
+                    "param": "vel_ang",
+                    "value": 0.25
                 }
             ]
         },
@@ -45,6 +51,12 @@
                     "type": "add",
                     "param": "vel_x",
                     "value": -0.75
+                },
+                {
+                    "id": 10,
+                    "type": "add",
+                    "param": "vel_ang",
+                    "value": -0.25
                 }
             ]
         },
@@ -67,6 +79,26 @@
                     "type": "set",
                     "param": "angle",
                     "value": 0
+                },
+                {
+                    "id": 10,
+                    "type": "set",
+                    "param": "vel_ang",
+                    "value": 0
+                }
+            ],
+            "keydown_hold": [
+                {
+                    "id": 10,
+                    "type": "set",
+                    "param": "vel_x",
+                    "value": 0
+                },
+                {
+                    "id": 10,
+                    "type": "set",
+                    "param": "vel_y",
+                    "value": -0.2
                 }
             ],
             "keyup": [
@@ -74,13 +106,13 @@
                     "id": 10,
                     "type": "set",
                     "param": "vel_x",
-                    "value": "-100:100"
+                    "value": "-25:25"
                 },
                 {
                     "id": 10,
                     "type": "set",
                     "param": "vel_y",
-                    "value": "-100:100"
+                    "value": "-25:25"
                 }
             ]
         }
