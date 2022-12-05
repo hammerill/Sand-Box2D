@@ -89,6 +89,17 @@ double getAverage(std::vector<T> const& v)
     return std::reduce(v.begin(), v.end(), 0.0) / v.size();
 }
 
+// Used for decreasing actions code
+void HandleActionCtrl(bool old, bool now, Json::Value key, Level level, std::vector<BasePObj*> objects)
+{
+    if (now && !old)
+        level.PerformAction(key["keydown_once"], objects);
+    else if (now)
+        level.PerformAction(key["keydown_hold"], objects);
+    else if (!now && old)
+        level.PerformAction(key["keyup"], objects);
+}
+
 std::vector<int> last_frames_speed_x = std::vector<int>();
 std::vector<int> last_frames_speed_y = std::vector<int>();
 
@@ -132,41 +143,13 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
         WorldManager::zoom += (ctrl.GetPinch() - old_ctrl.GetPinch());
     }
 
-    // ACTIONS (OOH, that's HUGE, I mean. What I'm gonna do with it to make it less DAT BEEG?)
-    if (ctrl.GetActionUp() && !old_ctrl.GetActionUp())
-        WorldManager::level.PerformAction(WorldManager::actions["up"]["keydown_once"], WorldManager::objects);
-    else if (ctrl.GetActionUp())
-        WorldManager::level.PerformAction(WorldManager::actions["up"]["keydown_hold"], WorldManager::objects);
-    else if (!ctrl.GetActionUp() && old_ctrl.GetActionUp())
-        WorldManager::level.PerformAction(WorldManager::actions["up"]["keyup"], WorldManager::objects);
+    // ACTIONS
+    HandleActionCtrl(old_ctrl.GetActionUp(), ctrl.GetActionUp(), WorldManager::actions["up"],WorldManager::level, WorldManager::objects);
+    HandleActionCtrl(old_ctrl.GetActionRight(), ctrl.GetActionRight(), WorldManager::actions["right"], WorldManager::level, WorldManager::objects);
+    HandleActionCtrl(old_ctrl.GetActionDown(), ctrl.GetActionDown(), WorldManager::actions["down"], WorldManager::level, WorldManager::objects);
+    HandleActionCtrl(old_ctrl.GetActionLeft(), ctrl.GetActionLeft(), WorldManager::actions["left"], WorldManager::level, WorldManager::objects);
     
-    if (ctrl.GetActionRight() && !old_ctrl.GetActionRight())
-        WorldManager::level.PerformAction(WorldManager::actions["right"]["keydown_once"], WorldManager::objects);
-    else if (ctrl.GetActionRight())
-        WorldManager::level.PerformAction(WorldManager::actions["right"]["keydown_hold"], WorldManager::objects);
-    else if (!ctrl.GetActionRight() && old_ctrl.GetActionRight())
-        WorldManager::level.PerformAction(WorldManager::actions["right"]["keyup"], WorldManager::objects);
-    
-    if (ctrl.GetActionDown() && !old_ctrl.GetActionDown())
-        WorldManager::level.PerformAction(WorldManager::actions["down"]["keydown_once"], WorldManager::objects);
-    else if (ctrl.GetActionDown())
-        WorldManager::level.PerformAction(WorldManager::actions["down"]["keydown_hold"], WorldManager::objects);
-    else if (!ctrl.GetActionDown() && old_ctrl.GetActionDown())
-        WorldManager::level.PerformAction(WorldManager::actions["down"]["keyup"], WorldManager::objects);
-    
-    if (ctrl.GetActionLeft() && !old_ctrl.GetActionLeft())
-        WorldManager::level.PerformAction(WorldManager::actions["left"]["keydown_once"], WorldManager::objects);
-    else if (ctrl.GetActionLeft())
-        WorldManager::level.PerformAction(WorldManager::actions["left"]["keydown_hold"], WorldManager::objects);
-    else if (!ctrl.GetActionLeft() && old_ctrl.GetActionLeft())
-        WorldManager::level.PerformAction(WorldManager::actions["left"]["keyup"], WorldManager::objects);
-    
-    if (ctrl.GetActionEnter() && !old_ctrl.GetActionEnter())
-        WorldManager::level.PerformAction(WorldManager::actions["enter"]["keydown_once"], WorldManager::objects);
-    else if (ctrl.GetActionEnter())
-        WorldManager::level.PerformAction(WorldManager::actions["enter"]["keydown_hold"], WorldManager::objects);
-    else if (!ctrl.GetActionEnter() && old_ctrl.GetActionEnter())
-        WorldManager::level.PerformAction(WorldManager::actions["enter"]["keyup"], WorldManager::objects);
+    HandleActionCtrl(old_ctrl.GetActionEnter(), ctrl.GetActionEnter(), WorldManager::actions["enter"], WorldManager::level, WorldManager::objects);
     //////////
 
     SDL_Point scr_center = {renderer->GetWidth() / 2, renderer->GetHeight() / 2};
