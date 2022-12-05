@@ -1,18 +1,40 @@
-name: Auto Build for Vita
+name: CMake
 
 on:
   push:
     branches: [ "main" ]
-  repository_dispatch:
-    types: [ run_build ]
 
 env:
   VITASDK: /usr/local/vitasdk
 
 jobs:
-  Vita:
+  build-linux:
+    name: Linux
     runs-on: ubuntu-latest
-      
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build project
+        run: |
+          git clone https://github.com/Hammerill/Sand-Box2D && cd Sand-Box2D
+          mkdir build
+          cd build
+          cmake .. -DBUILD_WINDOWS=OFF -DBUILD_LINUX=ON
+          make -j4
+
+      - name: Output build
+        uses: actions/upload-artifact@v3
+        with:
+          name: Linux executable
+          path: |
+            Sand-Box2D/build/assets
+            Sand-Box2D/build/Sand-Box2D
+
+  build-vita:
+    name: Vita
+    runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
 
@@ -22,7 +44,7 @@ jobs:
           cd vdpm
           ./bootstrap-vitasdk.sh
           ./install-all.sh
-      
+
       - name: Build project
         run: |
           git clone https://github.com/Hammerill/Sand-Box2D && cd Sand-Box2D
@@ -30,10 +52,10 @@ jobs:
           cd build
           cmake .. -DBUILD_WINDOWS=OFF -DBUILD_VITA=ON
           make -j4
-      
-      - name: Output VPK
+
+      - name: Output build
         uses: actions/upload-artifact@v3
         with:
-          name: Sand-Box2D.vpk
+          name: Vita VPK
           path: |
             Sand-Box2D/build/*.vpk

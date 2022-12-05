@@ -76,6 +76,7 @@ Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/discus
 ![Arch](./pics/project-arch.drawio.svg)
 
 ## Build 
+If you don't want to build by yourself, you can consider auto build system provided by GitHub [actions](https://github.com/Hammerill/Sand-Box2D/actions).
 ### On Windows
 1. Ensure you have all necessaire tools installed and wrote to your PATH variable (cmake, make, mingw (g++), git, etc.).
 2. Install packages:
@@ -104,7 +105,7 @@ or copy its contents (*.dll) to the same directory where .exe file should be (bu
   cmake .. -DBUILD_WINDOWS_PKGS=C:/path/to/pkgs
   make
   ```
-5. .exe file should appear, you can now launch this game:
+5. EXE file should appear, you can now launch this game:
   ```cmd
   Sand-Box2D.exe
   ```
@@ -137,9 +138,6 @@ or copy its contents (*.dll) to the same directory where .exe file should be (bu
 
 ### For PS Vita
 Build for PS Vita should be performed in Linux environment (or in MSYS2 in Windows, see step 1).
-
-Also, you can consider auto build system provided by GitHub [actions](https://github.com/Hammerill/Sand-Box2D/actions).
-
 1. Install [VITASDK](https://vitasdk.org/).
 2. Clone repo:
   ```bash
@@ -152,7 +150,7 @@ Also, you can consider auto build system provided by GitHub [actions](https://gi
   cmake .. -DBUILD_WINDOWS=OFF -DBUILD_VITA=ON
   make -j4
   ```
-4. .vpk file should appear. Copy this file to your hacked PS Vita and install via VitaShell.
+4. VPK file should appear. Copy this file to your hacked PS Vita and install via VitaShell.
 5. Bubble "Sand-Box2D" will appear, you can now launch this game.
 
 ## Credits
