@@ -27,6 +27,7 @@ jobs:
           git clone https://github.com/Hammerill/Sand-Box2D && cd Sand-Box2D
           mkdir build
           cd build
+          cmake .. -G "MinGW Makefiles"
           cmake .. -DBUILD_WINDOWS_PKGS=../pkgs
           make
 
