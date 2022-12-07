@@ -20,6 +20,8 @@ jobs:
         with:
           url: "https://github.com/Hammerill/Sand-Box2D/releases/download/v1.0.0/win64-packages.zip"
           target: pkgs/
+      - name: PWD
+        run: cd
 
       - name: Build project
         run: |
