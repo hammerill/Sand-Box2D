@@ -8,6 +8,36 @@ env:
   VITASDK: /usr/local/vitasdk
 
 jobs:
+  build-windows:
+    name: Windows
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: suisei-cn/actions-download-file@v1.3.0
+        name: Download packages
+        with:
+          url: "https://github.com/Hammerill/Sand-Box2D/releases/download/v1.0.0/win64-packages.zip"
+          target: pkgs/
+
+      - name: Build project
+        run: |
+          7z x pkgs/win64-packages.zip -opkgs
+          git clone https://github.com/Hammerill/Sand-Box2D && cd Sand-Box2D
+          mkdir build
+          cd build
+          cmake .. -DBUILD_WINDOWS_PKGS=../pkgs
+          make
+
+      - name: Output build
+        uses: actions/upload-artifact@v3
+        with:
+          name: Windows EXE
+          path: |
+            Sand-Box2D/build/assets
+            Sand-Box2D/build/*.exe
+
   build-linux:
     name: Linux
     runs-on: ubuntu-latest
