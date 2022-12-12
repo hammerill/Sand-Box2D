@@ -221,7 +221,7 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
 
     
     // LATER IT WILL BE CONSIDERED DEPRECATED AND DESTROYED
-    // Or no?
+    // No, it will be moved to the PauseMenu
     if (ctrl.ReloadLevel() && !old_ctrl.ReloadLevel()){
         WorldManager::LoadLevel(WorldManager::level, renderer);
         
@@ -239,7 +239,17 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
     for (int i = WorldManager::order.size() - 1; i >= 0; i--)
     { // Load order.
         WorldManager::objects.push_back(WorldManager::order[i]);
-        WorldManager::objects[WorldManager::objects.size() - 1]->Register(WorldManager::world, renderer->GetRenderer());
+
+        auto pobj = WorldManager::objects[WorldManager::objects.size() - 1];
+        
+        if (typeid(pobj) == typeid(PObjBox*))
+        {
+            dynamic_cast<PObjBox*>(pobj)->SetTexture(WorldManager::textures[""]);
+            // dynamic_cast<PObjBox*>(pobj)->SetTexture(WorldManager::LoadTexture(pobj->GetParam("texture_path").asString(), renderer->GetRenderer()));
+        }
+
+        pobj->Register(WorldManager::world, renderer->GetRenderer());
+        
         WorldManager::order.pop_back();        
     }
 

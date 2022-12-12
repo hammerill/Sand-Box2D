@@ -25,8 +25,7 @@ GameManager::GameManager(const char* path_to_settings, const char* path_to_def_s
     Level level;
     level.LoadFile(
         GameManager::settings.Get("path_to_def_level_base").asString(), 
-        GameManager::settings.Get("path_to_def_level").asString(),
-        GameManager::renderer->GetRenderer()
+        GameManager::settings.Get("path_to_def_level").asString()
     );
 
     GameManager::world_manager->LoadLevel(level, GameManager::renderer);

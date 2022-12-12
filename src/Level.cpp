@@ -35,8 +35,6 @@ Json::Value Level::LoadNumAsJson(Json::Value input)
     return Json::Value(Level::LoadNumber(input));
 }
 
-// Gonna delete this hardcoded stuff later.
-SDL_Texture* texture;
 BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
 {
     try
@@ -73,7 +71,7 @@ BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
             };
             auto box = new PObjBox(boxDesc);
 
-            box->SetTexture(texture);
+            box->SetParam("texture_path", "");
 
             if (jsonObj.isMember("id"))
                 box->SetParam("id", Level::LoadNumAsJson(jsonObj["id"]));
@@ -119,10 +117,8 @@ Level::~Level()
     // I need to think about how to load/unload textures later.
 }
 
-bool Level::LoadFile(std::string base, std::string filepath, SDL_Renderer* renderer)
+bool Level::LoadFile(std::string base, std::string filepath)
 {
-    texture = SDL_CreateTextureFromSurface(renderer, IMG_Load("assets/img/box.png"));
-
     Level::~Level();
 
     try

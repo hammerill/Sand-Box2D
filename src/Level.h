@@ -62,9 +62,8 @@ public:
     /// @param base where is base data directory located?
     /// @param filepath where is the level file (*.json) located relatively to the "base"?
     /// Will load this file.
-    /// @param renderer the rendering context.
     /// @return false if something went wrong, true if everything's ok.
-    bool LoadFile(std::string base, std::string filepath, SDL_Renderer* renderer);
+    bool LoadFile(std::string base, std::string filepath);
  
     JsonOptions GetOptions();
  
