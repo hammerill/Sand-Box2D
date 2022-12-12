@@ -13,6 +13,7 @@
 #include <iostream>
 #include <algorithm>
 #include <numeric>
+#include <map>
 
 /// @brief Class for managing either SDL2 window, renderer and Box2D world with physics objects within it.
 class WorldManager
@@ -29,12 +30,18 @@ private:
     /// no world calculations are performing.
     std::vector<BasePObj*> order;
 
+    /// Array of loaded textures in "TEXTURE_PATH:TEXTURE" format.
+    /// To access it use LoadTexture().
+    std::map<std::string, SDL_Texture*> textures = std::map<std::string, SDL_Texture*>();
+
     float x_offset = 0, y_offset = 0, zoom = 80;
     float move_speed, zoom_speed;
 
     int moving_inertia_frames;
 
     int physics_quality;
+
+    std::string path_to_def_texture;
 
     bool isDebug = false;
 
@@ -57,10 +64,16 @@ private:
 
 public:
     /// @brief Init Box2D world and create WorldManager instance.
+    /// @param path_to_def_texture path to the default texture which loaded when no texture provided for the PObj.
     /// @param physics_quality higher value - more precise but slower calculation.
+    /// @param moving_inertia_frames how much frames should WM remember when calculating past-move inertia?.
     /// @param move_speed amount of pixels added to camera offset variable in one frame when pressed relevant button.
     /// @param zoom_speed amount of coefficiency multiplied to camera zoom variable in one frame when pressed relevant button.
-    WorldManager(int physics_quality = 16, int moving_inertia_frames = 10, float move_speed = 10, float zoom_speed = 0.03);
+    WorldManager(   std::string path_to_def_texture,
+                    int physics_quality = 16,
+                    int moving_inertia_frames = 10,
+                    float move_speed = 10,
+                    float zoom_speed = 0.03);
     ~WorldManager();
 
     /// @brief Load level (object of class Level filled with required fields).
@@ -68,6 +81,12 @@ public:
     /// @param level Level to be loaded.
     /// @param renderer link to renderer object (not link to SDL_Renderer) where to render.
     void LoadLevel(Level level, Renderer* renderer);
+
+    /// @brief Load texture. If it was loaded before, will return pointer to already loaded texture.
+    /// @param path path to the texture to be loaded.
+    /// @param renderer the rendering context.
+    /// @return pointer to the SDL texture. nullptr if can't load.
+    SDL_Texture* LoadTexture(std::string path, SDL_Renderer* renderer);
 
     /// @brief Add physics object realization into the BasePObj array.
     /// @param obj link to the physics object realization to add.

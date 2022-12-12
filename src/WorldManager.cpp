@@ -1,7 +1,8 @@
 #include "WorldManager.h"
 
-WorldManager::WorldManager(int physics_quality, int moving_inertia_frames, float move_speed, float zoom_speed)
+WorldManager::WorldManager(std::string path_to_def_texture, int physics_quality, int moving_inertia_frames, float move_speed, float zoom_speed)
 {
+    WorldManager::path_to_def_texture = path_to_def_texture;
     WorldManager::physics_quality = physics_quality;
     WorldManager::moving_inertia_frames = moving_inertia_frames;
     WorldManager::move_speed = move_speed;
@@ -16,17 +17,25 @@ WorldManager::WorldManager(int physics_quality, int moving_inertia_frames, float
 }
 WorldManager::~WorldManager()
 {
+    /// @brief Delete all the objects.
     for (int i = WorldManager::objects.size() - 1; i >= 0; i--)
     {
         WorldManager::DeleteObject(i);
     }
-    
+    /// @brief Unload all the textures.
+    for (std::map<std::string, SDL_Texture*>::iterator itr = WorldManager::textures.begin(); itr != WorldManager::textures.end(); itr++)
+    {
+        SDL_DestroyTexture(itr->second);
+    }
+    /// @brief Destroy the world.
     delete WorldManager::world;
 }
 
 void WorldManager::LoadLevel(Level level, Renderer* renderer)
 {
     WorldManager::level = level;
+
+    WorldManager::textures[""] = SDL_CreateTextureFromSurface(renderer->GetRenderer(), IMG_Load(WorldManager::path_to_def_texture.c_str()));
 
     // CAMERA
     auto camera = WorldManager::level.GetCamera();
@@ -70,6 +79,16 @@ void WorldManager::LoadLevel(Level level, Renderer* renderer)
     //////////
 }
 
+SDL_Texture* WorldManager::LoadTexture(std::string path, SDL_Renderer* renderer)
+{
+    if (WorldManager::textures.count(path) == 0)
+    {
+        auto texture = SDL_CreateTextureFromSurface(renderer, IMG_Load(path.c_str()));
+        WorldManager::textures[path] = texture != NULL ? texture : nullptr;
+    }
+    return WorldManager::textures[path];
+}
+
 void WorldManager::AddObject(BasePObj* obj)
 {
     WorldManager::order.push_back(obj);
@@ -81,7 +100,7 @@ void WorldManager::DeleteObject(int index)
 }
 
 template<typename T>
-double getAverage(std::vector<T> const& v)
+double GetAverage(std::vector<T> const& v)
 {
     if (v.empty())
         return 0;
@@ -105,15 +124,15 @@ std::vector<int> last_frames_speed_y = std::vector<int>();
 
 void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
 {
-    if (ctrl.GetDebug() && !old_ctrl.GetDebug())
+    if (ctrl.Debug() && !old_ctrl.Debug())
     {
         WorldManager::isDebug = !WorldManager::isDebug;
     }        
 
-    WorldManager::y_offset += ctrl.GetMoveUp() * WorldManager::move_speed;
-    WorldManager::x_offset -= ctrl.GetMoveRight() * WorldManager::move_speed;
+    WorldManager::y_offset += ctrl.MoveUp() * WorldManager::move_speed;
+    WorldManager::x_offset -= ctrl.MoveRight() * WorldManager::move_speed;
     WorldManager::y_offset -= ctrl.GetMoveDown() * WorldManager::move_speed;
-    WorldManager::x_offset += ctrl.GetMoveLeft() * WorldManager::move_speed;
+    WorldManager::x_offset += ctrl.MoveLeft() * WorldManager::move_speed;
 
     if (last_frames_speed_x.size() > (size_t)(WorldManager::moving_inertia_frames))
     {
@@ -121,7 +140,7 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
         last_frames_speed_y.erase(last_frames_speed_y.begin());
     }
 
-    if (ctrl.GetIsMoving())
+    if (ctrl.IsMoving())
     {
         WorldManager::x_offset += (ctrl.GetMouse().x - old_ctrl.GetMouse().x);
         WorldManager::y_offset += (ctrl.GetMouse().y - old_ctrl.GetMouse().y);
@@ -130,13 +149,13 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
     }
     else
     {
-        WorldManager::x_offset += getAverage(last_frames_speed_x);
-        WorldManager::y_offset += getAverage(last_frames_speed_y);
+        WorldManager::x_offset += GetAverage(last_frames_speed_x);
+        WorldManager::y_offset += GetAverage(last_frames_speed_y);
         last_frames_speed_x.push_back(0);
         last_frames_speed_y.push_back(0);
     }
 
-    if (ctrl.GetIsPinching() && ((WorldManager::zoom + (ctrl.GetPinch() - old_ctrl.GetPinch())) > 10))
+    if (ctrl.IsPinching() && ((WorldManager::zoom + (ctrl.GetPinch() - old_ctrl.GetPinch())) > 10))
     {
         CorrectOffset(  ctrl.GetMouse(),
                         (ctrl.GetPinch() - old_ctrl.GetPinch()));
@@ -144,40 +163,40 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
     }
 
     // ACTIONS
-    HandleActionCtrl(old_ctrl.GetActionUp(), ctrl.GetActionUp(), WorldManager::actions["up"],WorldManager::level, WorldManager::objects);
-    HandleActionCtrl(old_ctrl.GetActionRight(), ctrl.GetActionRight(), WorldManager::actions["right"], WorldManager::level, WorldManager::objects);
-    HandleActionCtrl(old_ctrl.GetActionDown(), ctrl.GetActionDown(), WorldManager::actions["down"], WorldManager::level, WorldManager::objects);
-    HandleActionCtrl(old_ctrl.GetActionLeft(), ctrl.GetActionLeft(), WorldManager::actions["left"], WorldManager::level, WorldManager::objects);
+    HandleActionCtrl(old_ctrl.ActionUp(), ctrl.ActionUp(), WorldManager::actions["up"],WorldManager::level, WorldManager::objects);
+    HandleActionCtrl(old_ctrl.ActionRight(), ctrl.ActionRight(), WorldManager::actions["right"], WorldManager::level, WorldManager::objects);
+    HandleActionCtrl(old_ctrl.ActionDown(), ctrl.ActionDown(), WorldManager::actions["down"], WorldManager::level, WorldManager::objects);
+    HandleActionCtrl(old_ctrl.ActionLeft(), ctrl.ActionLeft(), WorldManager::actions["left"], WorldManager::level, WorldManager::objects);
     
-    HandleActionCtrl(old_ctrl.GetActionEnter(), ctrl.GetActionEnter(), WorldManager::actions["enter"], WorldManager::level, WorldManager::objects);
+    HandleActionCtrl(old_ctrl.ActionEnter(), ctrl.ActionEnter(), WorldManager::actions["enter"], WorldManager::level, WorldManager::objects);
     //////////
 
     SDL_Point scr_center = {renderer->GetWidth() / 2, renderer->GetHeight() / 2};
 
     if (WorldManager::zoom <= 1)
     {
-        CorrectOffset(  ctrl.GetIsWheel() ? ctrl.GetMouse() : scr_center,
+        CorrectOffset(  ctrl.tIsWheel() ? ctrl.GetMouse() : scr_center,
                         WorldManager::zoom - 1);
         WorldManager::zoom = 1;
     }
     else
     {
-        CorrectOffset(  ctrl.GetIsWheel() ? ctrl.GetMouse() : scr_center,
-                        ctrl.GetZoomOut() * WorldManager::zoom_speed * -1 * WorldManager::zoom);
-        WorldManager::zoom -= ctrl.GetZoomOut() * WorldManager::zoom_speed * WorldManager::zoom;
+        CorrectOffset(  ctrl.tIsWheel() ? ctrl.GetMouse() : scr_center,
+                        ctrl.ZoomOut() * WorldManager::zoom_speed * -1 * WorldManager::zoom);
+        WorldManager::zoom -= ctrl.ZoomOut() * WorldManager::zoom_speed * WorldManager::zoom;
     }
 
     if (WorldManager::zoom >= 1000)
     {
-        CorrectOffset(  ctrl.GetIsWheel() ? ctrl.GetMouse() : scr_center,
+        CorrectOffset(  ctrl.tIsWheel() ? ctrl.GetMouse() : scr_center,
                         1000 - WorldManager::zoom);
         WorldManager::zoom = 1000;
     }
     else
     {
-        CorrectOffset(  ctrl.GetIsWheel() ? ctrl.GetMouse() : scr_center,
-                        ctrl.GetZoomIn() * WorldManager::zoom_speed * WorldManager::zoom);
-        WorldManager::zoom += ctrl.GetZoomIn() * WorldManager::zoom_speed * WorldManager::zoom;
+        CorrectOffset(  ctrl.tIsWheel() ? ctrl.GetMouse() : scr_center,
+                        ctrl.ZoomIn() * WorldManager::zoom_speed * WorldManager::zoom);
+        WorldManager::zoom += ctrl.ZoomIn() * WorldManager::zoom_speed * WorldManager::zoom;
     }
 
     WorldManager::world->Step(1.0f / 60.0f, WorldManager::physics_quality * 3, WorldManager::physics_quality);
@@ -203,7 +222,7 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
     
     // LATER IT WILL BE CONSIDERED DEPRECATED AND DESTROYED
     // Or no?
-    if (ctrl.GetReloadLevel() && !old_ctrl.GetReloadLevel()){
+    if (ctrl.ReloadLevel() && !old_ctrl.ReloadLevel()){
         WorldManager::LoadLevel(WorldManager::level, renderer);
         
 //         Network::SetRepo("https://raw.githubusercontent.com/Hammerill/Sand-Box2D-levels/main/levels");
@@ -270,20 +289,20 @@ void WorldManager::Render(Renderer* renderer, Controls ctrl)
         debugStrings.push_back("Zoom = " + std::to_string(WorldManager::zoom));
         debugStrings.push_back("Mouse X = " + std::to_string(mouse.x));
         debugStrings.push_back("Mouse Y = " + std::to_string(mouse.y));
-        debugStrings.push_back("IsMoving? = " + std::to_string(ctrl.GetIsMoving()));
+        debugStrings.push_back("IsMoving? = " + std::to_string(ctrl.IsMoving()));
         debugStrings.push_back("Pinch = " + std::to_string(ctrl.GetPinch()));
-        debugStrings.push_back("IsPinching? = " + std::to_string(ctrl.GetIsPinching()));
-        debugStrings.push_back("Zoom In = " + std::to_string(ctrl.GetZoomIn()));
-        debugStrings.push_back("Zoom Out = " + std::to_string(ctrl.GetZoomOut()));
+        debugStrings.push_back("IsPinching? = " + std::to_string(ctrl.IsPinching()));
+        debugStrings.push_back("Zoom In = " + std::to_string(ctrl.ZoomIn()));
+        debugStrings.push_back("Zoom Out = " + std::to_string(ctrl.ZoomOut()));
         debugStrings.push_back("Objects count = " + std::to_string(WorldManager::world->GetBodyCount()));
         debugStrings.push_back("Objects rendered = " + std::to_string(renderedItemsCount));
         debugStrings.push_back("");
         debugStrings.push_back("ACTIONS");
-        debugStrings.push_back("Up = " + std::to_string(ctrl.GetActionUp()));
-        debugStrings.push_back("Right = " + std::to_string(ctrl.GetActionRight()));
-        debugStrings.push_back("Down = " + std::to_string(ctrl.GetActionDown()));
-        debugStrings.push_back("Left = " + std::to_string(ctrl.GetActionLeft()));
-        debugStrings.push_back("Enter = " + std::to_string(ctrl.GetActionEnter()));
+        debugStrings.push_back("Up = " + std::to_string(ctrl.ActionUp()));
+        debugStrings.push_back("Right = " + std::to_string(ctrl.ActionRight()));
+        debugStrings.push_back("Down = " + std::to_string(ctrl.ActionDown()));
+        debugStrings.push_back("Left = " + std::to_string(ctrl.ActionLeft()));
+        debugStrings.push_back("Enter = " + std::to_string(ctrl.ActionEnter()));
 
         WorldManager::RenderDebugScreen(debugStrings, renderer);        
     }

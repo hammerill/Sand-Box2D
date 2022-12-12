@@ -61,6 +61,10 @@ void PObjBox::SetParam(std::string name, Json::Value value)
     {
         PObjBox::body->SetAngularVelocity(value.asFloat());
     }
+    else if (name == "texture_path")
+    {
+        PObjBox::texture_path = value.asString();
+    }
 }
 
 Json::Value PObjBox::GetParam(std::string name)
@@ -84,6 +88,8 @@ Json::Value PObjBox::GetParam(std::string name)
         return Json::Value(PObjBox::body->GetLinearVelocity().y);
     else if (name == "vel_ang")
         return Json::Value(PObjBox::body->GetAngularVelocity());
+    else if (name == "texture_path")
+        return Json::Value(PObjBox::texture_path);
     
     return 0;
 }

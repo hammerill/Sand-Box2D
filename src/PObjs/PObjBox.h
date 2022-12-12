@@ -28,6 +28,10 @@ private:
     /// @brief Starting angular velocity of the Box.
     float vel_ang;
 
+    /// @brief Path to texture of the Box to be loaded outside (through SetTexture()).
+    /// Can be accessed through SetParam() and GetParam() as "texture_path".
+    std::string texture_path;
+
 public:
     PObjBox(BoxDesc boxDesc);
     ~PObjBox();
@@ -58,5 +62,5 @@ public:
     /// @param width screen width in pixels.
     /// @param height screen height in pixels.
     /// @return true if box rendered. False if didn't render because it's out of screen bounds. 
-    bool Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width = 0, int height = 0);
+    bool Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height);
 };

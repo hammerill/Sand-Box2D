@@ -257,30 +257,30 @@ void Controls::Check()
 }
 #endif
 
-bool Controls::GetExit()        { return Controls::exit; }
-bool Controls::GetFullscreen()  { return Controls::fullscreen; }
-bool Controls::GetDebug()       { return Controls::debug; }
-bool Controls::GetReloadLevel() { return Controls::reloadLevel; }
+bool Controls::Exit()           { return Controls::exit; }
+bool Controls::Fullscreen()     { return Controls::fullscreen; }
+bool Controls::Debug()          { return Controls::debug; }
+bool Controls::ReloadLevel()    { return Controls::reloadLevel; }
 
-double Controls::GetMoveUp()    { return Controls::moveUp; }
-double Controls::GetMoveRight() { return Controls::moveRight; }
+double Controls::MoveUp()       { return Controls::moveUp; }
+double Controls::MoveRight()    { return Controls::moveRight; }
 double Controls::GetMoveDown()  { return Controls::moveDown; }
-double Controls::GetMoveLeft()  { return Controls::moveLeft; }
+double Controls::MoveLeft()     { return Controls::moveLeft; }
 
-double Controls::GetZoomIn()    { return Controls::zoomIn; }
-double Controls::GetZoomOut()   { return Controls::zoomOut; }
+double Controls::ZoomIn()       { return Controls::zoomIn; }
+double Controls::ZoomOut()      { return Controls::zoomOut; }
 
-bool Controls::GetIsMoving()    { return Controls::isMoving; }
+bool Controls::IsMoving()       { return Controls::isMoving; }
 SDL_Point Controls::GetMouse()  { return Controls::mouse; }
 
-bool Controls::GetIsPinching()  { return Controls::isPinching; }
+bool Controls::IsPinching()     { return Controls::isPinching; }
 int Controls::GetPinch()        { return Controls::pinch; }
 
-bool Controls::GetIsWheel()     { return Controls::isWheel; }
+bool Controls::tIsWheel()       { return Controls::isWheel; }
 
-bool Controls::GetActionUp()    { return Controls::actionUp; }
-bool Controls::GetActionRight() { return Controls::actionRight; }
-bool Controls::GetActionDown()  { return Controls::actionDown; }
-bool Controls::GetActionLeft()  { return Controls::actionLeft; }
+bool Controls::ActionUp()       { return Controls::actionUp; }
+bool Controls::ActionRight()    { return Controls::actionRight; }
+bool Controls::ActionDown()     { return Controls::actionDown; }
+bool Controls::ActionLeft()     { return Controls::actionLeft; }
 
-bool Controls::GetActionEnter() { return Controls::actionEnter; }
+bool Controls::ActionEnter()    { return Controls::actionEnter; }

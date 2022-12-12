@@ -13,7 +13,7 @@
 class BasePObj
 {
 protected:
-    /// By multiplying this with value in radians you will get a value in degrees.
+    /// By multiplying this with value in radians you will get value in degrees.
     ///
     /// RAD * RAD2DEG == DEG
     /// DEG / RAD2DEG == RAD

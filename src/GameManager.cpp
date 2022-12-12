@@ -13,10 +13,11 @@ GameManager::GameManager(const char* path_to_settings, const char* path_to_def_s
     GameManager::renderer->InitVideo(
         fullscreen,
         GameManager::settings.Get("path_to_icon").asString() == "" ? nullptr : 
-        GameManager::settings.Get("path_to_icon").asString().c_str()
+            GameManager::settings.Get("path_to_icon").asString().c_str()
     );
     
     GameManager::world_manager = new WorldManager(
+        GameManager::settings.Get("path_to_def_texture").asString(),
         GameManager::settings.Get("physics_quality").asInt(),
         GameManager::settings.Get("moving_inertia_frames").asInt()
     );
@@ -39,10 +40,10 @@ bool GameManager::Step()
     GameManager::old_ctrl = GameManager::ctrl;
     GameManager::ctrl.Check();
 
-    if (ctrl.GetExit())
+    if (ctrl.Exit())
         return false;
     
-    if (ctrl.GetFullscreen() && !old_ctrl.GetFullscreen())
+    if (ctrl.Fullscreen() && !old_ctrl.Fullscreen())
     {
         auto cur_mode = GameManager::renderer->GetWindowMode();
         GameManager::renderer->ChangeRes(cur_mode != WINDOWED ? windowed : fullscreen);

@@ -51,22 +51,22 @@ public:
     void Check();
 
     /// @brief Is user does want to close the program? Should be handled.
-    bool GetExit();
+    bool Exit();
     /// @brief Is user does want to go/exit fullscreen mode?
-    bool GetFullscreen();
+    bool Fullscreen();
     /// @brief Is user does want to activate/deactivate debug mode?
-    bool GetDebug();
+    bool Debug();
     /// @brief Is user does want to reload current level?
-    bool GetReloadLevel();
+    bool ReloadLevel();
 
     /// @brief Is user does want to move camera up?
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).
     /// Otherwise analog value with minimum at 0 and maximum at 1.
-    double GetMoveUp();
+    double MoveUp();
     /// @brief Is user does want to move camera right?
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).
     /// Otherwise analog value with minimum at 0 and maximum at 1.
-    double GetMoveRight();
+    double MoveRight();
     /// @brief Is user does want to move camera down?
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).
     /// Otherwise analog value with minimum at 0 and maximum at 1.
@@ -74,38 +74,38 @@ public:
     /// @brief Is user does want to move camera left?
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).
     /// Otherwise analog value with minimum at 0 and maximum at 1.
-    double GetMoveLeft();
+    double MoveLeft();
     
     /// @brief Is user does want to zoom in?
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).
     /// Otherwise analog value with minimum at 0 and unlimited maximum.
-    double GetZoomIn();
+    double ZoomIn();
     /// @brief Is user does want to zoom out?
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).
     /// Otherwise analog value with minimum at 0 and unlimited maximum.
-    double GetZoomOut();
+    double ZoomOut();
     
     /// @brief Is user pressing left mouse button or touchscreen right now in order to move camera?
-    bool GetIsMoving();
+    bool IsMoving();
     /// @brief Get current mouse (or touchscreen) position.
     /// @return SDL_Point object with fields X and Y.
     SDL_Point GetMouse();
 
     /// @brief Is user zooming screen using touchscreen right now?
-    bool GetIsPinching();
+    bool IsPinching();
     /// @brief Get pinch value. It's a distance between two fingers.
     /// @return amount of pixels of distance between two fingers.
     int GetPinch();
 
     /// @brief Is user changing zoom right now using mouse wheel?
-    bool GetIsWheel();
+    bool tIsWheel();
 
     // ACTIONS
-    bool GetActionUp();
-    bool GetActionRight();
-    bool GetActionDown();
-    bool GetActionLeft();
+    bool ActionUp();
+    bool ActionRight();
+    bool ActionDown();
+    bool ActionLeft();
 
-    bool GetActionEnter();
+    bool ActionEnter();
     //////////
 };
