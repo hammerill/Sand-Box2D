@@ -71,7 +71,8 @@ BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
             };
             auto box = new PObjBox(boxDesc);
 
-            box->SetParam("texture_path", "");
+std::string path = Level::base + jsonObj["texture"].asString();
+            box->SetParam("texture_path", Json::Value(path));
 
             if (jsonObj.isMember("id"))
                 box->SetParam("id", Level::LoadNumAsJson(jsonObj["id"]));
@@ -121,9 +122,11 @@ bool Level::LoadFile(std::string base, std::string filepath)
 {
     Level::~Level();
 
+    Level::base = base;
+
     try
     {
-        std::ifstream ifs((base + "/" + filepath).c_str());
+        std::ifstream ifs((Level::base + "/" + filepath).c_str());
 
         Json::Reader reader;
         reader.parse(ifs, Level::jsonLevel);

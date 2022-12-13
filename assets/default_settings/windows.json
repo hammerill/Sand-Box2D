@@ -4,8 +4,8 @@
     "path_to_font": "./assets/fonts/PressStart2P-vaV7.ttf",
     "path_to_icon": "",
     "path_to_def_texture": "./assets/img/box.png",
-    "path_to_def_level_base": "./assets",
-    "path_to_def_level": "default_level/default_level.json",
+    "path_to_def_level_base": "./assets/default_level",
+    "path_to_def_level": "default_level.json",
     "speed_correction": false,
     "physics_quality": 16,
     "moving_inertia_frames": 10

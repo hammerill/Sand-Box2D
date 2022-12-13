@@ -50,6 +50,9 @@ private:
     /// @brief JSON value of loaded level. Getters of this class are parsing its contents.
     Json::Value jsonLevel;
 
+    /// @brief Where is Level directory?
+    std::string base;
+
     /// @brief Parse JSON PObject and return it as PObj.
     /// @param jsonObj PObj from JSON to be parsed.
     /// @return nullptr if there was problem parsing object.
