@@ -236,25 +236,27 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
     }
     ///////////////////////////////////////////////////////
 
+    // POBJECTS REGISTRATION
     for (int i = WorldManager::order.size() - 1; i >= 0; i--)
-    { // Load order.
+    {
         WorldManager::objects.push_back(WorldManager::order[i]);
 
         auto pobj = WorldManager::objects[WorldManager::objects.size() - 1];
         
-        if (typeid(pobj) == typeid(PObjBox*))
+        if (typeid(*pobj) == typeid(PObjBox))
         {
-            dynamic_cast<PObjBox*>(pobj)->SetTexture(WorldManager::textures[""]);
-            // dynamic_cast<PObjBox*>(pobj)->SetTexture(WorldManager::LoadTexture(pobj->GetParam("texture_path").asString(), renderer->GetRenderer()));
+            dynamic_cast<PObjBox*>(pobj)->SetTexture(WorldManager::LoadTexture(pobj->GetParam("texture_path").asString(), renderer->GetRenderer()));
         }
 
         pobj->Register(WorldManager::world, renderer->GetRenderer());
         
         WorldManager::order.pop_back();        
     }
+    ////////////////////////
 
+    // OUT OF BORDERS CHECK
     for (size_t i = 0; i < WorldManager::objects.size(); i++)
-    { // Out of bounds check.
+    {
         if (WorldManager::objects[i]->GetBody()->GetPosition().x > 100 ||
             WorldManager::objects[i]->GetBody()->GetPosition().y > 100 ||
             WorldManager::objects[i]->GetBody()->GetPosition().x < -100 ||
@@ -263,6 +265,7 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
             WorldManager::DeleteObject(i);
         }
     }
+    ///////////////////////
 }
 
 int renderedItemsCount;
