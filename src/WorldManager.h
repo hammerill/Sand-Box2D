@@ -31,7 +31,7 @@ private:
     std::vector<BasePObj*> order;
 
     /// Array of loaded textures in "TEXTURE_PATH:TEXTURE" format.
-    /// To access it use LoadTexture().
+    /// PObjs will manage it by themselves when Register() is called.
     std::map<std::string, SDL_Texture*> textures = std::map<std::string, SDL_Texture*>();
 
     float x_offset = 0, y_offset = 0, zoom = 80;
@@ -81,12 +81,6 @@ public:
     /// @param level Level to be loaded.
     /// @param renderer link to renderer object (not link to SDL_Renderer) where to render.
     void LoadLevel(Level level, Renderer* renderer);
-
-    /// @brief Load texture. If it was loaded before, will return pointer to already loaded texture.
-    /// @param path path to the texture to be loaded.
-    /// @param renderer the rendering context.
-    /// @return pointer to the SDL texture. nullptr if can't load.
-    SDL_Texture* LoadTexture(std::string path, SDL_Renderer* renderer);
 
     /// @brief Add physics object realization into the BasePObj array.
     /// @param obj link to the physics object realization to add.

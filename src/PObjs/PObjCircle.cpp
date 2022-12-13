@@ -74,6 +74,11 @@ void PObjCircle::SetParam(std::string name, Json::Value value)
         PObjCircle::g_angle = value.asUInt();
     else if (name == "b_angle")
         PObjCircle::b_angle = value.asUInt();
+    
+    else if (name == "is_texture")
+        PObjCircle::is_texture = value.asBool();
+    else if (name == "texture_path")
+        PObjCircle::texture_path = value.asString();
 }
 
 Json::Value PObjCircle::GetParam(std::string name)
@@ -109,10 +114,15 @@ Json::Value PObjCircle::GetParam(std::string name)
     else if (name == "b_angle")
         return Json::Value(PObjCircle::b_angle);
 
+    else if (name == "is_texture")
+        return Json::Value(PObjCircle::is_texture);
+    else if (name == "texture_path")
+        return Json::Value(PObjCircle::texture_path);
+
     return 0;
 }
 
-void PObjCircle::Register(b2World* world, SDL_Renderer* renderer)
+void PObjCircle::Register(b2World* world, SDL_Renderer* renderer, std::map<std::string, SDL_Texture*> textures)
 {
     PObjCircle::body = world->CreateBody(&(PObjCircle::bodyDef));
     PObjCircle::body->SetLinearVelocity(PObjCircle::vel);
@@ -133,14 +143,21 @@ bool PObjCircle::Render(SDL_Renderer* renderer, float x_offset, float y_offset, 
     if (circle.x > -radiusZoomed && circle.x < width + radiusZoomed
     &&  circle.y > -radiusZoomed && circle.y < height + radiusZoomed)
     {
-        filledCircleRGBA(renderer, circle.x, circle.y, radiusZoomed, PObjCircle::r, PObjCircle::g, PObjCircle::b, 0xFF);
+        if (PObjCircle::is_texture)
+        {
+            /* code */
+        }
+        else
+        {
+            filledCircleRGBA(renderer, circle.x, circle.y, radiusZoomed, PObjCircle::r, PObjCircle::g, PObjCircle::b, 0xFF);
 
-        SDL_SetRenderDrawColor(renderer, PObjCircle::r_angle, PObjCircle::g_angle, PObjCircle::b_angle, 0);
-        SDL_RenderDrawLine(renderer, 
-        circle.x, 
-        circle.y, 
-        (circle.x) + (cos(PObjCircle::body->GetAngle()) * radiusZoomed), 
-        (circle.y) + (sin(PObjCircle::body->GetAngle()) * radiusZoomed));
+            SDL_SetRenderDrawColor(renderer, PObjCircle::r_angle, PObjCircle::g_angle, PObjCircle::b_angle, 0);
+            SDL_RenderDrawLine(renderer, 
+            circle.x, 
+            circle.y, 
+            (circle.x) + (cos(PObjCircle::body->GetAngle()) * radiusZoomed), 
+            (circle.y) + (sin(PObjCircle::body->GetAngle()) * radiusZoomed));
+        }
 
         return true;
     }

@@ -28,6 +28,11 @@ private:
     /// @brief Color of the Circle angle renderer.
     uint8_t r_angle, g_angle, b_angle;
 
+    /// @brief Is texture for the Circle is loaded? If true, render Circle as texture.
+    /// Otherwise render it as colored shape.
+    /// Can be accessed through SetParam() and GetParam() as "is_texture".
+    bool is_texture = false;
+
     /// @brief Shape of the Circle.
     b2CircleShape circleShape;
 
@@ -54,7 +59,8 @@ public:
     /// called only when no world calculations are performing.
     /// @param world link to the world where Circle should be registered.
     /// @param renderer the rendering context.
-    void Register(b2World* world, SDL_Renderer* renderer = nullptr);
+    /// @param textures textures vector to work with.
+    void Register(b2World* world, SDL_Renderer* renderer, std::map<std::string, SDL_Texture*> textures);
 
     /// @brief Render this Circle.
     /// @param renderer the rendering context.

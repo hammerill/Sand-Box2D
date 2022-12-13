@@ -25,12 +25,23 @@ protected:
     /// @brief Texture of the PObj.
     SDL_Texture* texture = nullptr;
 
+    /// @brief Path to texture of the PObj. Will be loaded while calling Register().
+    /// Can be accessed through SetParam() and GetParam() as "texture_path".
+    std::string texture_path;
+
     /// @brief Link to the main body of the PObj.
     b2Body* body;
     /// @brief Body definition of the PObj.
     b2BodyDef bodyDef;
     /// @brief Fixture definition of the PObj.
     b2FixtureDef fixtureDef;
+
+    /// @brief Load texture. If it was loaded before, will return pointer to already loaded texture.
+    /// @param textures textures vector to work with.
+    /// @param path path to the texture to be loaded.
+    /// @param renderer the rendering context.
+    /// @return pointer to the SDL texture. nullptr if can't load.
+    SDL_Texture* LoadTexture(std::map<std::string, SDL_Texture*> textures, std::string path, SDL_Renderer* renderer);
 
 public:
     virtual ~BasePObj() {};
@@ -49,7 +60,8 @@ public:
     /// called only when no world calculations are performing.
     /// @param world link to the world where PObj should be registered.
     /// @param renderer the rendering context.
-    virtual void Register(b2World* world, SDL_Renderer* renderer = nullptr) = 0;
+    /// @param textures textures vector to work with.
+    virtual void Register(b2World* world, SDL_Renderer* renderer = nullptr, std::map<std::string, SDL_Texture*> textures = std::map<std::string, SDL_Texture*>()) = 0;
 
     b2Body* GetBody();
     int GetId();

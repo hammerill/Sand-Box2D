@@ -41,7 +41,8 @@ public:
     /// called only when no world calculations are performing.
     /// @param world link to the world where Platform should be registered.
     /// @param renderer the rendering context.
-    void Register(b2World* world, SDL_Renderer* renderer = nullptr);
+    /// @param textures textures vector to work with.
+    void Register(b2World* world, SDL_Renderer* renderer, std::map<std::string, SDL_Texture*> textures);
 
     /// @brief Render this Platform.
     /// @param renderer the rendering context.

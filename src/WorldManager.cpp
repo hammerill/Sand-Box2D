@@ -79,16 +79,6 @@ void WorldManager::LoadLevel(Level level, Renderer* renderer)
     //////////
 }
 
-SDL_Texture* WorldManager::LoadTexture(std::string path, SDL_Renderer* renderer)
-{
-    if (WorldManager::textures.count(path) == 0)
-    {
-        auto texture = SDL_CreateTextureFromSurface(renderer, IMG_Load(path.c_str()));
-        WorldManager::textures[path] = texture != NULL ? texture : nullptr;
-    }
-    return WorldManager::textures[path];
-}
-
 void WorldManager::AddObject(BasePObj* obj)
 {
     WorldManager::order.push_back(obj);
@@ -242,13 +232,8 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
         WorldManager::objects.push_back(WorldManager::order[i]);
 
         auto pobj = WorldManager::objects[WorldManager::objects.size() - 1];
-        
-        if (typeid(*pobj) == typeid(PObjBox))
-        {
-            dynamic_cast<PObjBox*>(pobj)->SetTexture(WorldManager::LoadTexture(pobj->GetParam("texture_path").asString(), renderer->GetRenderer()));
-        }
 
-        pobj->Register(WorldManager::world, renderer->GetRenderer());
+        pobj->Register(WorldManager::world, renderer->GetRenderer(), WorldManager::textures);
         
         WorldManager::order.pop_back();        
     }

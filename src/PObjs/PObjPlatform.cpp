@@ -44,7 +44,7 @@ Json::Value PObjPlatform::GetParam(std::string name)
     return 0;
 }
 
-void PObjPlatform::Register(b2World* world, SDL_Renderer* renderer)
+void PObjPlatform::Register(b2World* world, SDL_Renderer* renderer, std::map<std::string, SDL_Texture*> textures)
 {
     PObjPlatform::body = world->CreateBody(&(PObjPlatform::bodyDef));
     PObjPlatform::body->CreateFixture(&(PObjPlatform::fixtureDef));

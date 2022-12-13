@@ -71,8 +71,7 @@ BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
             };
             auto box = new PObjBox(boxDesc);
 
-std::string path = Level::base + jsonObj["texture"].asString();
-            box->SetParam("texture_path", Json::Value(path));
+            box->SetParam("texture_path", Json::Value(Level::base + jsonObj["texture"].asString()));
 
             if (jsonObj.isMember("id"))
                 box->SetParam("id", Level::LoadNumAsJson(jsonObj["id"]));

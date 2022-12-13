@@ -28,10 +28,6 @@ private:
     /// @brief Starting angular velocity of the Box.
     float vel_ang;
 
-    /// @brief Path to texture of the Box to be loaded outside (through SetTexture()).
-    /// Can be accessed through SetParam() and GetParam() as "texture_path".
-    std::string texture_path;
-
 public:
     PObjBox(BoxDesc boxDesc);
     ~PObjBox();
@@ -46,13 +42,12 @@ public:
     /// @return Json::Value. Call its functions like AsFloat(), etc.
     Json::Value GetParam(std::string name);
 
-    void SetTexture(SDL_Texture* texture);
-
     /// Register this box in the world and set its texture. Should be 
     /// called only when no world calculations are performing.
     /// @param world link to the world where box should be registered.
     /// @param renderer the rendering context.
-    void Register(b2World* world, SDL_Renderer* renderer);
+    /// @param textures textures vector to work with.
+    void Register(b2World* world, SDL_Renderer* renderer, std::map<std::string, SDL_Texture*> textures);
 
     /// @brief Render this box.
     /// @param renderer the rendering context.

@@ -94,17 +94,14 @@ Json::Value PObjBox::GetParam(std::string name)
     return 0;
 }
 
-void PObjBox::SetTexture(SDL_Texture* texture)
-{
-    PObjBox::texture = texture;
-}
-
-void PObjBox::Register(b2World* world, SDL_Renderer* renderer)
+void PObjBox::Register(b2World* world, SDL_Renderer* renderer, std::map<std::string, SDL_Texture*> textures)
 {
     PObjBox::body = world->CreateBody(&(PObjBox::bodyDef));
     PObjBox::body->SetLinearVelocity(PObjBox::vel);
     PObjBox::body->SetAngularVelocity(PObjBox::vel_ang);
     PObjBox::body->CreateFixture(&(PObjBox::fixtureDef));
+
+    PObjBox::texture = PObjBox::LoadTexture(textures, PObjBox::GetParam("texture_path").asString(), renderer);
 }
 
 bool PObjBox::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)
