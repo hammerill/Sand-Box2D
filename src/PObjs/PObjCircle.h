@@ -36,11 +36,6 @@ private:
     /// @brief Shape of the Circle.
     b2CircleShape circleShape;
 
-    /// @brief Starting velocity of the Circle.
-    b2Vec2 vel;
-    /// @brief Starting angular velocity of the Circle.
-    float vel_ang;
-
 public:
     PObjCircle(CircleDesc circleDesc);
     ~PObjCircle();

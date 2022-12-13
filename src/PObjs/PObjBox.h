@@ -23,11 +23,6 @@ private:
     /// @brief Shape of the box entity.
     b2PolygonShape boxShape;
 
-    /// @brief Starting velocity of the Box.
-    b2Vec2 vel;
-    /// @brief Starting angular velocity of the Box.
-    float vel_ang;
-
 public:
     PObjBox(BoxDesc boxDesc);
     ~PObjBox();

@@ -4,9 +4,6 @@ PObjBox::PObjBox(BoxDesc boxDesc)
 {
     PObjBox::boxDesc = boxDesc;
 
-    PObjBox::vel.Set(PObjBox::boxDesc.vel_x, PObjBox::boxDesc.vel_y);
-    PObjBox::vel_ang = boxDesc.vel_ang;
-
     PObjBox::bodyDef.type = b2_dynamicBody;
     PObjBox::bodyDef.angle = PObjBox::boxDesc.angle / PObjBox::RAD2DEG; 
     PObjBox::bodyDef.position.Set(PObjBox::boxDesc.x, PObjBox::boxDesc.y);
@@ -97,8 +94,8 @@ Json::Value PObjBox::GetParam(std::string name)
 void PObjBox::Register(b2World* world, SDL_Renderer* renderer, std::map<std::string, SDL_Texture*> textures)
 {
     PObjBox::body = world->CreateBody(&(PObjBox::bodyDef));
-    PObjBox::body->SetLinearVelocity(PObjBox::vel);
-    PObjBox::body->SetAngularVelocity(PObjBox::vel_ang);
+    PObjBox::body->SetLinearVelocity(b2Vec2(PObjBox::boxDesc.vel_x, PObjBox::boxDesc.vel_y));
+    PObjBox::body->SetAngularVelocity(PObjBox::boxDesc.vel_ang);
     PObjBox::body->CreateFixture(&(PObjBox::fixtureDef));
 
     PObjBox::texture = PObjBox::LoadTexture(textures, PObjBox::GetParam("texture_path").asString(), renderer);

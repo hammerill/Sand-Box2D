@@ -4,9 +4,6 @@ PObjCircle::PObjCircle(CircleDesc circleDesc)
 {
     PObjCircle::circleDesc = circleDesc;
 
-    PObjCircle::vel.Set(PObjCircle::circleDesc.vel_x, PObjCircle::circleDesc.vel_y);
-    PObjCircle::vel_ang = circleDesc.vel_ang;
-
     PObjCircle::bodyDef.type = b2_dynamicBody;
     PObjCircle::bodyDef.position.Set(PObjCircle::circleDesc.x, PObjCircle::circleDesc.y);
     PObjCircle::bodyDef.angle = PObjCircle::circleDesc.angle / PObjCircle::RAD2DEG;
@@ -125,9 +122,12 @@ Json::Value PObjCircle::GetParam(std::string name)
 void PObjCircle::Register(b2World* world, SDL_Renderer* renderer, std::map<std::string, SDL_Texture*> textures)
 {
     PObjCircle::body = world->CreateBody(&(PObjCircle::bodyDef));
-    PObjCircle::body->SetLinearVelocity(PObjCircle::vel);
-    PObjCircle::body->SetAngularVelocity(PObjCircle::vel_ang);
+    PObjCircle::body->SetLinearVelocity(b2Vec2(PObjCircle::circleDesc.vel_x, PObjCircle::circleDesc.vel_y));
+    PObjCircle::body->SetAngularVelocity(PObjCircle::circleDesc.vel_ang);
     PObjCircle::body->CreateFixture(&(PObjCircle::fixtureDef));
+
+    if (PObjCircle::is_texture)
+        PObjCircle::texture = PObjCircle::LoadTexture(textures, PObjCircle::GetParam("texture_path").asString(), renderer);
 }
 
 bool PObjCircle::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)
@@ -145,7 +145,15 @@ bool PObjCircle::Render(SDL_Renderer* renderer, float x_offset, float y_offset, 
     {
         if (PObjCircle::is_texture)
         {
-            /* code */
+            SDL_Rect box;
+    
+            box.w = radiusZoomed * 2;
+            box.h = radiusZoomed * 2;
+
+            box.x = circle.x - (box.w / 2.0f);
+            box.y = circle.y - (box.h / 2.0f);
+
+            SDL_RenderCopyEx(renderer, PObjCircle::texture, NULL, &box, PObjCircle::body->GetAngle() * PObjCircle::RAD2DEG, NULL, SDL_FLIP_NONE);
         }
         else
         {

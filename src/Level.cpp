@@ -71,7 +71,7 @@ BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
             };
             auto box = new PObjBox(boxDesc);
 
-            box->SetParam("texture_path", Json::Value(Level::base + jsonObj["texture"].asString()));
+            box->SetParam("texture_path", Json::Value(Level::base + "/" + jsonObj["texture"].asString()));
 
             if (jsonObj.isMember("id"))
                 box->SetParam("id", Level::LoadNumAsJson(jsonObj["id"]));
@@ -89,13 +89,23 @@ BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
                 Level::LoadNumber(jsonObj["vel_ang"])
             };
             auto circle = new PObjCircle(circleDesc);
-            
-            circle->SetParam("r", Level::LoadNumAsJson(jsonObj["r"]));
-            circle->SetParam("g", Level::LoadNumAsJson(jsonObj["g"]));
-            circle->SetParam("b", Level::LoadNumAsJson(jsonObj["b"]));
-            circle->SetParam("r_angle", Level::LoadNumAsJson(jsonObj["r_angle"]));
-            circle->SetParam("g_angle", Level::LoadNumAsJson(jsonObj["g_angle"]));
-            circle->SetParam("b_angle", Level::LoadNumAsJson(jsonObj["b_angle"]));
+
+            auto texture_path = jsonObj["texture"].asString();
+
+            if (texture_path != "")
+            {
+                circle->SetParam("is_texture", Json::Value(true));
+                circle->SetParam("texture_path", Json::Value(Level::base + "/" + texture_path));
+            }
+            else
+            {
+                circle->SetParam("r", Level::LoadNumAsJson(jsonObj["r"]));
+                circle->SetParam("g", Level::LoadNumAsJson(jsonObj["g"]));
+                circle->SetParam("b", Level::LoadNumAsJson(jsonObj["b"]));
+                circle->SetParam("r_angle", Level::LoadNumAsJson(jsonObj["r_angle"]));
+                circle->SetParam("g_angle", Level::LoadNumAsJson(jsonObj["g_angle"]));
+                circle->SetParam("b_angle", Level::LoadNumAsJson(jsonObj["b_angle"]));
+            }
 
             if (jsonObj.isMember("id"))
                 circle->SetParam("id", Level::LoadNumAsJson(jsonObj["id"]));

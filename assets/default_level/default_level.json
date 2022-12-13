@@ -149,13 +149,12 @@
             "b": 0
         },
         {
-            "type": "box",
+            "type": "circle",
             "id": 10,
             "x": 6,
             "y": 5,
-            "w": 2.5,
-            "h": 2.5,
-            "texture": "./box.png"
+            "radius": 1.25,
+            "texture": "./icon.png"
         }
     ],
     "cycles": [
