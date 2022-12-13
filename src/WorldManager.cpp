@@ -294,6 +294,7 @@ void WorldManager::Render(Renderer* renderer, Controls ctrl)
         debugStrings.push_back("Zoom Out = " + std::to_string(ctrl.ZoomOut()));
         debugStrings.push_back("Objects count = " + std::to_string(WorldManager::world->GetBodyCount()));
         debugStrings.push_back("Objects rendered = " + std::to_string(renderedItemsCount));
+        debugStrings.push_back("Loaded textures = " + std::to_string(WorldManager::textures.size()));
         debugStrings.push_back("");
         debugStrings.push_back("ACTIONS");
         debugStrings.push_back("Up = " + std::to_string(ctrl.ActionUp()));

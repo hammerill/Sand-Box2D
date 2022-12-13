@@ -41,7 +41,7 @@ protected:
     /// @param path path to the texture to be loaded.
     /// @param renderer the rendering context.
     /// @return pointer to the SDL texture. nullptr if can't load.
-    SDL_Texture* LoadTexture(std::map<std::string, SDL_Texture*> textures, std::string path, SDL_Renderer* renderer);
+    SDL_Texture* LoadTexture(std::map<std::string, SDL_Texture*>& textures, std::string path, SDL_Renderer* renderer);
 
 public:
     virtual ~BasePObj() {};
@@ -61,7 +61,7 @@ public:
     /// @param world link to the world where PObj should be registered.
     /// @param renderer the rendering context.
     /// @param textures textures vector to work with.
-    virtual void Register(b2World* world, SDL_Renderer* renderer = nullptr, std::map<std::string, SDL_Texture*> textures = std::map<std::string, SDL_Texture*>()) = 0;
+    virtual void Register(b2World* world, SDL_Renderer* renderer, std::map<std::string, SDL_Texture*>& textures) = 0;
 
     b2Body* GetBody();
     int GetId();

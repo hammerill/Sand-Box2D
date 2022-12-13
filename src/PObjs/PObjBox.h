@@ -42,7 +42,7 @@ public:
     /// @param world link to the world where box should be registered.
     /// @param renderer the rendering context.
     /// @param textures textures vector to work with.
-    void Register(b2World* world, SDL_Renderer* renderer, std::map<std::string, SDL_Texture*> textures);
+    void Register(b2World* world, SDL_Renderer* renderer, std::map<std::string, SDL_Texture*>& textures);
 
     /// @brief Render this box.
     /// @param renderer the rendering context.

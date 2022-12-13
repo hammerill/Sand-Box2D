@@ -91,7 +91,7 @@ Json::Value PObjBox::GetParam(std::string name)
     return 0;
 }
 
-void PObjBox::Register(b2World* world, SDL_Renderer* renderer, std::map<std::string, SDL_Texture*> textures)
+void PObjBox::Register(b2World* world, SDL_Renderer* renderer, std::map<std::string, SDL_Texture*>& textures)
 {
     PObjBox::body = world->CreateBody(&(PObjBox::bodyDef));
     PObjBox::body->SetLinearVelocity(b2Vec2(PObjBox::boxDesc.vel_x, PObjBox::boxDesc.vel_y));

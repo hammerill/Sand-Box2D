@@ -9,7 +9,7 @@ int BasePObj::GetId()
     return BasePObj::id;
 }
 
-SDL_Texture* BasePObj::LoadTexture(std::map<std::string, SDL_Texture*> textures, std::string path, SDL_Renderer* renderer)
+SDL_Texture* BasePObj::LoadTexture(std::map<std::string, SDL_Texture*>& textures, std::string path, SDL_Renderer* renderer)
 {
     if (textures.count(path) == 0)
     {

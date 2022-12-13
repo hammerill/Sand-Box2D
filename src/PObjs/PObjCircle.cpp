@@ -119,7 +119,7 @@ Json::Value PObjCircle::GetParam(std::string name)
     return 0;
 }
 
-void PObjCircle::Register(b2World* world, SDL_Renderer* renderer, std::map<std::string, SDL_Texture*> textures)
+void PObjCircle::Register(b2World* world, SDL_Renderer* renderer, std::map<std::string, SDL_Texture*>& textures)
 {
     PObjCircle::body = world->CreateBody(&(PObjCircle::bodyDef));
     PObjCircle::body->SetLinearVelocity(b2Vec2(PObjCircle::circleDesc.vel_x, PObjCircle::circleDesc.vel_y));
