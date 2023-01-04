@@ -12,8 +12,6 @@ WorldManager::WorldManager(std::string path_to_def_texture, int physics_quality,
     WorldManager::world = new b2World(gravity);
 
     WorldManager::objects = std::vector<BasePObj*>();
-
-    Font::LoadFont("./assets/fonts/PressStart2P-vaV7.ttf");
 }
 WorldManager::~WorldManager()
 {
@@ -274,7 +272,7 @@ void WorldManager::Render(Renderer* renderer, Controls ctrl)
         }        
     }
 
-    if (WorldManager::isDebug && Font::GetLoaded())
+    if (WorldManager::isDebug && renderer->GetFont()->GetLoaded())
     {
         SDL_Point mouse = ctrl.GetMouse();
 
@@ -310,13 +308,14 @@ void WorldManager::Render(Renderer* renderer, Controls ctrl)
 void WorldManager::RenderDebugScreen(std::vector<std::string> debugStrings, Renderer* renderer)
 {
     float debugScale = 2;
+    int fontWidth = renderer->GetFont()->FontWidth;
 
     std::vector<int> debugWidths;
     for (size_t i = 0; i < debugStrings.size(); i++)
-        debugWidths.push_back((debugStrings[i].size() + 2) * Font::FontWidth * debugScale);
+        debugWidths.push_back((debugStrings[i].size() + 2) * fontWidth * debugScale);
 
     int debug_w = *std::max_element(debugWidths.begin(), debugWidths.end());
-    int debug_h = (debugStrings.size() + 2) * Font::FontWidth * debugScale;
+    int debug_h = (debugStrings.size() + 2) * fontWidth * debugScale;
 
     SDL_Rect debugBg {0, 0, debug_w, debug_h};
 
@@ -327,7 +326,7 @@ void WorldManager::RenderDebugScreen(std::vector<std::string> debugStrings, Rend
 
     for (size_t i = 0; i < debugStrings.size(); i++)
     {
-        Font::Render(renderer->GetRenderer(), debugStrings[i].c_str(), Font::FontWidth * debugScale, Font::FontWidth * debugScale * (i+1), debugScale);
+        renderer->RenderText(renderer->GetRenderer(), debugStrings[i].c_str(), fontWidth * debugScale, fontWidth * debugScale * (i+1), debugScale);
     }
 }
 

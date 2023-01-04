@@ -6,13 +6,14 @@ Renderer::~Renderer()
     SDL_DestroyWindow(Renderer::window);
 }
 
-void Renderer::InitVideo(WindowParams params, const char* path_to_icon)
+void Renderer::InitVideo(WindowParams params, const char* path_to_font, const char* path_to_icon)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
     
     Renderer::window = SDL_CreateWindow("Sand-Box2D", 0, 0, 0, 0, SDL_WINDOW_SHOWN);
-    // Renderer::window = SDL_CreateWindow("Sand-Box2D", SDL_WINDOWPOS_CENTERED,
-    //     SDL_WINDOWPOS_CENTERED, 960, 544, SDL_WINDOW_SHOWN);
+
+    if (path_to_font != nullptr)
+        Renderer::font->LoadFont(path_to_font);
 
     if (path_to_icon != nullptr)
     {
@@ -46,7 +47,7 @@ void Renderer::ChangeRes(WindowParams params)
         break;
     case FULLSCREEN_SIMPLE:
     case FULLSCREEN_REAL:
-        if (params.width == 0 && params.height == 0)
+        if (params.width == 0 || params.height == 0)
         {
             SDL_DisplayMode dm;
             SDL_GetCurrentDisplayMode(0, &dm);
@@ -72,6 +73,15 @@ void Renderer::ChangeRes(WindowParams params)
     default:
         break;
     }
+}
+
+void Renderer::RenderText(SDL_Renderer* renderer, const char* text, int x, int y, float scale, Uint8 r, Uint8 g, Uint8 b)
+{
+    Renderer::font->Render(renderer, text, x, y, scale, r, g, b);
+}
+Font* Renderer::GetFont()
+{
+    return Renderer::font;
 }
 
 WindowMode Renderer::GetWindowMode()    { return window_mode; }

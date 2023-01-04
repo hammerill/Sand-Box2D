@@ -1,22 +1,24 @@
 #pragma once
 
 #include <SDL2/SDL_ttf.h>
+#include <exception>
 
-/// @brief Static class for rendering text. Intended for one single font.
+/// @brief Class for rendering text. Intended for one single font.
 class Font
 {
 private:
-    static TTF_Font* font;
+    TTF_Font* font;
 
-    static bool loaded;
+    bool loaded;
 
 public:
     Font();
     ~Font();
 
     /// @brief Load font to private field of this class, then you can render it later with Render().
+    /// If can't load font it will just leave "loaded" field "false", so it just won't render text.
     /// @param path_to_font path to the font (*.ttf) file.
-    static void LoadFont(const char* path_to_font);
+    void LoadFont(const char* path_to_font);
 
     /// @brief Render text.
     /// @param renderer the rendering context.
@@ -27,12 +29,12 @@ public:
     /// @param r Color.
     /// @param g Color.
     /// @param b Color.
-    static void Render(SDL_Renderer* renderer, const char* text, int x = 0, int y = 0, float scale = 1, Uint8 r = 0xFF, Uint8 g = 0xFF, Uint8 b = 0xFF);
+    void Render(SDL_Renderer* renderer, const char* text, int x = 0, int y = 0, float scale = 1, Uint8 r = 0xFF, Uint8 g = 0xFF, Uint8 b = 0xFF);
 
     /// @brief Did FontManager load font and is it able to render text?
-    static bool GetLoaded();
+    bool GetLoaded();
 
     /// @brief Constant scale of font width. If you use scale 1 at Render(), it will use scale 1 * FontWidth (8)
     /// If 2, 2 * FontWidth (16) and etc.
-    static const int FontWidth = 8;
+    const int FontWidth = 8;
 };
