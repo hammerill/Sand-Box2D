@@ -84,7 +84,4 @@ Font* Renderer::GetFont()
     return Renderer::font;
 }
 
-WindowMode Renderer::GetWindowMode()    { return window_mode; }
-
-int Renderer::GetWidth()    { return window_width; }
-int Renderer::GetHeight()   { return window_height; }
+WindowParams Renderer::GetWindowParams()    { return {window_mode, window_width, window_height}; }

@@ -40,13 +40,13 @@ void WorldManager::LoadLevel(Level level, Renderer* renderer)
 
     if (camera.type == "static")
     {
-        WorldManager::zoom = renderer->GetHeight() / camera.height;
+        WorldManager::zoom = renderer->GetWindowParams().height / camera.height;
 
         WorldManager::x_offset =    -(camera.x * WorldManager::zoom)
-                                    +(renderer->GetWidth() / 2);
+                                    +(renderer->GetWindowParams().width / 2);
 
         WorldManager::y_offset =    -(camera.y * WorldManager::zoom)
-                                    +(renderer->GetHeight() / 2);
+                                    +(renderer->GetWindowParams().height / 2);
     }
     /////////
     
@@ -110,8 +110,29 @@ void HandleActionCtrl(bool old, bool now, Json::Value key, Level level, std::vec
 std::vector<int> last_frames_speed_x = std::vector<int>();
 std::vector<int> last_frames_speed_y = std::vector<int>();
 
+WindowParams old_wparams, now_wparams;
+float zoomChange, zoomChangeCoeff;
 void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
 {
+    old_wparams = now_wparams;
+    now_wparams = renderer->GetWindowParams();
+
+    if (old_wparams.width != 0 && old_wparams.height != 0)
+    {
+        if (old_wparams.width != now_wparams.width)
+            WorldManager::x_offset += (now_wparams.width - old_wparams.width) / 2;
+        if (old_wparams.height != now_wparams.height)
+        {
+            WorldManager::y_offset += (now_wparams.height - old_wparams.height) / 2;
+
+            zoomChangeCoeff = (float)now_wparams.height / (float)old_wparams.height;
+            zoomChange = (WorldManager::zoom * zoomChangeCoeff) - WorldManager::zoom;
+
+            CorrectOffset({now_wparams.width / 2, now_wparams.height / 2}, zoomChange);
+            WorldManager::zoom += zoomChange;
+        }
+    }
+
     if (ctrl.Debug() && !old_ctrl.Debug())
     {
         WorldManager::isDebug = !WorldManager::isDebug;
@@ -159,7 +180,7 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
     HandleActionCtrl(old_ctrl.ActionEnter(), ctrl.ActionEnter(), WorldManager::actions["enter"], WorldManager::level, WorldManager::objects);
     //////////
 
-    SDL_Point scr_center = {renderer->GetWidth() / 2, renderer->GetHeight() / 2};
+    SDL_Point scr_center = {renderer->GetWindowParams().width / 2, renderer->GetWindowParams().height / 2};
 
     if (WorldManager::zoom <= 1)
     {
@@ -265,8 +286,8 @@ void WorldManager::Render(Renderer* renderer, Controls ctrl)
                                                 WorldManager::x_offset, 
                                                 WorldManager::y_offset, 
                                                 WorldManager::zoom,
-                                                renderer->GetWidth(),
-                                                renderer->GetHeight()))
+                                                renderer->GetWindowParams().width,
+                                                renderer->GetWindowParams().height))
         {
             renderedItemsCount++;
         }        
@@ -290,6 +311,8 @@ void WorldManager::Render(Renderer* renderer, Controls ctrl)
         debugStrings.push_back("IsPinching? = " + std::to_string(ctrl.IsPinching()));
         debugStrings.push_back("Zoom In = " + std::to_string(ctrl.ZoomIn()));
         debugStrings.push_back("Zoom Out = " + std::to_string(ctrl.ZoomOut()));
+        debugStrings.push_back("Zoom Change coeff = " + std::to_string(zoomChangeCoeff));
+        debugStrings.push_back("Zoom Change = " + std::to_string(zoomChange));
         debugStrings.push_back("Objects count = " + std::to_string(WorldManager::world->GetBodyCount()));
         debugStrings.push_back("Objects rendered = " + std::to_string(renderedItemsCount));
         debugStrings.push_back("Loaded textures = " + std::to_string(WorldManager::textures.size()));

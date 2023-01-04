@@ -79,8 +79,5 @@ public:
     /// @brief Get pointer to Font object which is used to render text by default.
     Font* GetFont();
 
-    WindowMode GetWindowMode();
-
-    int GetWidth();
-    int GetHeight();
+    WindowParams GetWindowParams();
 };

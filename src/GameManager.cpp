@@ -46,7 +46,7 @@ bool GameManager::Step()
     
     if (ctrl.Fullscreen() && !old_ctrl.Fullscreen())
     {
-        auto cur_mode = GameManager::renderer->GetWindowMode();
+        auto cur_mode = GameManager::renderer->GetWindowParams().mode;
         GameManager::renderer->ChangeRes(cur_mode != WINDOWED ? windowed : fullscreen);
     }
 
