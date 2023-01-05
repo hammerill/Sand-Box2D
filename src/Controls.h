@@ -70,7 +70,7 @@ public:
     /// @brief Is user does want to move camera down?
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).
     /// Otherwise analog value with minimum at 0 and maximum at 1.
-    double GetMoveDown();
+    double MoveDown();
     /// @brief Is user does want to move camera left?
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).
     /// Otherwise analog value with minimum at 0 and maximum at 1.
@@ -98,7 +98,7 @@ public:
     int GetPinch();
 
     /// @brief Is user changing zoom right now using mouse wheel?
-    bool tIsWheel();
+    bool IsWheel();
 
     // ACTIONS
     bool ActionUp();

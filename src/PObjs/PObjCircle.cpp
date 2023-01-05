@@ -83,20 +83,39 @@ Json::Value PObjCircle::GetParam(std::string name)
     if (name == "id")
         return Json::Value(PObjCircle::id);
     
-    else if (name == "x")
-        return Json::Value(PObjCircle::body->GetPosition().x);
-    else if (name == "y")
-        return Json::Value(PObjCircle::body->GetPosition().y);
-    else if (name == "radius")
+    if (PObjCircle::isRegistered)
+    {
+        if (name == "x")
+            return Json::Value(PObjCircle::body->GetPosition().x);
+        else if (name == "y")
+            return Json::Value(PObjCircle::body->GetPosition().y);
+        else if (name == "angle")
+            return Json::Value(PObjCircle::body->GetAngle() * PObjCircle::RAD2DEG);
+        else if (name == "vel_x")
+            return Json::Value(PObjCircle::body->GetLinearVelocity().x);
+        else if (name == "vel_y")
+            return Json::Value(PObjCircle::body->GetLinearVelocity().y);
+        else if (name == "vel_ang")
+            return Json::Value(PObjCircle::body->GetAngularVelocity());
+    }
+    else
+    {
+        if (name == "x")
+            return Json::Value(PObjCircle::circleDesc.x);
+        else if (name == "y")
+            return Json::Value(PObjCircle::circleDesc.y);
+        else if (name == "angle")
+            return Json::Value(PObjCircle::circleDesc.angle);
+        else if (name == "vel_x")
+            return Json::Value(PObjCircle::circleDesc.vel_x);
+        else if (name == "vel_y")
+            return Json::Value(PObjCircle::circleDesc.vel_y);
+        else if (name == "vel_ang")
+            return Json::Value(PObjCircle::circleDesc.vel_ang);
+    }
+    
+    if (name == "radius")
         return Json::Value(PObjCircle::circleDesc.radius);
-    else if (name == "angle")
-        return Json::Value(PObjCircle::body->GetAngle() * PObjCircle::RAD2DEG);
-    else if (name == "vel_x")
-        return Json::Value(PObjCircle::body->GetLinearVelocity().x);
-    else if (name == "vel_y")
-        return Json::Value(PObjCircle::body->GetLinearVelocity().y);
-    else if (name == "vel_ang")
-        return Json::Value(PObjCircle::body->GetAngularVelocity());
     
     else if (name == "r")
         return Json::Value(PObjCircle::r);
@@ -128,6 +147,8 @@ void PObjCircle::Register(b2World* world, SDL_Renderer* renderer, std::map<std::
 
     if (PObjCircle::is_texture)
         PObjCircle::texture = PObjCircle::LoadTexture(textures, PObjCircle::GetParam("texture_path").asString(), renderer);
+
+    PObjCircle::isRegistered = true;
 }
 
 bool PObjCircle::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)

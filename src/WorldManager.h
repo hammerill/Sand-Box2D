@@ -21,15 +21,15 @@ private:
     /// @brief Main Box2D world.
     b2World* world;
     
-    /// Array of physics objects of the world. BasePObj is an abstract class and this array
+    /// @brief Array of physics objects of the world. BasePObj is an abstract class and this array
     /// should only contain realizations of it (for example, PObjBox).
     std::vector<BasePObj*> objects;
 
-    /// Array of "ordered" physics objects that should be added to main ph. obj-s array when
+    /// @brief Array of "ordered" physics objects that should be added to main ph. obj-s array when
     /// no world calculations are performing.
     std::vector<BasePObj*> order;
 
-    /// Array of loaded textures in "TEXTURE_PATH:TEXTURE" format.
+    /// @brief Array of loaded textures in "TEXTURE_PATH:TEXTURE" format.
     /// PObjs will manage it by themselves when Register() is called.
     std::map<std::string, SDL_Texture*> textures = std::map<std::string, SDL_Texture*>();
 
@@ -82,6 +82,8 @@ public:
     void LoadLevel(Level level, Renderer* renderer);
 
     /// @brief Add physics object realization into the BasePObj array.
+    /// Caution: object doesn't get to "objects" array instantly, first, it gets to "order" array
+    /// and only at the end of Step() it `realizes` and adds to "objects" array.
     /// @param obj link to the physics object realization to add.
     void AddObject(BasePObj* obj);
 

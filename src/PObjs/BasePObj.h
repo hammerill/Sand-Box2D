@@ -36,6 +36,10 @@ protected:
     /// @brief Fixture definition of the PObj.
     b2FixtureDef fixtureDef;
 
+    /// @brief Is this PObj already registered? If no, it's gonna access fields not from
+    /// "body", which is not initialized yet, but from starting parameters.
+    bool isRegistered = false;
+
     /// @brief Load texture. If it was loaded before, will return pointer to already loaded texture.
     /// @param textures textures vector to work with.
     /// @param path path to the texture to be loaded.

@@ -264,7 +264,7 @@ bool Controls::ReloadLevel()    { return Controls::reloadLevel; }
 
 double Controls::MoveUp()       { return Controls::moveUp; }
 double Controls::MoveRight()    { return Controls::moveRight; }
-double Controls::GetMoveDown()  { return Controls::moveDown; }
+double Controls::MoveDown()  { return Controls::moveDown; }
 double Controls::MoveLeft()     { return Controls::moveLeft; }
 
 double Controls::ZoomIn()       { return Controls::zoomIn; }
@@ -276,7 +276,7 @@ SDL_Point Controls::GetMouse()  { return Controls::mouse; }
 bool Controls::IsPinching()     { return Controls::isPinching; }
 int Controls::GetPinch()        { return Controls::pinch; }
 
-bool Controls::tIsWheel()       { return Controls::isWheel; }
+bool Controls::IsWheel()       { return Controls::isWheel; }
 
 bool Controls::ActionUp()       { return Controls::actionUp; }
 bool Controls::ActionRight()    { return Controls::actionRight; }

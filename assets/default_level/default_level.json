@@ -1,10 +1,9 @@
 {
     "camera": {
-        "type": "static",
+        "type": "attached",
+        "attached_id": 10,
+        "attached_remain": 75,
         "zoom": true,
-        "move": true,
-        "x": 6,
-        "y": 3.5,
         "height": 8
     },
     "actions": {

@@ -48,6 +48,8 @@ void PObjPlatform::Register(b2World* world, SDL_Renderer* renderer, std::map<std
 {
     PObjPlatform::body = world->CreateBody(&(PObjPlatform::bodyDef));
     PObjPlatform::body->CreateFixture(&(PObjPlatform::fixtureDef));
+
+    PObjPlatform::isRegistered = true;
 }
 
 bool PObjPlatform::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)

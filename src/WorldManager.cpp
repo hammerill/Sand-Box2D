@@ -34,21 +34,6 @@ void WorldManager::LoadLevel(Level level, Renderer* renderer)
     WorldManager::level = level;
 
     WorldManager::textures[""] = SDL_CreateTextureFromSurface(renderer->GetRenderer(), IMG_Load(WorldManager::path_to_def_texture.c_str()));
-
-    // CAMERA
-    auto camera = WorldManager::level.GetCamera();
-
-    if (camera.type == "static")
-    {
-        WorldManager::zoom = renderer->GetWindowParams().height / camera.height;
-
-        WorldManager::x_offset =    -(camera.x * WorldManager::zoom)
-                                    +(renderer->GetWindowParams().width / 2);
-
-        WorldManager::y_offset =    -(camera.y * WorldManager::zoom)
-                                    +(renderer->GetWindowParams().height / 2);
-    }
-    /////////
     
     // OBJECTS
     for (int i = WorldManager::objects.size() - 1; i >= 0; i--)
@@ -62,6 +47,49 @@ void WorldManager::LoadLevel(Level level, Renderer* renderer)
         WorldManager::AddObject(objects[i]);
     }
     //////////
+
+    // CAMERA
+    auto camera = WorldManager::level.GetCamera();
+
+    WorldManager::zoom = renderer->GetWindowParams().height / camera.height;
+
+    switch (camera.type)
+    {
+    case CAMERA_TYPE_STATIC:
+        WorldManager::x_offset =    -(camera.x * WorldManager::zoom)
+                                    +(renderer->GetWindowParams().width / 2);
+
+        WorldManager::y_offset =    -(camera.y * WorldManager::zoom)
+                                    +(renderer->GetWindowParams().height / 2);
+        break;
+    
+    case CAMERA_TYPE_ATTACHED:
+        {
+            b2Vec2 pos;
+            BasePObj* pobj = WorldManager::level.GetObjectById(camera.attached_id, WorldManager::order);
+
+            if (pobj == nullptr)
+                pos = {0, 0};
+            else
+            {
+                pos = {
+                    pobj->GetParam("x").asFloat(),
+                    pobj->GetParam("y").asFloat()
+                };
+            }
+
+            WorldManager::x_offset =    -(pos.x * WorldManager::zoom)
+                                        +(renderer->GetWindowParams().width / 2);
+
+            WorldManager::y_offset =    -(pos.y * WorldManager::zoom)
+                                        +(renderer->GetWindowParams().height / 2);
+        }
+        break;
+    
+    default:
+        break;
+    }
+    /////////
 
     // CYCLES (everything other at the end of the Step())
     WorldManager::cyclesDelays = std::vector<int>();
@@ -112,6 +140,7 @@ std::vector<int> last_frames_speed_y = std::vector<int>();
 
 WindowParams old_wparams, now_wparams;
 float zoomChange, zoomChangeCoeff;
+
 void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
 {
     old_wparams = now_wparams;
@@ -121,6 +150,7 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
     {
         if (old_wparams.width != now_wparams.width)
             WorldManager::x_offset += (now_wparams.width - old_wparams.width) / 2;
+        
         if (old_wparams.height != now_wparams.height)
         {
             WorldManager::y_offset += (now_wparams.height - old_wparams.height) / 2;
@@ -134,41 +164,97 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
     }
 
     if (ctrl.Debug() && !old_ctrl.Debug())
-    {
         WorldManager::isDebug = !WorldManager::isDebug;
-    }        
 
-    WorldManager::y_offset += ctrl.MoveUp() * WorldManager::move_speed;
-    WorldManager::x_offset -= ctrl.MoveRight() * WorldManager::move_speed;
-    WorldManager::y_offset -= ctrl.GetMoveDown() * WorldManager::move_speed;
-    WorldManager::x_offset += ctrl.MoveLeft() * WorldManager::move_speed;
-
-    if (last_frames_speed_x.size() > (size_t)(WorldManager::moving_inertia_frames))
+    if (WorldManager::level.GetCamera().move)
     {
-        last_frames_speed_x.erase(last_frames_speed_x.begin());
-        last_frames_speed_y.erase(last_frames_speed_y.begin());
+        WorldManager::y_offset += ctrl.MoveUp() * WorldManager::move_speed;
+        WorldManager::x_offset -= ctrl.MoveRight() * WorldManager::move_speed;
+        WorldManager::y_offset -= ctrl.MoveDown() * WorldManager::move_speed;
+        WorldManager::x_offset += ctrl.MoveLeft() * WorldManager::move_speed;
+
+        if (last_frames_speed_x.size() > (size_t)(WorldManager::moving_inertia_frames))
+        {
+            last_frames_speed_x.erase(last_frames_speed_x.begin());
+            last_frames_speed_y.erase(last_frames_speed_y.begin());
+        }
+
+        if (ctrl.IsMoving())
+        {
+            WorldManager::x_offset += (ctrl.GetMouse().x - old_ctrl.GetMouse().x);
+            WorldManager::y_offset += (ctrl.GetMouse().y - old_ctrl.GetMouse().y);
+            last_frames_speed_x.push_back(ctrl.GetMouse().x - old_ctrl.GetMouse().x);
+            last_frames_speed_y.push_back(ctrl.GetMouse().y - old_ctrl.GetMouse().y);
+        }
+        else
+        {
+            WorldManager::x_offset += GetAverage(last_frames_speed_x);
+            WorldManager::y_offset += GetAverage(last_frames_speed_y);
+            last_frames_speed_x.push_back(0);
+            last_frames_speed_y.push_back(0);
+        }
     }
 
-    if (ctrl.IsMoving())
+    SDL_Point scr_center = {renderer->GetWindowParams().width / 2, renderer->GetWindowParams().height / 2};
+
+    if (WorldManager::level.GetCamera().zoom)
     {
-        WorldManager::x_offset += (ctrl.GetMouse().x - old_ctrl.GetMouse().x);
-        WorldManager::y_offset += (ctrl.GetMouse().y - old_ctrl.GetMouse().y);
-        last_frames_speed_x.push_back(ctrl.GetMouse().x - old_ctrl.GetMouse().x);
-        last_frames_speed_y.push_back(ctrl.GetMouse().y - old_ctrl.GetMouse().y);
-    }
-    else
-    {
-        WorldManager::x_offset += GetAverage(last_frames_speed_x);
-        WorldManager::y_offset += GetAverage(last_frames_speed_y);
-        last_frames_speed_x.push_back(0);
-        last_frames_speed_y.push_back(0);
+        if (ctrl.IsPinching() && ((WorldManager::zoom + (ctrl.GetPinch() - old_ctrl.GetPinch())) > 10))
+        {
+            CorrectOffset(  WorldManager::level.GetCamera().type != CAMERA_TYPE_ATTACHED
+                                ? ctrl.GetMouse() : scr_center,
+                            (ctrl.GetPinch() - old_ctrl.GetPinch()));
+            WorldManager::zoom += (ctrl.GetPinch() - old_ctrl.GetPinch());
+        }
+
+        if (WorldManager::zoom <= 1)
+        {
+            CorrectOffset(  ctrl.IsWheel() && WorldManager::level.GetCamera().type != CAMERA_TYPE_ATTACHED
+                                ? ctrl.GetMouse() : scr_center,
+                            WorldManager::zoom - 1);
+            WorldManager::zoom = 1;
+        }
+        else
+        {
+            CorrectOffset(  ctrl.IsWheel() && WorldManager::level.GetCamera().type != CAMERA_TYPE_ATTACHED
+                                ? ctrl.GetMouse() : scr_center,
+                            ctrl.ZoomOut() * WorldManager::zoom_speed * -1 * WorldManager::zoom);
+            WorldManager::zoom -= ctrl.ZoomOut() * WorldManager::zoom_speed * WorldManager::zoom;
+        }
+
+        if (WorldManager::zoom >= 1000)
+        {
+            CorrectOffset(  ctrl.IsWheel() && WorldManager::level.GetCamera().type != CAMERA_TYPE_ATTACHED
+                                ? ctrl.GetMouse() : scr_center,
+                            1000 - WorldManager::zoom);
+            WorldManager::zoom = 1000;
+        }
+        else
+        {
+            CorrectOffset(  ctrl.IsWheel() && WorldManager::level.GetCamera().type != CAMERA_TYPE_ATTACHED
+                                ? ctrl.GetMouse() : scr_center,
+                            ctrl.ZoomIn() * WorldManager::zoom_speed * WorldManager::zoom);
+            WorldManager::zoom += ctrl.ZoomIn() * WorldManager::zoom_speed * WorldManager::zoom;
+        }
     }
 
-    if (ctrl.IsPinching() && ((WorldManager::zoom + (ctrl.GetPinch() - old_ctrl.GetPinch())) > 10))
+    if (WorldManager::level.GetCamera().type == CAMERA_TYPE_ATTACHED)
     {
-        CorrectOffset(  ctrl.GetMouse(),
-                        (ctrl.GetPinch() - old_ctrl.GetPinch()));
-        WorldManager::zoom += (ctrl.GetPinch() - old_ctrl.GetPinch());
+        b2Vec2 pos;
+        BasePObj* pobj = WorldManager::level.GetObjectById(WorldManager::level.GetCamera().attached_id, WorldManager::objects);
+
+        if (pobj == nullptr)
+            pos = {x_offset, y_offset};
+        else
+        {
+            pos = {
+                pobj->GetParam("x").asFloat() * WorldManager::zoom + x_offset,
+                pobj->GetParam("y").asFloat() * WorldManager::zoom + y_offset
+            };
+        }
+        
+        WorldManager::x_offset += (scr_center.x - pos.x) * ((100 - WorldManager::level.GetCamera().attached_remain) / 100.0);
+        WorldManager::y_offset += (scr_center.y - pos.y) * ((100 - WorldManager::level.GetCamera().attached_remain) / 100.0);
     }
 
     // ACTIONS
@@ -179,34 +265,6 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
     
     HandleActionCtrl(old_ctrl.ActionEnter(), ctrl.ActionEnter(), WorldManager::actions["enter"], WorldManager::level, WorldManager::objects);
     //////////
-
-    SDL_Point scr_center = {renderer->GetWindowParams().width / 2, renderer->GetWindowParams().height / 2};
-
-    if (WorldManager::zoom <= 1)
-    {
-        CorrectOffset(  ctrl.tIsWheel() ? ctrl.GetMouse() : scr_center,
-                        WorldManager::zoom - 1);
-        WorldManager::zoom = 1;
-    }
-    else
-    {
-        CorrectOffset(  ctrl.tIsWheel() ? ctrl.GetMouse() : scr_center,
-                        ctrl.ZoomOut() * WorldManager::zoom_speed * -1 * WorldManager::zoom);
-        WorldManager::zoom -= ctrl.ZoomOut() * WorldManager::zoom_speed * WorldManager::zoom;
-    }
-
-    if (WorldManager::zoom >= 1000)
-    {
-        CorrectOffset(  ctrl.tIsWheel() ? ctrl.GetMouse() : scr_center,
-                        1000 - WorldManager::zoom);
-        WorldManager::zoom = 1000;
-    }
-    else
-    {
-        CorrectOffset(  ctrl.tIsWheel() ? ctrl.GetMouse() : scr_center,
-                        ctrl.ZoomIn() * WorldManager::zoom_speed * WorldManager::zoom);
-        WorldManager::zoom += ctrl.ZoomIn() * WorldManager::zoom_speed * WorldManager::zoom;
-    }
 
     WorldManager::world->Step(1.0f / 60.0f, WorldManager::physics_quality * 3, WorldManager::physics_quality);
 

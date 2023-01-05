@@ -69,22 +69,41 @@ Json::Value PObjBox::GetParam(std::string name)
     if (name == "id")
         return Json::Value(PObjBox::id);
     
-    else if (name == "x")
-        return Json::Value(PObjBox::body->GetPosition().x);
-    else if (name == "y")
-        return Json::Value(PObjBox::body->GetPosition().y);
-    else if (name == "w")
+    if (PObjBox::isRegistered)
+    {
+        if (name == "x")
+            return Json::Value(PObjBox::body->GetPosition().x);
+        else if (name == "y")
+            return Json::Value(PObjBox::body->GetPosition().y);
+        else if (name == "angle")
+            return Json::Value(PObjBox::body->GetAngle() * PObjBox::RAD2DEG);
+        else if (name == "vel_x")
+            return Json::Value(PObjBox::body->GetLinearVelocity().x);
+        else if (name == "vel_y")
+            return Json::Value(PObjBox::body->GetLinearVelocity().y);
+        else if (name == "vel_ang")
+            return Json::Value(PObjBox::body->GetAngularVelocity());
+    }
+    else
+    {
+        if (name == "x")
+            return Json::Value(PObjBox::boxDesc.x);
+        else if (name == "y")
+            return Json::Value(PObjBox::boxDesc.y);
+        else if (name == "angle")
+            return Json::Value(PObjBox::boxDesc.angle);
+        else if (name == "vel_x")
+            return Json::Value(PObjBox::boxDesc.vel_x);
+        else if (name == "vel_y")
+            return Json::Value(PObjBox::boxDesc.vel_y);
+        else if (name == "vel_ang")
+            return Json::Value(PObjBox::boxDesc.vel_ang);
+    }
+
+    if (name == "w")
         return Json::Value(PObjBox::boxDesc.w);
     else if (name == "h")
         return Json::Value(PObjBox::boxDesc.h);
-    else if (name == "angle")
-        return Json::Value(PObjBox::body->GetAngle() * PObjBox::RAD2DEG);
-    else if (name == "vel_x")
-        return Json::Value(PObjBox::body->GetLinearVelocity().x);
-    else if (name == "vel_y")
-        return Json::Value(PObjBox::body->GetLinearVelocity().y);
-    else if (name == "vel_ang")
-        return Json::Value(PObjBox::body->GetAngularVelocity());
     else if (name == "texture_path")
         return Json::Value(PObjBox::texture_path);
     
@@ -99,6 +118,8 @@ void PObjBox::Register(b2World* world, SDL_Renderer* renderer, std::map<std::str
     PObjBox::body->CreateFixture(&(PObjBox::fixtureDef));
 
     PObjBox::texture = PObjBox::LoadTexture(textures, PObjBox::GetParam("texture_path").asString(), renderer);
+
+    PObjBox::isRegistered = true;
 }
 
 bool PObjBox::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)

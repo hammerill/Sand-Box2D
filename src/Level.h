@@ -16,11 +16,18 @@ struct JsonOptions
     // Gonna be filled in some time.
 };
 
+enum JsonCameraType
+{
+    CAMERA_TYPE_STATIC = 0,
+    CAMERA_TYPE_ATTACHED
+};
+
 struct JsonCamera
 {
-    std::string type;
+    JsonCameraType type;
     bool zoom, move;
-    float x, y, height;
+    float x, y, height, attached_remain;
+    int attached_id;
 };
 
 struct JsonCycle
@@ -73,7 +80,7 @@ public:
     JsonCamera GetCamera();
  
     /// @brief Get array of PObjects.
-    /// @return array of pointers to objects represeneting childs of BasePObj
+    /// @return array of pointers to objects representing childs of BasePObj
     /// (not the BasePObj itself because it's an abstract class).
     std::vector<BasePObj*> GetPObjects();
 

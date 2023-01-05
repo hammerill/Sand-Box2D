@@ -159,13 +159,27 @@ JsonCamera Level::GetCamera()
 {
     auto camera = JsonCamera();
 
-    camera.type = Level::jsonLevel["camera"]["type"].asString();
+    std::string cameraType = Level::jsonLevel["camera"]["type"].asString();
 
-    if (camera.type != "attached")
+    if (cameraType == "static")
+        camera.type = CAMERA_TYPE_STATIC;
+    else if (cameraType == "attached")
+        camera.type = CAMERA_TYPE_ATTACHED;
+    else
+        camera.type = CAMERA_TYPE_STATIC;
+
+
+    if (camera.type == CAMERA_TYPE_STATIC)
     {
         camera.x = Level::LoadNumber(Level::jsonLevel["camera"]["x"]);
         camera.y = Level::LoadNumber(Level::jsonLevel["camera"]["y"]);    
         camera.move = Level::jsonLevel["camera"]["move"].asBool();
+    }
+    else if (camera.type == CAMERA_TYPE_ATTACHED)
+    {
+        camera.attached_id = Level::LoadNumber(Level::jsonLevel["camera"]["attached_id"]);
+        camera.attached_remain = Level::LoadNumber(Level::jsonLevel["camera"]["attached_remain"]);  
+        camera.move = false;
     }
 
     camera.height = Level::LoadNumber(Level::jsonLevel["camera"]["height"]);
