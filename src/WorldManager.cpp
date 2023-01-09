@@ -201,7 +201,7 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
     {
         if (ctrl.IsPinching() && ((WorldManager::zoom + (ctrl.GetPinch() - old_ctrl.GetPinch())) > 10))
         {
-            CorrectOffset(  WorldManager::level.GetCamera().type != CAMERA_TYPE_ATTACHED
+            CorrectOffset(  WorldManager::level.GetCamera().move
                                 ? ctrl.GetMouse() : scr_center,
                             (ctrl.GetPinch() - old_ctrl.GetPinch()));
             WorldManager::zoom += (ctrl.GetPinch() - old_ctrl.GetPinch());
@@ -209,14 +209,14 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
 
         if (WorldManager::zoom <= 1)
         {
-            CorrectOffset(  ctrl.IsWheel() && WorldManager::level.GetCamera().type != CAMERA_TYPE_ATTACHED
+            CorrectOffset(  ctrl.IsWheel() && WorldManager::level.GetCamera().move
                                 ? ctrl.GetMouse() : scr_center,
                             WorldManager::zoom - 1);
             WorldManager::zoom = 1;
         }
         else
         {
-            CorrectOffset(  ctrl.IsWheel() && WorldManager::level.GetCamera().type != CAMERA_TYPE_ATTACHED
+            CorrectOffset(  ctrl.IsWheel() && WorldManager::level.GetCamera().move
                                 ? ctrl.GetMouse() : scr_center,
                             ctrl.ZoomOut() * WorldManager::zoom_speed * -1 * WorldManager::zoom);
             WorldManager::zoom -= ctrl.ZoomOut() * WorldManager::zoom_speed * WorldManager::zoom;
@@ -224,14 +224,14 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
 
         if (WorldManager::zoom >= 1000)
         {
-            CorrectOffset(  ctrl.IsWheel() && WorldManager::level.GetCamera().type != CAMERA_TYPE_ATTACHED
+            CorrectOffset(  ctrl.IsWheel() && WorldManager::level.GetCamera().move
                                 ? ctrl.GetMouse() : scr_center,
                             1000 - WorldManager::zoom);
             WorldManager::zoom = 1000;
         }
         else
         {
-            CorrectOffset(  ctrl.IsWheel() && WorldManager::level.GetCamera().type != CAMERA_TYPE_ATTACHED
+            CorrectOffset(  ctrl.IsWheel() && WorldManager::level.GetCamera().move
                                 ? ctrl.GetMouse() : scr_center,
                             ctrl.ZoomIn() * WorldManager::zoom_speed * WorldManager::zoom);
             WorldManager::zoom += ctrl.ZoomIn() * WorldManager::zoom_speed * WorldManager::zoom;
