@@ -76,6 +76,8 @@ void PObjCircle::SetParam(std::string name, Json::Value value)
         PObjCircle::is_texture = value.asBool();
     else if (name == "texture_path")
         PObjCircle::texture_path = value.asString();
+    else if (name == "undeletable")
+        PObjCircle::undeletable = value.asBool();
 }
 
 Json::Value PObjCircle::GetParam(std::string name)
@@ -134,6 +136,8 @@ Json::Value PObjCircle::GetParam(std::string name)
         return Json::Value(PObjCircle::is_texture);
     else if (name == "texture_path")
         return Json::Value(PObjCircle::texture_path);
+    else if (name == "undeletable")
+        return Json::Value(PObjCircle::undeletable);
 
     return 0;
 }

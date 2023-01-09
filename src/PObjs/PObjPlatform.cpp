@@ -27,6 +27,9 @@ void PObjPlatform::SetParam(std::string name, Json::Value value)
         PObjPlatform::g = value.asUInt();
     else if (name == "b")
         PObjPlatform::b = value.asUInt();
+        
+    else if (name == "undeletable")
+        PObjPlatform::undeletable = value.asBool();
 }
 
 Json::Value PObjPlatform::GetParam(std::string name)
@@ -40,6 +43,9 @@ Json::Value PObjPlatform::GetParam(std::string name)
         return Json::Value(PObjPlatform::g);
     else if (name == "b")
         return Json::Value(PObjPlatform::b);
+        
+    else if (name == "undeletable")
+        return Json::Value(PObjPlatform::undeletable);
 
     return 0;
 }

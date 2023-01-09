@@ -62,6 +62,10 @@ void PObjBox::SetParam(std::string name, Json::Value value)
     {
         PObjBox::texture_path = value.asString();
     }
+    else if (name == "undeletable")
+    {
+        PObjBox::undeletable = value.asBool();
+    }
 }
 
 Json::Value PObjBox::GetParam(std::string name)
@@ -106,6 +110,8 @@ Json::Value PObjBox::GetParam(std::string name)
         return Json::Value(PObjBox::boxDesc.h);
     else if (name == "texture_path")
         return Json::Value(PObjBox::texture_path);
+    else if (name == "undeletable")
+        return Json::Value(PObjBox::undeletable);
     
     return 0;
 }

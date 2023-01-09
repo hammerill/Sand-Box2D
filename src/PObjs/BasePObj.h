@@ -40,6 +40,10 @@ protected:
     /// "body", which is not initialized yet, but from starting parameters.
     bool isRegistered = false;
 
+    /// @brief If true, this object cannot be deleted due to the out of bounds check.
+    /// Access via "undeletable" in Set-Get params.
+    bool undeletable = false;
+
     /// @brief Load texture. If it was loaded before, will return pointer to already loaded texture.
     /// @param textures textures vector to work with.
     /// @param path path to the texture to be loaded.

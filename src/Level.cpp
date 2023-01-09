@@ -53,6 +53,8 @@ BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
             platform->SetParam("r", Level::LoadNumAsJson(jsonObj["r"]));
             platform->SetParam("g", Level::LoadNumAsJson(jsonObj["g"]));
             platform->SetParam("b", Level::LoadNumAsJson(jsonObj["b"]));
+            
+            platform->SetParam("undeletable", Json::Value(jsonObj["undeletable"].asBool()));
 
             if (jsonObj.isMember("id"))
                 platform->SetParam("id", Level::LoadNumAsJson(jsonObj["id"]));
@@ -72,6 +74,7 @@ BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
             auto box = new PObjBox(boxDesc);
 
             box->SetParam("texture_path", Json::Value(Level::base + "/" + jsonObj["texture"].asString()));
+            box->SetParam("undeletable", Json::Value(jsonObj["undeletable"].asBool()));
 
             if (jsonObj.isMember("id"))
                 box->SetParam("id", Level::LoadNumAsJson(jsonObj["id"]));
@@ -109,6 +112,8 @@ BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
 
             if (jsonObj.isMember("id"))
                 circle->SetParam("id", Level::LoadNumAsJson(jsonObj["id"]));
+            
+            circle->SetParam("undeletable", Json::Value(jsonObj["undeletable"].asBool()));
 
             return circle;
         }

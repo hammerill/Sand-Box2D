@@ -319,10 +319,14 @@ void WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
     // OUT OF BORDERS CHECK
     for (size_t i = 0; i < WorldManager::objects.size(); i++)
     {
-        if (WorldManager::objects[i]->GetBody()->GetPosition().x > 100 ||
-            WorldManager::objects[i]->GetBody()->GetPosition().y > 100 ||
-            WorldManager::objects[i]->GetBody()->GetPosition().x < -100 ||
-            WorldManager::objects[i]->GetBody()->GetPosition().y < -100 )
+        if (
+               (WorldManager::objects[i]->GetBody()->GetPosition().x > 100 ||
+                WorldManager::objects[i]->GetBody()->GetPosition().y > 100 ||
+                WorldManager::objects[i]->GetBody()->GetPosition().x < -100 ||
+                WorldManager::objects[i]->GetBody()->GetPosition().y < -100)
+            &&
+                !WorldManager::objects[i]->GetParam("undeletable").asBool()
+            )
         {
             WorldManager::DeleteObject(i);
         }
