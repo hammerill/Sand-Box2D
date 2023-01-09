@@ -29,11 +29,11 @@ WorldManager::~WorldManager()
     delete WorldManager::world;
 }
 
-void WorldManager::LoadLevel(Level level, Renderer* renderer)
+void WorldManager::LoadLevel(Level level, Renderer* rr)
 {
     WorldManager::level = level;
 
-    WorldManager::textures[""] = SDL_CreateTextureFromSurface(renderer->GetRenderer(), IMG_Load(WorldManager::path_to_def_texture.c_str()));
+    WorldManager::textures[""] = SDL_CreateTextureFromSurface(rr->GetRenderer(), IMG_Load(WorldManager::path_to_def_texture.c_str()));
     
     // OBJECTS
     for (int i = WorldManager::objects.size() - 1; i >= 0; i--)
@@ -51,16 +51,16 @@ void WorldManager::LoadLevel(Level level, Renderer* renderer)
     // CAMERA
     auto camera = WorldManager::level.GetCamera();
 
-    WorldManager::zoom = renderer->GetWindowParams().height / camera.height;
+    WorldManager::zoom = rr->GetWindowParams().height / camera.height;
 
     switch (camera.type)
     {
     case CAMERA_TYPE_STATIC:
         WorldManager::x_offset =    -(camera.x * WorldManager::zoom)
-                                    +(renderer->GetWindowParams().width / 2);
+                                    +(rr->GetWindowParams().width / 2);
 
         WorldManager::y_offset =    -(camera.y * WorldManager::zoom)
-                                    +(renderer->GetWindowParams().height / 2);
+                                    +(rr->GetWindowParams().height / 2);
         break;
     
     case CAMERA_TYPE_ATTACHED:
@@ -79,10 +79,10 @@ void WorldManager::LoadLevel(Level level, Renderer* renderer)
             }
 
             WorldManager::x_offset =    -(pos.x * WorldManager::zoom)
-                                        +(renderer->GetWindowParams().width / 2);
+                                        +(rr->GetWindowParams().width / 2);
 
             WorldManager::y_offset =    -(pos.y * WorldManager::zoom)
-                                        +(renderer->GetWindowParams().height / 2);
+                                        +(rr->GetWindowParams().height / 2);
         }
         break;
     
@@ -141,10 +141,10 @@ std::vector<int> last_frames_speed_y = std::vector<int>();
 WindowParams old_wparams, now_wparams;
 float zoomChange, zoomChangeCoeff;
 
-void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
+void WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
 {
     old_wparams = now_wparams;
-    now_wparams = renderer->GetWindowParams();
+    now_wparams = rr->GetWindowParams();
 
     if (old_wparams.width != 0 && old_wparams.height != 0)
     {
@@ -195,7 +195,7 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
         }
     }
 
-    SDL_Point scr_center = {renderer->GetWindowParams().width / 2, renderer->GetWindowParams().height / 2};
+    SDL_Point scr_center = {rr->GetWindowParams().width / 2, rr->GetWindowParams().height / 2};
 
     if (WorldManager::level.GetCamera().zoom)
     {
@@ -290,7 +290,7 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
     // LATER IT WILL BE CONSIDERED DEPRECATED AND DESTROYED
     // No, it will be moved to the PauseMenu
     if (ctrl.ReloadLevel() && !old_ctrl.ReloadLevel()){
-        WorldManager::LoadLevel(WorldManager::level, renderer);
+        WorldManager::LoadLevel(WorldManager::level, rr);
         
 //         Network::SetRepo("https://raw.githubusercontent.com/Hammerill/Sand-Box2D-levels/main/levels");
 // #ifdef Vita
@@ -310,7 +310,7 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
 
         auto pobj = WorldManager::objects[WorldManager::objects.size() - 1];
 
-        pobj->Register(WorldManager::world, renderer->GetRenderer(), WorldManager::textures);
+        pobj->Register(WorldManager::world, rr->GetRenderer(), WorldManager::textures);
         
         WorldManager::order.pop_back();        
     }
@@ -331,27 +331,27 @@ void WorldManager::Step(Renderer* renderer, Controls ctrl, Controls old_ctrl)
 }
 
 int renderedItemsCount;
-void WorldManager::Render(Renderer* renderer, Controls ctrl)
+void WorldManager::Render(Renderer* rr, Controls ctrl)
 {
-    SDL_SetRenderDrawBlendMode(renderer->GetRenderer(), SDL_BLENDMODE_NONE);
-    SDL_SetRenderDrawColor(renderer->GetRenderer(), 0x32, 0x32, 0x32, 0); //BG OPTION TO WORK ON
-    SDL_RenderClear(renderer->GetRenderer());
+    SDL_SetRenderDrawBlendMode(rr->GetRenderer(), SDL_BLENDMODE_NONE);
+    SDL_SetRenderDrawColor(rr->GetRenderer(), 0x32, 0x32, 0x32, 0); //BG OPTION TO WORK ON
+    SDL_RenderClear(rr->GetRenderer());
 
     renderedItemsCount = 0;
     for (size_t i = 0; i < WorldManager::objects.size(); i++)   
     {
-        if (WorldManager::objects[i]->Render(   renderer->GetRenderer(), 
+        if (WorldManager::objects[i]->Render(   rr->GetRenderer(), 
                                                 WorldManager::x_offset, 
                                                 WorldManager::y_offset, 
                                                 WorldManager::zoom,
-                                                renderer->GetWindowParams().width,
-                                                renderer->GetWindowParams().height))
+                                                rr->GetWindowParams().width,
+                                                rr->GetWindowParams().height))
         {
             renderedItemsCount++;
         }        
     }
 
-    if (WorldManager::isDebug && renderer->GetFont()->GetLoaded())
+    if (WorldManager::isDebug && rr->GetFont()->GetLoaded())
     {
         SDL_Point mouse = ctrl.GetMouse();
 
@@ -382,14 +382,14 @@ void WorldManager::Render(Renderer* renderer, Controls ctrl)
         debugStrings.push_back("Left = " + std::to_string(ctrl.ActionLeft()));
         debugStrings.push_back("Enter = " + std::to_string(ctrl.ActionEnter()));
 
-        WorldManager::RenderDebugScreen(debugStrings, renderer);        
+        WorldManager::RenderDebugScreen(debugStrings, rr);        
     }
 }
 
-void WorldManager::RenderDebugScreen(std::vector<std::string> debugStrings, Renderer* renderer)
+void WorldManager::RenderDebugScreen(std::vector<std::string> debugStrings, Renderer* rr)
 {
     float debugScale = 2;
-    int fontWidth = renderer->GetFont()->FontWidth;
+    int fontWidth = rr->GetFont()->FontWidth;
 
     std::vector<int> debugWidths;
     for (size_t i = 0; i < debugStrings.size(); i++)
@@ -400,14 +400,14 @@ void WorldManager::RenderDebugScreen(std::vector<std::string> debugStrings, Rend
 
     SDL_Rect debugBg {0, 0, debug_w, debug_h};
 
-    SDL_SetRenderDrawBlendMode(renderer->GetRenderer(), SDL_BLENDMODE_BLEND);
-    SDL_SetRenderDrawColor(renderer->GetRenderer(), 4, 4, 4, 0xA0);
+    SDL_SetRenderDrawBlendMode(rr->GetRenderer(), SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(rr->GetRenderer(), 4, 4, 4, 0xA0);
 
-    SDL_RenderFillRect(renderer->GetRenderer(), &debugBg);
+    SDL_RenderFillRect(rr->GetRenderer(), &debugBg);
 
     for (size_t i = 0; i < debugStrings.size(); i++)
     {
-        renderer->RenderText(renderer->GetRenderer(), debugStrings[i].c_str(), fontWidth * debugScale, fontWidth * debugScale * (i+1), debugScale);
+        rr->RenderText(rr->GetRenderer(), debugStrings[i].c_str(), fontWidth * debugScale, fontWidth * debugScale * (i+1), debugScale);
     }
 }
 

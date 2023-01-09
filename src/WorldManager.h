@@ -78,8 +78,8 @@ public:
     /// @brief Load level (object of class Level filled with required fields).
     /// First, it will destroy current loaded level (if it exists), then it will load attached level.
     /// @param level Level to be loaded.
-    /// @param renderer link to renderer object (not link to SDL_Renderer) where to render.
-    void LoadLevel(Level level, Renderer* renderer);
+    /// @param rr link to renderer object (not link to SDL_Renderer) where to render.
+    void LoadLevel(Level level, Renderer* rr);
 
     /// @brief Add physics object realization into the BasePObj array.
     /// Caution: object doesn't get to "objects" array instantly, first, it gets to "order" array
@@ -92,15 +92,15 @@ public:
     void DeleteObject(int index);
 
     /// @brief Perform step of the world and logic, read keys and process them.
-    /// @param renderer link to renderer object (not link to SDL_Renderer) where to render.
+    /// @param rr link to renderer object (not link to SDL_Renderer) where to render.
     /// @param ctrl buttons pressed in this frame.
     /// @param old_ctrl buttons pressed in previous frame.
-    void Step(Renderer* renderer, Controls ctrl, Controls old_ctrl);
+    void Step(Renderer* rr, Controls ctrl, Controls old_ctrl);
     
     /// @brief Render all the physics objects and show them.
-    void Render(Renderer* renderer, Controls ctrl);
+    void Render(Renderer* rr, Controls ctrl);
 
     /// @brief Render debug screen at upper-left corner of a window.
     /// @param debugStrings information to be shown.
-    void RenderDebugScreen(std::vector<std::string> debugStrings, Renderer* renderer);
+    void RenderDebugScreen(std::vector<std::string> debugStrings, Renderer* rr);
 };
