@@ -30,7 +30,7 @@ void Font::LoadFont(const char* path_to_font)
     }
 }
 
-void Font::Render(SDL_Renderer* renderer, const char* text, int x, int y, float scale, Uint8 r, Uint8 g, Uint8 b)
+void Font::Render(SDL_Renderer* renderer, const char* text, int x, int y, float scale, bool center, Uint8 r, Uint8 g, Uint8 b)
 {
     if (Font::loaded)
     {
@@ -42,6 +42,13 @@ void Font::Render(SDL_Renderer* renderer, const char* text, int x, int y, float 
 
         textRect.w *= scale;
         textRect.h *= scale;
+
+        if (center)
+        {
+            textRect.x -= textRect.w / 2;
+            textRect.y -= textRect.h / 2;
+        }
+        
 
         SDL_Surface* textSurface = TTF_RenderText_Solid(Font::font, text, {r, g, b});
         SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);

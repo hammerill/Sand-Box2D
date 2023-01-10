@@ -75,9 +75,9 @@ void Renderer::ChangeRes(WindowParams params)
     }
 }
 
-void Renderer::RenderText(SDL_Renderer* renderer, const char* text, int x, int y, float scale, Uint8 r, Uint8 g, Uint8 b)
+void Renderer::RenderText(const char* text, int x, int y, float scale, bool center, Uint8 r, Uint8 g, Uint8 b)
 {
-    Renderer::font->Render(renderer, text, x, y, scale, r, g, b);
+    Renderer::font->Render(Renderer::renderer, text, x, y, scale, center, r, g, b);
 }
 Font* Renderer::GetFont()
 {

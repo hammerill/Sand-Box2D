@@ -1,18 +1,73 @@
 #pragma once
 
 #include "Renderer.h"
+#include <math.h>
+
+#ifndef M_PI
+#define M_PI           3.14159265358979323846264338327950288  /* pi */
+#endif
 
 enum Anim 
 {
     ANIM_WORLD_MANAGER_INIT = 0     // Animation of WorldManager initialization (WMI). Will show levels name.
 };
 
+/// @brief Little class to apply transitions.
+class Transition
+{
+private:
+    float start_value, end_value;
+    int frames_start, frames_length;
+public:
+    /// @param start_value value before applying transition.
+    /// @param end_value value after applying transition.
+    /// @param frames_start at which frame transition will start.
+    /// @param frames_length how much frames transition will last.
+    Transition(float start_value, float end_value, int frames_start, int frames_length)
+    {
+        this->start_value = start_value;
+        this->end_value = end_value;
+        this->frames_start = frames_start;
+        this->frames_length = frames_length;
+    }
+
+    /// @param value value to be transitioned.
+    /// @param frames frames count on this animation.
+    /// @param transition transition function to be applied.
+    void ApplyTransition(float& value, int frames, float (*transition)(float))
+    {
+        if (frames <= this->frames_start)
+        {
+            value = this->start_value;
+            return;
+        }
+        if (frames > this->frames_start + this->frames_length)
+        {
+            value = this->end_value;
+            return;
+        }
+        
+        value = this->start_value
+                +
+                (
+                    transition
+                    (
+                        (frames - this->frames_start)
+                        /
+                        (float)this->frames_length
+                    )
+                    * 
+                    (this->end_value - this->start_value)
+                );
+    }
+};
+
 struct PARAMS_WORLD_MANAGER_INIT
 {
     int frames = 0;
     const char* levelname = "DEFAULT LEVEL";
+    int text_scale = 4;
 
-    int text_size = 4;
     float pos = 0, text_opaque = 0, bg_opaque = 1;
 };
 
@@ -36,4 +91,10 @@ public:
     static void StepAnim(Anim anim);
     /// @brief Render animation.
     static void RenderAnim(Anim anim, Renderer* rr);
+
+    /// @brief Function used to make transition "Ease-In-Out Sine".
+    /// Credits to easings.net
+    /// @param linear value of input linear function.
+    /// @return transitioned value.
+    static float TransitionEaseInOutSine(float linear);
 };

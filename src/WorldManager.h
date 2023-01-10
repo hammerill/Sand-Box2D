@@ -6,6 +6,7 @@
 #include "Level.h"
 #include "Network.h"
 #include "Renderer.h"
+#include "AnimationManager.h"
 
 #include <box2d/box2d.h>
 #include <vector>

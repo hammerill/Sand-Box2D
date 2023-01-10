@@ -12,6 +12,8 @@ WorldManager::WorldManager(std::string path_to_def_texture, int physics_quality,
     WorldManager::world = new b2World(gravity);
 
     WorldManager::objects = std::vector<BasePObj*>();
+
+    AnimationManager::InitAnim(ANIM_WORLD_MANAGER_INIT);
 }
 WorldManager::~WorldManager()
 {
@@ -332,6 +334,10 @@ void WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
         }
     }
     ///////////////////////
+
+    // ANIMATIONS
+    AnimationManager::StepAnim(ANIM_WORLD_MANAGER_INIT);
+    /////////////
 }
 
 int renderedItemsCount;
@@ -388,6 +394,8 @@ void WorldManager::Render(Renderer* rr, Controls ctrl)
 
         WorldManager::RenderDebugScreen(debugStrings, rr);        
     }
+    
+    AnimationManager::RenderAnim(ANIM_WORLD_MANAGER_INIT, rr);
 }
 
 void WorldManager::RenderDebugScreen(std::vector<std::string> debugStrings, Renderer* rr)
@@ -411,7 +419,7 @@ void WorldManager::RenderDebugScreen(std::vector<std::string> debugStrings, Rend
 
     for (size_t i = 0; i < debugStrings.size(); i++)
     {
-        rr->RenderText(rr->GetRenderer(), debugStrings[i].c_str(), fontWidth * debugScale, fontWidth * debugScale * (i+1), debugScale);
+        rr->RenderText(debugStrings[i].c_str(), fontWidth * debugScale, fontWidth * debugScale * (i+1), debugScale);
     }
 }
 

@@ -26,10 +26,11 @@ public:
     /// @param x X position of the beginning of the text.
     /// @param y Y position of the beginning of the text.
     /// @param scale How much scale font? Also multiplied by const FontWidth.
+    /// @param center Do we need to center text? If yes, given X and Y would be center of the text.
     /// @param r Color.
     /// @param g Color.
     /// @param b Color.
-    void Render(SDL_Renderer* renderer, const char* text, int x = 0, int y = 0, float scale = 1, Uint8 r = 0xFF, Uint8 g = 0xFF, Uint8 b = 0xFF);
+    void Render(SDL_Renderer* renderer, const char* text, int x = 0, int y = 0, float scale = 1, bool center = false, Uint8 r = 0xFF, Uint8 g = 0xFF, Uint8 b = 0xFF);
 
     /// @brief Did FontManager load font and is it able to render text?
     bool GetLoaded();
