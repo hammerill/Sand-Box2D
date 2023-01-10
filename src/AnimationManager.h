@@ -19,11 +19,13 @@ private:
     float start_value, end_value;
     int frames_start, frames_length;
 public:
+    Transition() {}
+
     /// @param start_value value before applying transition.
     /// @param end_value value after applying transition.
     /// @param frames_start at which frame transition will start.
     /// @param frames_length how much frames transition will last.
-    Transition(float start_value, float end_value, int frames_start, int frames_length)
+    void SetTransition(float start_value, float end_value, int frames_start, int frames_length)
     {
         this->start_value = start_value;
         this->end_value = end_value;
@@ -65,10 +67,11 @@ public:
 struct PARAMS_WORLD_MANAGER_INIT
 {
     int frames = 0;
-    const char* levelname = "DEFAULT LEVEL";
+    const char* levelname = "SAND-BOX2D PRE-RELEASE";
     int text_scale = 4;
 
-    float pos = 0, text_opaque = 0, bg_opaque = 1;
+    float pos, text_opaque, bg_opaque;
+    Transition transition_pos, transition_text_opaque, transition_bg_opaque;
 };
 
 /// Static class for managing game animations.

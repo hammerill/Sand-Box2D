@@ -12,8 +12,6 @@ WorldManager::WorldManager(std::string path_to_def_texture, int physics_quality,
     WorldManager::world = new b2World(gravity);
 
     WorldManager::objects = std::vector<BasePObj*>();
-
-    AnimationManager::InitAnim(ANIM_WORLD_MANAGER_INIT);
 }
 WorldManager::~WorldManager()
 {
@@ -105,6 +103,10 @@ void WorldManager::LoadLevel(Level level, Renderer* rr)
     // ACTIONS (everything other at control handling sector)
     WorldManager::actions = WorldManager::level.GetActions();
     //////////
+
+    // ANIMATIONS
+    AnimationManager::InitAnim(ANIM_WORLD_MANAGER_INIT);
+    /////////////
 }
 
 void WorldManager::AddObject(BasePObj* obj)
