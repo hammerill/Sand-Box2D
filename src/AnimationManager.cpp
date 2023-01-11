@@ -1,6 +1,7 @@
 #include "AnimationManager.h"
 
 PARAMS_WORLD_MANAGER_INIT AnimationManager::wmi;
+PARAMS_FADE AnimationManager::fade;
 
 AnimationManager::AnimationManager() {}
 AnimationManager::~AnimationManager() {}
@@ -99,14 +100,16 @@ void AnimationManager::RenderAnim(Anim anim, Renderer* rr)
                 text_color, text_color, text_color);
         }
         break;
-        case ANIM_FADE_IN: case ANIM_FADE_OUT:
+    case ANIM_FADE_IN: case ANIM_FADE_OUT:
+        {
             SDL_Rect rect {0, 0, rr->GetWindowParams().width, rr->GetWindowParams().height};
 
             SDL_SetRenderDrawBlendMode(rr->GetRenderer(), SDL_BLENDMODE_BLEND);
             SDL_SetRenderDrawColor(rr->GetRenderer(), 0, 0, 0, AnimationManager::fade.opaque * 0xFF);
 
             SDL_RenderFillRect(rr->GetRenderer(), &rect);
-        break;
+        }
+    break;
     
     default:
         break;
