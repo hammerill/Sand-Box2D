@@ -55,7 +55,7 @@ void Controls::Check()
     Controls::menuEnter = vita_ctrl.buttons & SCE_CTRL_CROSS;
     Controls::menuBack = vita_ctrl.buttons & SCE_CTRL_CIRCLE;
 
-    Controls::exit = vita_ctrl.buttons & (SCE_CTRL_START | SCE_CTRL_SELECT);
+    Controls::pause = vita_ctrl.buttons & (SCE_CTRL_START | SCE_CTRL_SELECT);
 
     if (touchxy[0].reportNum == 1)
     {
@@ -267,7 +267,7 @@ void Controls::Check()
                 break;
 
             case SDLK_ESCAPE:
-                Controls::exit = true;
+                Controls::pause = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
 
             default:
@@ -317,3 +317,5 @@ bool Controls::MenuLeft()       { return Controls::menuLeft; }
 
 bool Controls::MenuEnter()      { return Controls::menuEnter; }
 bool Controls::MenuBack()       { return Controls::menuBack; }
+
+bool Controls::Pause()          { return Controls::pause; }

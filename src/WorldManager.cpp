@@ -145,7 +145,7 @@ std::vector<int> last_frames_speed_y = std::vector<int>();
 WindowParams old_wparams, now_wparams;
 float zoomChange, zoomChangeCoeff;
 
-void WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
+bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
 {
     old_wparams = now_wparams;
     now_wparams = rr->GetWindowParams();
@@ -340,6 +340,8 @@ void WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
     // ANIMATIONS
     AnimationManager::StepAnim(ANIM_WORLD_MANAGER_INIT);
     /////////////
+
+    return true;
 }
 
 int renderedItemsCount;
@@ -394,6 +396,7 @@ void WorldManager::Render(Renderer* rr, Controls ctrl)
         debugStrings.push_back("Left = " + std::to_string(ctrl.MenuLeft()));
         debugStrings.push_back("Enter = " + std::to_string(ctrl.MenuEnter()));
         debugStrings.push_back("Back = " + std::to_string(ctrl.MenuBack()));
+        debugStrings.push_back("Pause = " + std::to_string(ctrl.Pause()));
 
         WorldManager::RenderDebugScreen(debugStrings, rr);        
     }

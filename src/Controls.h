@@ -46,6 +46,8 @@ protected:
     
     bool menuEnter = false;
     bool menuBack = false;
+    
+    bool pause = false;
 
     SDL_Event e;
     
@@ -125,5 +127,7 @@ public:
 
     bool MenuEnter();
     bool MenuBack();
+
+    bool Pause();
     ///////
 };

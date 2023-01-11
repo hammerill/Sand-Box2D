@@ -96,7 +96,8 @@ public:
     /// @param rr link to renderer object (not link to SDL_Renderer) where to render.
     /// @param ctrl buttons pressed in this frame.
     /// @param old_ctrl buttons pressed in previous frame.
-    void Step(Renderer* rr, Controls ctrl, Controls old_ctrl);
+    /// @return true if WM wants to render next frame. False if it's the end and we need to load MainMenu instead.
+    bool Step(Renderer* rr, Controls ctrl, Controls old_ctrl);
     
     /// @brief Render all the physics objects and show them.
     void Render(Renderer* rr, Controls ctrl);

@@ -9,7 +9,9 @@
 
 enum Anim 
 {
-    ANIM_WORLD_MANAGER_INIT = 0     // Animation of WorldManager initialization (WMI). Will show levels name.
+    ANIM_WORLD_MANAGER_INIT = 0,    // Animation of WorldManager initialization (WMI). Will show levels name.
+    ANIM_FADE_IN,                   // Animation of Fade-in, i.e. from black screen to scene.
+    ANIM_FADE_OUT                   // Animation of Fade-out, i.e. from scene to black screen.
 };
 
 /// @brief Little class to apply transitions.
@@ -74,6 +76,14 @@ struct PARAMS_WORLD_MANAGER_INIT
     Transition transition_pos, transition_text_opaque, transition_bg_opaque;
 };
 
+struct PARAMS_FADE
+{
+    int frames = 0;
+
+    float opaque;
+    Transition transition_opaque;
+};
+
 /// Static class for managing game animations.
 /// 
 /// First you need to init some animation (InitAnim(ANIM_NAME)).
@@ -83,6 +93,7 @@ class AnimationManager
 {
 private:
     static PARAMS_WORLD_MANAGER_INIT wmi;
+    static PARAMS_FADE fade;
 public:
     AnimationManager();
     ~AnimationManager();
