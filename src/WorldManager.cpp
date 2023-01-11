@@ -387,12 +387,13 @@ void WorldManager::Render(Renderer* rr, Controls ctrl)
         debugStrings.push_back("Objects rendered = " + std::to_string(renderedItemsCount));
         debugStrings.push_back("Loaded textures = " + std::to_string(WorldManager::textures.size()));
         debugStrings.push_back("");
-        debugStrings.push_back("ACTIONS");
-        debugStrings.push_back("Up = " + std::to_string(ctrl.ActionUp()));
-        debugStrings.push_back("Right = " + std::to_string(ctrl.ActionRight()));
-        debugStrings.push_back("Down = " + std::to_string(ctrl.ActionDown()));
-        debugStrings.push_back("Left = " + std::to_string(ctrl.ActionLeft()));
-        debugStrings.push_back("Enter = " + std::to_string(ctrl.ActionEnter()));
+        debugStrings.push_back("MENU");
+        debugStrings.push_back("Up = " + std::to_string(ctrl.MenuUp()));
+        debugStrings.push_back("Right = " + std::to_string(ctrl.MenuRight()));
+        debugStrings.push_back("Down = " + std::to_string(ctrl.MenuDown()));
+        debugStrings.push_back("Left = " + std::to_string(ctrl.MenuLeft()));
+        debugStrings.push_back("Enter = " + std::to_string(ctrl.MenuEnter()));
+        debugStrings.push_back("Back = " + std::to_string(ctrl.MenuBack()));
 
         WorldManager::RenderDebugScreen(debugStrings, rr);        
     }

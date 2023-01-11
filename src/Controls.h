@@ -39,6 +39,14 @@ protected:
     
     bool actionEnter = false;
 
+    bool menuUp = false;
+    bool menuRight = false;
+    bool menuDown = false;
+    bool menuLeft = false;
+    
+    bool menuEnter = false;
+    bool menuBack = false;
+
     SDL_Event e;
     
 
@@ -108,4 +116,14 @@ public:
 
     bool ActionEnter();
     //////////
+
+    // MENU
+    bool MenuUp();
+    bool MenuRight();
+    bool MenuDown();
+    bool MenuLeft();
+
+    bool MenuEnter();
+    bool MenuBack();
+    ///////
 };

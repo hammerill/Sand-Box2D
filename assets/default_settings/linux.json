@@ -6,6 +6,7 @@
     "path_to_def_texture": "./assets/img/box.png",
     "path_to_def_level_base": "./assets/default_level",
     "path_to_def_level": "default_level.json",
+    "path_to_translations": "./assets/translations",
     "speed_correction": true,
     "physics_quality": 16,
     "moving_inertia_frames": 10

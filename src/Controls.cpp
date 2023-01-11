@@ -47,6 +47,14 @@ void Controls::Check()
     
     Controls::actionEnter = vita_ctrl.buttons & SCE_CTRL_CROSS;
 
+    Controls::menuUp = vita_ctrl.buttons & SCE_CTRL_UP;
+    Controls::menuRight = vita_ctrl.buttons & SCE_CTRL_RIGHT;
+    Controls::menuDown = vita_ctrl.buttons & SCE_CTRL_DOWN;
+    Controls::menuLeft = vita_ctrl.buttons & SCE_CTRL_LEFT;
+    
+    Controls::menuEnter = vita_ctrl.buttons & SCE_CTRL_CROSS;
+    Controls::menuBack = vita_ctrl.buttons & SCE_CTRL_CIRCLE;
+
     Controls::exit = vita_ctrl.buttons & (SCE_CTRL_START | SCE_CTRL_SELECT);
 
     if (touchxy[0].reportNum == 1)
@@ -200,36 +208,53 @@ void Controls::Check()
                 break;
             case SDLK_x:
                 Controls::reloadLevel = e.type == SDL_KEYDOWN; 
+                Controls::menuBack = e.type == SDL_KEYDOWN; 
+                break;
+            case SDLK_BACKSPACE:
+                Controls::menuBack = e.type == SDL_KEYDOWN; 
                 break;
 
             case SDLK_UP:
                 Controls::moveUp = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::menuUp = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
             case SDLK_RIGHT:
                 Controls::moveRight = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::menuRight = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
             case SDLK_DOWN:
                 Controls::moveDown = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::menuDown = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
             case SDLK_LEFT:
                 Controls::moveLeft = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::menuLeft = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
 
             case SDLK_w:
                 Controls::actionUp = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::menuUp = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
             case SDLK_d:
                 Controls::actionRight = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::menuRight = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
             case SDLK_s:
                 Controls::actionDown = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::menuDown = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
             case SDLK_a:
                 Controls::actionLeft = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::menuLeft = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
                 
-            case SDLK_SPACE: case SDLK_r:
+            case SDLK_SPACE: case SDLK_r: case SDLK_RETURN:
                 Controls::actionEnter = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::menuEnter = e.type == SDL_KEYDOWN ? 1 : 0;
+                break;
+                
+            case SDLK_z:
+                Controls::menuEnter = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
 
             case SDLK_e:
@@ -264,7 +289,7 @@ bool Controls::ReloadLevel()    { return Controls::reloadLevel; }
 
 double Controls::MoveUp()       { return Controls::moveUp; }
 double Controls::MoveRight()    { return Controls::moveRight; }
-double Controls::MoveDown()  { return Controls::moveDown; }
+double Controls::MoveDown()     { return Controls::moveDown; }
 double Controls::MoveLeft()     { return Controls::moveLeft; }
 
 double Controls::ZoomIn()       { return Controls::zoomIn; }
@@ -276,7 +301,7 @@ SDL_Point Controls::GetMouse()  { return Controls::mouse; }
 bool Controls::IsPinching()     { return Controls::isPinching; }
 int Controls::GetPinch()        { return Controls::pinch; }
 
-bool Controls::IsWheel()       { return Controls::isWheel; }
+bool Controls::IsWheel()        { return Controls::isWheel; }
 
 bool Controls::ActionUp()       { return Controls::actionUp; }
 bool Controls::ActionRight()    { return Controls::actionRight; }
@@ -284,3 +309,11 @@ bool Controls::ActionDown()     { return Controls::actionDown; }
 bool Controls::ActionLeft()     { return Controls::actionLeft; }
 
 bool Controls::ActionEnter()    { return Controls::actionEnter; }
+
+bool Controls::MenuUp()         { return Controls::menuUp; }
+bool Controls::MenuRight()      { return Controls::menuRight; }
+bool Controls::MenuDown()       { return Controls::menuDown; }
+bool Controls::MenuLeft()       { return Controls::menuLeft; }
+
+bool Controls::MenuEnter()      { return Controls::menuEnter; }
+bool Controls::MenuBack()       { return Controls::menuBack; }

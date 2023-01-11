@@ -1,11 +1,17 @@
 #pragma once
 
+#include <vector>
+#include <string>
+#include "Renderer.h"
+
 /// @brief Class that manages main menu and can download levels.
 class MainMenu
 {
 private:
-    /* data */
+    std::vector<std::string> menu_items;
 public:
     MainMenu();
+
+
 };
 

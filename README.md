@@ -44,7 +44,7 @@ have rewritten it from zero using OOP, and now you're free to play this game and
 
 ## Controls
 ### For Desktops
-- <kbd>WASD</kbd> and <kbd>Space</kbd> or <kbd>R</kbd> - actions.
+- <kbd>WASD</kbd> and <kbd>Space</kbd>/<kbd>R</kbd>/<kbd>Enter</kbd> - actions.
 - <kbd>Arrows</kbd> - move camera.
 - <kbd>Q</kbd>/<kbd>E</kbd> - adjust zoom.
 - <kbd>Tab</kbd> - on/off debug screen.
