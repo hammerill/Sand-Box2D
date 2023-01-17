@@ -147,6 +147,8 @@ float zoomChange, zoomChangeCoeff;
 
 bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
 {
+    WorldManager::world->Step(1.0f / 60.0f, WorldManager::physics_quality * 3, WorldManager::physics_quality);
+    
     old_wparams = now_wparams;
     now_wparams = rr->GetWindowParams();
 
@@ -269,8 +271,6 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
     
     HandleActionCtrl(old_ctrl.ActionEnter(), ctrl.ActionEnter(), WorldManager::actions["enter"], WorldManager::level, WorldManager::objects);
     //////////
-
-    WorldManager::world->Step(1.0f / 60.0f, WorldManager::physics_quality * 3, WorldManager::physics_quality);
 
     // CYCLES
     auto cycles = WorldManager::level.GetCycles();

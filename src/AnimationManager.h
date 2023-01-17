@@ -102,9 +102,11 @@ public:
     /// It will reset all the values and start playing animation from beginning.
     static void InitAnim(Anim anim);
     /// @brief Make a logical step of animation.
-    static void StepAnim(Anim anim);
+    /// @return true if animations next frame can be rendered. False if it's the end.
+    static bool StepAnim(Anim anim);
     /// @brief Render animation.
-    static void RenderAnim(Anim anim, Renderer* rr);
+    /// @return true if animations next frame can be rendered. False if it's the end.
+    static bool RenderAnim(Anim anim, Renderer* rr);
 
     /// @brief Function used to make transition "Ease-In-Out Sine".
     /// Credits to easings.net

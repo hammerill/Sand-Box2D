@@ -32,12 +32,12 @@ void AnimationManager::InitAnim(Anim anim)
     }
 }
 
-void AnimationManager::StepAnim(Anim anim)
+bool AnimationManager::StepAnim(Anim anim)
 {
     switch (anim)
     {
     case ANIM_WORLD_MANAGER_INIT:
-        if (AnimationManager::wmi.frames < 300)
+        if (AnimationManager::wmi.frames < 290)
         {
             switch (AnimationManager::wmi.frames)
             {
@@ -57,8 +57,11 @@ void AnimationManager::StepAnim(Anim anim)
                 AnimationManager::wmi.bg_opaque, AnimationManager::wmi.frames, &TransitionEaseInOutSine);
 
             AnimationManager::wmi.frames++;
+
+            return true;
         }
-        break;
+
+        return false;
     case ANIM_FADE_IN: case ANIM_FADE_OUT:
         if (AnimationManager::fade.frames <= 100)
         {
@@ -66,19 +69,22 @@ void AnimationManager::StepAnim(Anim anim)
                 AnimationManager::fade.opaque, AnimationManager::fade.frames, &TransitionEaseInOutSine);
 
             AnimationManager::wmi.frames++;
+
+            return true;
         }
-    
+
+        return false;
     default:
-        break;
+        return false;
     }
 }
 
-void AnimationManager::RenderAnim(Anim anim, Renderer* rr)
+bool AnimationManager::RenderAnim(Anim anim, Renderer* rr)
 {
     switch (anim)
     {
     case ANIM_WORLD_MANAGER_INIT:
-        if (AnimationManager::wmi.frames < 300)
+        if (AnimationManager::wmi.frames < 290)
         {
             int pospx = rr->GetWindowParams().height * AnimationManager::wmi.pos;
 
@@ -98,8 +104,11 @@ void AnimationManager::RenderAnim(Anim anim, Renderer* rr)
                 AnimationManager::wmi.levelname, rr->GetWindowParams().width / 2,
                 (rr->GetWindowParams().height + pospx) / 2, AnimationManager::wmi.text_scale, true,
                 text_color, text_color, text_color);
+            
+            return true;
         }
-        break;
+
+        return false;
     case ANIM_FADE_IN: case ANIM_FADE_OUT:
         {
             SDL_Rect rect {0, 0, rr->GetWindowParams().width, rr->GetWindowParams().height};
@@ -108,11 +117,13 @@ void AnimationManager::RenderAnim(Anim anim, Renderer* rr)
             SDL_SetRenderDrawColor(rr->GetRenderer(), 0, 0, 0, AnimationManager::fade.opaque * 0xFF);
 
             SDL_RenderFillRect(rr->GetRenderer(), &rect);
+
+            return true;
         }
-    break;
-    
+
+        return false;
     default:
-        break;
+        return false;
     }
 }
 

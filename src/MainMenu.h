@@ -5,6 +5,7 @@
 
 #include "Renderer.h"
 #include "Controls.h"
+#include "Translations.h"
 
 /// @brief Class that manages main menu and can download levels.
 class MainMenu
