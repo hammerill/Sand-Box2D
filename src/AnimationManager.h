@@ -105,8 +105,7 @@ public:
     /// @return true if animations next frame can be rendered. False if it's the end.
     static bool StepAnim(Anim anim);
     /// @brief Render animation.
-    /// @return true if animations next frame can be rendered. False if it's the end.
-    static bool RenderAnim(Anim anim, Renderer* rr);
+    static void RenderAnim(Anim anim, Renderer* rr);
 
     /// @brief Function used to make transition "Ease-In-Out Sine".
     /// Credits to easings.net

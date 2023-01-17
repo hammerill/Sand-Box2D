@@ -79,7 +79,7 @@ bool AnimationManager::StepAnim(Anim anim)
     }
 }
 
-bool AnimationManager::RenderAnim(Anim anim, Renderer* rr)
+void AnimationManager::RenderAnim(Anim anim, Renderer* rr)
 {
     switch (anim)
     {
@@ -104,11 +104,9 @@ bool AnimationManager::RenderAnim(Anim anim, Renderer* rr)
                 AnimationManager::wmi.levelname, rr->GetWindowParams().width / 2,
                 (rr->GetWindowParams().height + pospx) / 2, AnimationManager::wmi.text_scale, true,
                 text_color, text_color, text_color);
-            
-            return true;
         }
 
-        return false;
+        break;
     case ANIM_FADE_IN: case ANIM_FADE_OUT:
         {
             SDL_Rect rect {0, 0, rr->GetWindowParams().width, rr->GetWindowParams().height};
@@ -117,13 +115,11 @@ bool AnimationManager::RenderAnim(Anim anim, Renderer* rr)
             SDL_SetRenderDrawColor(rr->GetRenderer(), 0, 0, 0, AnimationManager::fade.opaque * 0xFF);
 
             SDL_RenderFillRect(rr->GetRenderer(), &rect);
-
-            return true;
         }
 
-        return false;
+        break;
     default:
-        return false;
+        break;
     }
 }
 

@@ -9,8 +9,8 @@ GameManager::GameManager(const char* path_to_settings, const char* path_to_def_s
 
     GameManager::settings = Settings(path_to_settings, path_to_def_settings);
 
-    GameManager::renderer = new Renderer();
-    GameManager::renderer->InitVideo(
+    GameManager::rr = new Renderer();
+    GameManager::rr->InitVideo(
         GameManager::fullscreen,
         GameManager::settings.Get("path_to_font").asString() == "" ? nullptr : 
             GameManager::settings.Get("path_to_font").asString().c_str(),
@@ -30,7 +30,10 @@ GameManager::GameManager(const char* path_to_settings, const char* path_to_def_s
         GameManager::settings.Get("path_to_def_level").asString()
     );
 
-    GameManager::world_manager->LoadLevel(level, GameManager::renderer);
+    GameManager::world_manager->LoadLevel(level, GameManager::rr);
+
+    GameManager::main_menu = MainMenu();
+    GameManager::main_menu.Init(GameManager::settings.Get("path_to_translations").asString());
 }
 
 bool GameManager::Step()
@@ -46,12 +49,13 @@ bool GameManager::Step()
     
     if (ctrl.Fullscreen() && !old_ctrl.Fullscreen())
     {
-        auto cur_mode = GameManager::renderer->GetWindowParams().mode;
-        GameManager::renderer->ChangeRes(cur_mode != WINDOWED ? windowed : fullscreen);
+        auto cur_mode = GameManager::rr->GetWindowParams().mode;
+        GameManager::rr->ChangeRes(cur_mode != WINDOWED ? windowed : fullscreen);
     }
 
     // STEPS
-    world_manager->Step(GameManager::renderer, GameManager::ctrl, GameManager::old_ctrl);
+    world_manager->Step(GameManager::rr, GameManager::ctrl, GameManager::old_ctrl);
+    // main_menu.Step(GameManager::ctrl, GameManager::old_ctrl);
     ////////
 
     return true;
@@ -60,10 +64,11 @@ bool GameManager::Step()
 void GameManager::Render()
 {
     // RENDER
-    world_manager->Render(GameManager::renderer, GameManager::ctrl);
+    world_manager->Render(GameManager::rr, GameManager::ctrl);
+    // main_menu.Render(GameManager::rr);
     /////////
 
-    SDL_RenderPresent(GameManager::renderer->GetRenderer());
+    SDL_RenderPresent(GameManager::rr->GetRenderer());
 }
 
 void GameManager::Cycle()

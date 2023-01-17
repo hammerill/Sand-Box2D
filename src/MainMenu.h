@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <algorithm>
 
 #include "Renderer.h"
 #include "Controls.h"

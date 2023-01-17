@@ -4,18 +4,18 @@
 #include "Controls.h"
 #include "Settings.h"
 
-// #include "MainMenu.h"
+#include "MainMenu.h"
 #include "WorldManager.h"
 
 /// @brief Class that manages everything.
 class GameManager
 {
 private:
-    Renderer* renderer;
+    Renderer* rr;
     Controls ctrl, old_ctrl;
     Settings settings;
 
-    // MainMenu main_menu;
+    MainMenu main_menu;
     WorldManager* world_manager;
 
     WindowParams fullscreen = {};
@@ -39,7 +39,7 @@ public:
     /// @brief Call render functions on all the objects and then show them on the screen.
     void Render();
 
-    /// @brief Launch main game cycle. Exit from it when user want it.
+    /// @brief Launch main game cycle. Will exit from it when user want it.
     void Cycle();
 };
 
