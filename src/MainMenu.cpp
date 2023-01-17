@@ -35,7 +35,7 @@ bool MainMenu::Step(Controls ctrl, Controls old_ctrl)
 
 void MainMenu::Render(Renderer* rr)
 {
-    float menuScale = 6;
+    int menuScale = rr->GetWindowParams().height / 100;
     int fontWidth = rr->GetFont()->FontWidth;
 
     std::vector<int> menuWidths;
@@ -48,7 +48,7 @@ void MainMenu::Render(Renderer* rr)
     int x_offset = (rr->GetWindowParams().width / 4) - (menu_w / 2);
     int y_offset = (rr->GetWindowParams().height / 2) - (menu_h / 2);
 
-    SDL_SetRenderDrawBlendMode(rr->GetRenderer(), SDL_BLENDMODE_NONE);
+    SDL_SetRenderDrawBlendMode(rr->GetRenderer(), SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(rr->GetRenderer(), 0, 0, 0, 0);
     SDL_RenderClear(rr->GetRenderer());
 
@@ -57,19 +57,18 @@ void MainMenu::Render(Renderer* rr)
         if (i == MainMenu::hovered_item)
         {
             SDL_Rect hover_bg {
-                x_offset + fontWidth * menuScale,
-                y_offset + fontWidth * menuScale * i,
-                MainMenu::menu_items[i].size() * fontWidth * menuScale,
-                fontWidth * menuScale
+                x_offset + fontWidth * menuScale - fontWidth,
+                y_offset + fontWidth * menuScale * i - fontWidth,
+                MainMenu::menu_items[i].size() * fontWidth * menuScale + fontWidth,
+                fontWidth * menuScale + fontWidth
             };
 
             SDL_SetRenderDrawColor(rr->GetRenderer(), 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderFillRect(rr->GetRenderer(), &hover_bg);
 
-            SDL_SetRenderDrawColor(rr->GetRenderer(), 0, 0, 0, 0);
             rr->RenderText(MainMenu::menu_items[i].c_str(), x_offset + fontWidth * menuScale, y_offset + fontWidth * menuScale * i, menuScale, false, 0, 0, 0);
         }
-        
-        rr->RenderText(MainMenu::menu_items[i].c_str(), x_offset + fontWidth * menuScale, y_offset + fontWidth * menuScale * i, menuScale);
+        else
+            rr->RenderText(MainMenu::menu_items[i].c_str(), x_offset + fontWidth * menuScale, y_offset + fontWidth * menuScale * i, menuScale);
     }
 }
