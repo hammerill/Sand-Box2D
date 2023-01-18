@@ -13,21 +13,30 @@ void MainMenu::Init(std::string translations_base)
     MainMenu::menu_items.push_back(Translations::Load("menu.json/item_play"));
     MainMenu::menu_items.push_back(Translations::Load("menu.json/item_about"));
     MainMenu::menu_items.push_back(Translations::Load("menu.json/item_exit"));
+
+    AnimationManager::InitAnim(ANIM_FADE_IN);
 }
 
+bool sound;
 bool MainMenu::Step(Controls ctrl, Controls old_ctrl)
 {
-    if (ctrl.MenuUp() && !old_ctrl.MenuUp())
+    sound = false;
+    if (!AnimationManager::StepAnim(ANIM_FADE_IN))
     {
-        MainMenu::hovered_item = MainMenu::hovered_item == 0
-                                    ? MainMenu::menu_items.size() - 1
-                                    : MainMenu::hovered_item - 1;
-    }
-    if (ctrl.MenuDown() && !old_ctrl.MenuDown())
-    {
-        MainMenu::hovered_item = MainMenu::hovered_item == MainMenu::menu_items.size() - 1
-                                    ? 0
-                                    : MainMenu::hovered_item + 1;
+        if (ctrl.MenuUp() && !old_ctrl.MenuUp())
+        {
+            sound = true;
+            MainMenu::hovered_item = MainMenu::hovered_item == 0
+                                        ? MainMenu::menu_items.size() - 1
+                                        : MainMenu::hovered_item - 1;
+        }
+        if (ctrl.MenuDown() && !old_ctrl.MenuDown())
+        {
+            sound = true;
+            MainMenu::hovered_item = MainMenu::hovered_item == MainMenu::menu_items.size() - 1
+                                        ? 0
+                                        : MainMenu::hovered_item + 1;
+        }
     }
     
     return true;
@@ -35,6 +44,9 @@ bool MainMenu::Step(Controls ctrl, Controls old_ctrl)
 
 void MainMenu::Render(Renderer* rr)
 {
+    if (sound)
+        rr->GetSounds()->PlaySfx("menu_switch");    
+
     int menuScale = rr->GetWindowParams().height / 100;
     int fontWidth = rr->GetFont()->FontWidth;
 
@@ -71,4 +83,6 @@ void MainMenu::Render(Renderer* rr)
         else
             rr->RenderText(MainMenu::menu_items[i].c_str(), x_offset + fontWidth * menuScale, y_offset + fontWidth * menuScale * i, menuScale);
     }
+
+    AnimationManager::RenderAnim(ANIM_FADE_IN, rr);
 }

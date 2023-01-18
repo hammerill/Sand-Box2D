@@ -20,11 +20,11 @@ void AnimationManager::InitAnim(Anim anim)
         break;
     case ANIM_FADE_IN:
         AnimationManager::fade = {};
-        AnimationManager::fade.transition_opaque.SetTransition(1, 0, 0, 100);
+        AnimationManager::fade.transition_opaque.SetTransition(1, 0, 0, 60);
         break;
     case ANIM_FADE_OUT:
         AnimationManager::fade = {};
-        AnimationManager::fade.transition_opaque.SetTransition(0, 1, 0, 100);
+        AnimationManager::fade.transition_opaque.SetTransition(0, 1, 0, 60);
         break;
     
     default:
@@ -37,12 +37,12 @@ bool AnimationManager::StepAnim(Anim anim)
     switch (anim)
     {
     case ANIM_WORLD_MANAGER_INIT:
-        if (AnimationManager::wmi.frames < 290)
+        if (AnimationManager::wmi.frames <= AnimationManager::wmi.frames_max)
         {
             switch (AnimationManager::wmi.frames)
             {
             case 250:
-                AnimationManager::wmi.transition_pos.SetTransition(0.75, 2, 250, 40);
+                AnimationManager::wmi.transition_pos.SetTransition(0.75, 2, AnimationManager::wmi.frames_max - 40, 40);
                 break;
             
             default:
@@ -63,12 +63,12 @@ bool AnimationManager::StepAnim(Anim anim)
 
         return false;
     case ANIM_FADE_IN: case ANIM_FADE_OUT:
-        if (AnimationManager::fade.frames <= 100)
+        if (AnimationManager::fade.frames <= AnimationManager::fade.frames_max)
         {
             AnimationManager::fade.transition_opaque.ApplyTransition(
                 AnimationManager::fade.opaque, AnimationManager::fade.frames, &TransitionEaseInOutSine);
 
-            AnimationManager::wmi.frames++;
+            AnimationManager::fade.frames++;
 
             return true;
         }
@@ -84,7 +84,7 @@ void AnimationManager::RenderAnim(Anim anim, Renderer* rr)
     switch (anim)
     {
     case ANIM_WORLD_MANAGER_INIT:
-        if (AnimationManager::wmi.frames < 290)
+        if (AnimationManager::wmi.frames <= AnimationManager::wmi.frames_max)
         {
             int pospx = rr->GetWindowParams().height * AnimationManager::wmi.pos;
 

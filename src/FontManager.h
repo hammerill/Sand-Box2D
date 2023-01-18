@@ -18,6 +18,11 @@ public:
     /// @brief Load font to private field of this class, then you can render it later with Render().
     /// If can't load font it will just leave "loaded" field "false", so it just won't render text.
     /// @param path_to_font path to the font (*.ttf) file.
+    Font(const char* path_to_font);
+
+    /// @brief Load font to private field of this class, then you can render it later with Render().
+    /// If can't load font it will just leave "loaded" field "false", so it just won't render text.
+    /// @param path_to_font path to the font (*.ttf) file.
     void LoadFont(const char* path_to_font);
 
     /// @brief Render text.

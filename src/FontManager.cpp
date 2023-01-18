@@ -11,6 +11,12 @@ Font::~Font()
         TTF_CloseFont(Font::font);
 }
 
+Font::Font(const char* path_to_font)
+{
+    Font::loaded = false;
+    Font::LoadFont(path_to_font);
+}
+
 void Font::LoadFont(const char* path_to_font)
 {
     if (Font::loaded)

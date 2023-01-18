@@ -6,11 +6,14 @@ Renderer::~Renderer()
     SDL_DestroyWindow(Renderer::window);
 }
 
-void Renderer::InitVideo(WindowParams params, const char* path_to_font, const char* path_to_icon)
+void Renderer::InitVideo(WindowParams params, const char* path_to_sfx_base, const char* path_to_font, const char* path_to_icon)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
     
     Renderer::window = SDL_CreateWindow("Sand-Box2D", 0, 0, 0, 0, SDL_WINDOW_SHOWN);
+
+    if (path_to_sfx_base != nullptr)
+        Renderer::sounds->LoadSfx(path_to_sfx_base);
 
     if (path_to_font != nullptr)
         Renderer::font->LoadFont(path_to_font);
@@ -28,6 +31,7 @@ void Renderer::InitVideo(WindowParams params, const char* path_to_font, const ch
 
 SDL_Renderer* Renderer::GetRenderer()   { return renderer; }
 SDL_Window* Renderer::GetWindow()       { return window; }
+SoundManager* Renderer::GetSounds()     { return sounds; }
 
 void Renderer::ChangeRes(WindowParams params)
 {

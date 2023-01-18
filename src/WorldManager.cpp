@@ -15,17 +15,17 @@ WorldManager::WorldManager(std::string path_to_def_texture, int physics_quality,
 }
 WorldManager::~WorldManager()
 {
-    /// @brief Delete all the objects.
+    // Delete all the objects.
     for (int i = WorldManager::objects.size() - 1; i >= 0; i--)
     {
         WorldManager::DeleteObject(i);
     }
-    /// @brief Unload all the textures.
+    // Unload all the textures.
     for (std::map<std::string, SDL_Texture*>::iterator itr = WorldManager::textures.begin(); itr != WorldManager::textures.end(); itr++)
     {
         SDL_DestroyTexture(itr->second);
     }
-    /// @brief Destroy the world.
+    // Destroy the world.
     delete WorldManager::world;
 }
 

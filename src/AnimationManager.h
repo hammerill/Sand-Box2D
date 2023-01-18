@@ -68,7 +68,7 @@ public:
 
 struct PARAMS_WORLD_MANAGER_INIT
 {
-    int frames = 0;
+    int frames = 0, frames_max = 290;
     const char* levelname = "SAND-BOX2D PRE-RELEASE";
     int text_scale = 4;
 
@@ -78,7 +78,7 @@ struct PARAMS_WORLD_MANAGER_INIT
 
 struct PARAMS_FADE
 {
-    int frames = 0;
+    int frames = 0, frames_max = 60;
 
     float opaque;
     Transition transition_opaque;

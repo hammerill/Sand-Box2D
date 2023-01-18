@@ -12,6 +12,8 @@ GameManager::GameManager(const char* path_to_settings, const char* path_to_def_s
     GameManager::rr = new Renderer();
     GameManager::rr->InitVideo(
         GameManager::fullscreen,
+        GameManager::settings.Get("path_to_sfx_base").asString() == "" ? nullptr : 
+            GameManager::settings.Get("path_to_sfx_base").asString().c_str(),
         GameManager::settings.Get("path_to_font").asString() == "" ? nullptr : 
             GameManager::settings.Get("path_to_font").asString().c_str(),
         GameManager::settings.Get("path_to_icon").asString() == "" ? nullptr : 

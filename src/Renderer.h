@@ -4,6 +4,7 @@
 #include <SDL2/SDL_image.h>
 
 #include "FontManager.h"
+#include "SoundManager.h"
 
 /// @brief Window modes for game (fullscreen or no and etc.).
 enum WindowMode
@@ -44,6 +45,7 @@ private:
     const char* path_to_icon;
 
     Font* font = new Font();
+    SoundManager* sounds = new SoundManager();
 
 public:
     ~Renderer();
@@ -51,14 +53,21 @@ public:
     /// @brief Init video.
     /// @param params declare settings of your window here (see struct WindowParams).
     /// You can change them later using ChangeRes().
+    /// @param path_to_sfx_base path to the directory where all the sound effects are located. Should
+    /// contain index.json which looks like this: {"big_sound_name": "PathTo/Big/Sound.wav", "...": "..."}
     /// @param path_to_font path to the font (*.ttf) file which will be always rendered.
     /// Leave nullptr if you don't want to render any text.
     /// @param path_to_icon path to the icon that will be set to program instance.
     /// Leave nullptr if you're setting icon in CMake.
-    void InitVideo(WindowParams params, const char* path_to_font = nullptr, const char* path_to_icon = nullptr);
+    void InitVideo(
+        WindowParams params,
+        const char* path_to_sfx_base = nullptr,
+        const char* path_to_font = nullptr,
+        const char* path_to_icon = nullptr);
 
     SDL_Renderer* GetRenderer();
     SDL_Window* GetWindow();
+    SoundManager* GetSounds();
 
     /// @brief Change game resolution and go/exit fullscreen if need.
     /// @param params declare settings of your window here (see struct WindowParams).
