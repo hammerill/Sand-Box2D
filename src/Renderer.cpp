@@ -24,14 +24,21 @@ void Renderer::InitVideo(WindowParams params, const char* path_to_sfx_base, cons
         SDL_SetWindowIcon(Renderer::window, icon);
     }
 
+    Renderer::frames = 0;
+
     Renderer::renderer = SDL_CreateRenderer(Renderer::window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     Renderer::ChangeRes(params);
 }
 
-SDL_Renderer* Renderer::GetRenderer()   { return renderer; }
-SDL_Window* Renderer::GetWindow()       { return window; }
-SoundManager* Renderer::GetSounds()     { return sounds; }
+SDL_Renderer* Renderer::GetRenderer()       { return renderer; }
+SDL_Window* Renderer::GetWindow()           { return window; }
+SoundManager* Renderer::GetSounds()         { return sounds; }
+Font* Renderer::GetFont()                   { return Renderer::font; }
+WindowParams Renderer::GetWindowParams()    { return {window_mode, window_width, window_height}; }
+
+void Renderer::AddFrame()       { Renderer::frames++; }
+uint64_t Renderer::GetFrames()  { return Renderer::frames; }
 
 void Renderer::ChangeRes(WindowParams params)
 {
@@ -83,9 +90,3 @@ void Renderer::RenderText(const char* text, int x, int y, float scale, bool cent
 {
     Renderer::font->Render(Renderer::renderer, text, x, y, scale, center, r, g, b);
 }
-Font* Renderer::GetFont()
-{
-    return Renderer::font;
-}
-
-WindowParams Renderer::GetWindowParams()    { return {window_mode, window_width, window_height}; }

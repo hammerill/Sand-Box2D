@@ -26,18 +26,11 @@ GameManager::GameManager(const char* path_to_settings, const char* path_to_def_s
         GameManager::settings.Get("moving_inertia_frames").asInt()
     );
 
-    Level level;
-    level.LoadFile(
-        GameManager::settings.Get("path_to_def_level_base").asString(), 
-        GameManager::settings.Get("path_to_def_level").asString()
-    );
-
-    GameManager::world_manager->LoadLevel(level, GameManager::rr);
-
     GameManager::main_menu = MainMenu();
     GameManager::main_menu.Init(GameManager::settings.Get("path_to_translations").asString());
 }
 
+bool isInMenu = true;
 bool GameManager::Step()
 {
     if (GameManager::settings.Get("speed_correction").asBool())
@@ -56,8 +49,38 @@ bool GameManager::Step()
     }
 
     // STEPS
-    world_manager->Step(GameManager::rr, GameManager::ctrl, GameManager::old_ctrl);
-    // main_menu.Step(GameManager::ctrl, GameManager::old_ctrl);
+    if (isInMenu)
+    {
+        if (!GameManager::main_menu.Step(GameManager::rr, GameManager::ctrl, GameManager::old_ctrl))
+        {
+            if (GameManager::main_menu.GetStatus() == "play")
+            {
+                Level level;
+                level.LoadFile(
+                    GameManager::settings.Get("path_to_def_level_base").asString(), 
+                    GameManager::settings.Get("path_to_def_level").asString()
+                );
+                GameManager::world_manager->LoadLevel(level, GameManager::rr);
+                GameManager::world_manager->Step(GameManager::rr, GameManager::ctrl, GameManager::old_ctrl);
+                // ^^ We give WorldManager first step here to avoid rendering problems
+                // (if you try to remove first step here it will try to call Render() before Step()
+                // which may cause some graphical issues).
+                isInMenu = false;
+            }
+            else
+                return false;
+        }
+    }
+    else
+        if (!GameManager::world_manager->Step(GameManager::rr, GameManager::ctrl, GameManager::old_ctrl))
+        {
+            GameManager::main_menu.Init(GameManager::settings.Get("path_to_translations").asString());
+            GameManager::main_menu.Step(GameManager::rr, GameManager::ctrl, GameManager::old_ctrl);
+            // ^^ We give MainMenu first step here to avoid rendering problems
+            // (if you try to remove first step here it will try to call Render() before Step()
+            // which may cause some graphical issues).
+            isInMenu = true;
+        }
     ////////
 
     return true;
@@ -66,9 +89,13 @@ bool GameManager::Step()
 void GameManager::Render()
 {
     // RENDER
-    world_manager->Render(GameManager::rr, GameManager::ctrl);
-    // main_menu.Render(GameManager::rr);
+    if (isInMenu)
+        GameManager::main_menu.Render(GameManager::rr);
+    else
+        GameManager::world_manager->Render(GameManager::rr, GameManager::ctrl);
     /////////
+
+    GameManager::rr->AddFrame();
 
     SDL_RenderPresent(GameManager::rr->GetRenderer());
 }

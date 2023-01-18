@@ -38,7 +38,6 @@ void Controls::Check()
             touchxy[0].reportNum == 2};
     
     Controls::debug = vita_ctrl.buttons & SCE_CTRL_TRIANGLE;
-    Controls::reloadLevel = vita_ctrl.buttons & SCE_CTRL_CIRCLE;
 
     Controls::actionUp = vita_ctrl.buttons & SCE_CTRL_UP;
     Controls::actionRight = vita_ctrl.buttons & SCE_CTRL_RIGHT;
@@ -206,11 +205,7 @@ void Controls::Check()
             case SDLK_TAB:
                 Controls::debug = e.type == SDL_KEYDOWN; 
                 break;
-            case SDLK_x:
-                Controls::reloadLevel = e.type == SDL_KEYDOWN; 
-                Controls::menuBack = e.type == SDL_KEYDOWN; 
-                break;
-            case SDLK_BACKSPACE:
+            case SDLK_x: case SDLK_BACKSPACE:
                 Controls::menuBack = e.type == SDL_KEYDOWN; 
                 break;
 
@@ -285,7 +280,6 @@ void Controls::Check()
 bool Controls::Exit()           { return Controls::exit; }
 bool Controls::Fullscreen()     { return Controls::fullscreen; }
 bool Controls::Debug()          { return Controls::debug; }
-bool Controls::ReloadLevel()    { return Controls::reloadLevel; }
 
 double Controls::MoveUp()       { return Controls::moveUp; }
 double Controls::MoveRight()    { return Controls::moveRight; }

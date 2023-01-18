@@ -1,4 +1,4 @@
-#include "AnimationManager.h"
+#include "Animations.h"
 
 PARAMS_WORLD_MANAGER_INIT AnimationManager::wmi;
 PARAMS_FADE AnimationManager::fade;

@@ -62,8 +62,8 @@ have rewritten it from zero using OOP, and now you're free to play this game and
 
 ## Future plans
 - ~~Add support for loading custom levels~~ ✅ Done!
-- Make a main menu, where player can:
-  * Download, manage and start levels;
+- (~~Make a main menu~~ ✅ Done!, but) where player can:
+  * Download, manage and (~~start~~ ✅ Done!) levels;
   * Adjust settings;
   * Access menu "About".
 - Implement level editor (right now to make levels you need to manually edit JSON).
@@ -76,8 +76,9 @@ Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/discus
 2. ~~Adapt camera while on/offing the fullscreen mode~~ ✅ Done!
 3. ~~Realize attached camera mode and consider camera:move and camera:zoom options~~ ✅ Done!
 4. ~~When WorldManager just initialized, show some effect, like lighten everything from the darkness and show level's title. Based on how other games show level starting animation, Sonic for example~~ ✅ Done!
-5. Realize simple MainMenu for beginning, buttons list like "PLAY", "ABOUT", "EXIT". When PLAY clicked everything dims and after that (when everything became black) tell GameManager somehow that MainMenu is no longer used and it needs to init WorldManager which will load desired level (and it will load animation from step 4).
-6. MainMenu for release state at future:
+5. ~~Realize simple MainMenu for beginning, buttons list like "PLAY", "ABOUT", "EXIT". When PLAY clicked everything dims and after that (when everything became black) tell GameManager somehow that MainMenu is no longer used and it needs to init WorldManager which will load desired level (and it will load animation from step 4)~~ ✅ Done!
+6. Hide mouse when user doesn't use it.
+7. MainMenu for release state at future:
   - At first launch it asks to choose interface language (CHOOSE YOUR LANGUAGE (...) YOU CAN CHANGE IT LATER IN THE SETTINGS). When cycling through languages, interface language will automatically change to the hovered one.
   - If platform is PS Vita, when game just inited video it should fade out of the pics/sce_sys/pic0.png, because it's a picture that shown when game is loading on Vita.
   - In main menu at the top is Sand-Box2D logo shown. If player clicks at the box (either with mouse or touchscreen), it will fall off and collide with menu item selector, by moving it up-down player can throw the box, and all that happens while remaining Sand-Box2D text fades out. When player manages to lose the box, logo returns to its place.

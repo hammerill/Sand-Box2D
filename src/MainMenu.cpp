@@ -7,6 +7,7 @@ void MainMenu::Init(std::string translations_base)
 {
     MainMenu::menu_items = std::vector<std::string>();
     MainMenu::hovered_item = 0;
+    MainMenu::status = "";
 
     Translations::LoadTranslation(translations_base, "en");
 
@@ -17,35 +18,61 @@ void MainMenu::Init(std::string translations_base)
     AnimationManager::InitAnim(ANIM_FADE_IN);
 }
 
-bool sound;
-bool MainMenu::Step(Controls ctrl, Controls old_ctrl)
+bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
 {
-    sound = false;
-    if (!AnimationManager::StepAnim(ANIM_FADE_IN))
+    if (AnimationManager::StepAnim(ANIM_FADE_IN))
+        return true; // If Fade-In anim is still rendering we don't take controls and can do early return.
+    
+    if (MainMenu::status == "fadeout")
     {
-        if (ctrl.MenuUp() && !old_ctrl.MenuUp())
-        {
-            sound = true;
-            MainMenu::hovered_item = MainMenu::hovered_item == 0
-                                        ? MainMenu::menu_items.size() - 1
-                                        : MainMenu::hovered_item - 1;
-        }
-        if (ctrl.MenuDown() && !old_ctrl.MenuDown())
-        {
-            sound = true;
-            MainMenu::hovered_item = MainMenu::hovered_item == MainMenu::menu_items.size() - 1
-                                        ? 0
-                                        : MainMenu::hovered_item + 1;
+        if (AnimationManager::StepAnim(ANIM_FADE_OUT))
+            return true; // If scene is still fading out we just don't take controls and can do early return.
+        else
+        { // But if scene have completely faded out we need to proceed it.
+            switch (MainMenu::hovered_item)
+            {
+            case 0:
+                MainMenu::status = "play";
+                break;
+            
+            default:
+                MainMenu::status = "";
+                break;
+            }
+            return false; // False signifies that we've reached the end of MainMenu lifecycle.
+            // From now on, its `will` will be stored only at "status" variable.
         }
     }
     
+    if (ctrl.MenuUp() && !old_ctrl.MenuUp())
+    {
+        rr->GetSounds()->PlaySfx("menu_switch");
+        MainMenu::hovered_item = MainMenu::hovered_item == 0
+                                    ? MainMenu::menu_items.size() - 1
+                                    : MainMenu::hovered_item - 1;
+    }
+    if (ctrl.MenuDown() && !old_ctrl.MenuDown())
+    {
+        rr->GetSounds()->PlaySfx("menu_switch");
+        MainMenu::hovered_item = MainMenu::hovered_item == MainMenu::menu_items.size() - 1
+                                    ? 0
+                                    : MainMenu::hovered_item + 1;
+    }
+    if (ctrl.MenuEnter() && !old_ctrl.MenuEnter())
+    {
+        rr->GetSounds()->PlaySfx("menu_enter");
+        MainMenu::status = "fadeout";
+        AnimationManager::InitAnim(ANIM_FADE_OUT);
+    }
+        
     return true;
 }
 
 void MainMenu::Render(Renderer* rr)
 {
-    if (sound)
-        rr->GetSounds()->PlaySfx("menu_switch");    
+    bool do_not = false;
+    if (MainMenu::status == "fadeout" && (int)(rr->GetFrames() / 10) % 2)
+        do_not = true;
 
     int menuScale = rr->GetWindowParams().height / 100;
     int fontWidth = rr->GetFont()->FontWidth;
@@ -66,7 +93,7 @@ void MainMenu::Render(Renderer* rr)
 
     for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
     {
-        if (i == MainMenu::hovered_item)
+        if (i == MainMenu::hovered_item && !do_not)
         {
             SDL_Rect hover_bg = rr->GetFont()->GetTextDimensions(MainMenu::menu_items[i].c_str(), menuScale);
 
@@ -86,3 +113,5 @@ void MainMenu::Render(Renderer* rr)
 
     AnimationManager::RenderAnim(ANIM_FADE_IN, rr);
 }
+
+std::string MainMenu::GetStatus()   { return MainMenu::status; }

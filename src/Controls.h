@@ -14,7 +14,6 @@ protected:
     bool exit = false;
     bool fullscreen = false;
     bool debug = false;
-    bool reloadLevel = false;
 
     double moveUp = 0;
     double moveRight = 0;
@@ -66,8 +65,6 @@ public:
     bool Fullscreen();
     /// @brief Is user does want to activate/deactivate debug mode?
     bool Debug();
-    /// @brief Is user does want to reload current level?
-    bool ReloadLevel();
 
     /// @brief Is user does want to move camera up?
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).

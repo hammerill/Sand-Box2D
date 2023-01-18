@@ -29,8 +29,12 @@ WorldManager::~WorldManager()
     delete WorldManager::world;
 }
 
+// Fadeout handling happens a little below of the Step() start.
+bool fadeout = false;
+
 void WorldManager::LoadLevel(Level level, Renderer* rr)
 {
+    fadeout = false;
     WorldManager::level = level;
 
     WorldManager::textures[""] = SDL_CreateTextureFromSurface(rr->GetRenderer(), IMG_Load(WorldManager::path_to_def_texture.c_str()));
@@ -169,6 +173,16 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
         }
     }
 
+    // FADEOUT HANDLING
+    if (fadeout)
+        return AnimationManager::StepAnim(ANIM_FADE_OUT);
+    else if (ctrl.Pause())
+    {
+        fadeout = true;
+        AnimationManager::InitAnim(ANIM_FADE_OUT);
+    }
+    ///////////////////
+
     if (ctrl.Debug() && !old_ctrl.Debug())
         WorldManager::isDebug = !WorldManager::isDebug;
 
@@ -290,12 +304,7 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
     }    
     /////////
 
-    
-    // LATER IT WILL BE CONSIDERED DEPRECATED AND DESTROYED
-    // No, it will be moved to the PauseMenu
-    if (ctrl.ReloadLevel() && !old_ctrl.ReloadLevel()){
-        WorldManager::LoadLevel(WorldManager::level, rr);
-        
+    // NETWORK SAMPLE CODE (for me to not forget)
 //         Network::SetRepo("https://raw.githubusercontent.com/Hammerill/Sand-Box2D-levels/main/levels");
 // #ifdef Vita
 //         Network::DownloadFile("ux0:Data/Sand-Box2D/levels", "index.json");
@@ -304,8 +313,11 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
 //         Network::DownloadFile("./levels", "index.json");
 //         Network::DownloadFile("./levels", "default_level/default_level.json");
 // #endif
-    }
     ///////////////////////////////////////////////////////
+
+    // EXIT HANDLING
+
+    ////////////////
 
     // POBJECTS REGISTRATION
     for (int i = WorldManager::order.size() - 1; i >= 0; i--)
@@ -402,6 +414,9 @@ void WorldManager::Render(Renderer* rr, Controls ctrl)
     }
     
     AnimationManager::RenderAnim(ANIM_WORLD_MANAGER_INIT, rr);
+
+    if (fadeout)
+        AnimationManager::RenderAnim(ANIM_FADE_OUT, rr);
 }
 
 void WorldManager::RenderDebugScreen(std::vector<std::string> debugStrings, Renderer* rr)

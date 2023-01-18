@@ -3,7 +3,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
-#include "FontManager.h"
+#include "Fonts.h"
 #include "SoundManager.h"
 
 /// @brief Window modes for game (fullscreen or no and etc.).
@@ -44,6 +44,8 @@ private:
 
     const char* path_to_icon;
 
+    uint64_t frames = 0;
+
     Font* font = new Font();
     SoundManager* sounds = new SoundManager();
 
@@ -68,6 +70,13 @@ public:
     SDL_Renderer* GetRenderer();
     SDL_Window* GetWindow();
     SoundManager* GetSounds();
+    Font* GetFont();
+    WindowParams GetWindowParams();
+
+    /// @brief Increment frames count rendered.
+    void AddFrame();
+    /// @brief Get frames count rendered.
+    uint64_t GetFrames();
 
     /// @brief Change game resolution and go/exit fullscreen if need.
     /// @param params declare settings of your window here (see struct WindowParams).
@@ -84,9 +93,4 @@ public:
     /// @param g Color.
     /// @param b Color.
     void RenderText(const char* text, int x = 0, int y = 0, float scale = 1, bool center = false, Uint8 r = 0xFF, Uint8 g = 0xFF, Uint8 b = 0xFF);
-
-    /// @brief Get pointer to Font object which is used to render text by default.
-    Font* GetFont();
-
-    WindowParams GetWindowParams();
 };

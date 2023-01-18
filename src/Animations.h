@@ -69,7 +69,7 @@ public:
 struct PARAMS_WORLD_MANAGER_INIT
 {
     int frames = 0, frames_max = 290;
-    const char* levelname = "SAND-BOX2D PRE-RELEASE";
+    const char* levelname = "DEFAULT LEVEL";
     int text_scale = 4;
 
     float pos, text_opaque, bg_opaque;
