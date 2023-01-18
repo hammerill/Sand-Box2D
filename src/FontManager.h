@@ -35,6 +35,9 @@ public:
     /// @brief Did FontManager load font and is it able to render text?
     bool GetLoaded();
 
+    /// @brief Will return SDL_Rect which will show how much pixels this text takes.
+    SDL_Rect GetTextDimensions(const char* text, float scale = 1);
+
     /// @brief Constant scale of font width. If you use scale 1 at Render(), it will use scale 1 * FontWidth (8)
     /// If 2, 2 * FontWidth (16) and etc.
     const int FontWidth = 8;

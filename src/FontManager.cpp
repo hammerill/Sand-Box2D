@@ -34,14 +34,10 @@ void Font::Render(SDL_Renderer* renderer, const char* text, int x, int y, float 
 {
     if (Font::loaded)
     {
-        SDL_Rect textRect;
+        SDL_Rect textRect = Font::GetTextDimensions(text, scale);
 
-        TTF_SizeText(Font::font, text, &(textRect.w), &(textRect.h));
         textRect.x = x;
         textRect.y = y;
-
-        textRect.w *= scale;
-        textRect.h *= scale;
 
         if (center)
         {
@@ -50,7 +46,7 @@ void Font::Render(SDL_Renderer* renderer, const char* text, int x, int y, float 
         }
         
 
-        SDL_Surface* textSurface = TTF_RenderText_Solid(Font::font, text, {r, g, b});
+        SDL_Surface* textSurface = TTF_RenderUTF8_Solid(Font::font, text, {r, g, b});
         SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
 
         SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
@@ -61,3 +57,14 @@ void Font::Render(SDL_Renderer* renderer, const char* text, int x, int y, float 
 }
 
 bool Font::GetLoaded()  { return Font::loaded; }
+
+SDL_Rect Font::GetTextDimensions(const char* text, float scale)
+{
+    SDL_Rect textRect {0, 0};
+    TTF_SizeUTF8(Font::font, text, &(textRect.w), &(textRect.h));
+
+    textRect.w *= scale;
+    textRect.h *= scale;
+
+    return textRect;
+}

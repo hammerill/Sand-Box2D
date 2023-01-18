@@ -40,7 +40,7 @@ void MainMenu::Render(Renderer* rr)
 
     std::vector<int> menuWidths;
     for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
-        menuWidths.push_back((MainMenu::menu_items[i].size()) * fontWidth * menuScale);
+        menuWidths.push_back(rr->GetFont()->GetTextDimensions(MainMenu::menu_items[i].c_str(), menuScale).w);
 
     int menu_w = *std::max_element(menuWidths.begin(), menuWidths.end());
     int menu_h = (MainMenu::menu_items.size()) * fontWidth * menuScale;
@@ -56,12 +56,12 @@ void MainMenu::Render(Renderer* rr)
     {
         if (i == MainMenu::hovered_item)
         {
-            SDL_Rect hover_bg {
-                x_offset + fontWidth * menuScale - fontWidth,
-                y_offset + fontWidth * menuScale * i - fontWidth,
-                MainMenu::menu_items[i].size() * fontWidth * menuScale + fontWidth,
-                fontWidth * menuScale + fontWidth
-            };
+            SDL_Rect hover_bg = rr->GetFont()->GetTextDimensions(MainMenu::menu_items[i].c_str(), menuScale);
+
+            hover_bg.x = x_offset + fontWidth * menuScale - fontWidth;
+            hover_bg.y = y_offset + fontWidth * menuScale * (int)i - fontWidth;
+            hover_bg.w += fontWidth;
+            hover_bg.h += fontWidth;
 
             SDL_SetRenderDrawColor(rr->GetRenderer(), 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderFillRect(rr->GetRenderer(), &hover_bg);
