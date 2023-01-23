@@ -11,7 +11,8 @@ enum Anim
 {
     ANIM_WORLD_MANAGER_INIT = 0,    // Animation of WorldManager initialization (WMI). Will show levels name.
     ANIM_FADE_IN,                   // Animation of Fade-in, i.e. from black screen to scene.
-    ANIM_FADE_OUT                   // Animation of Fade-out, i.e. from scene to black screen.
+    ANIM_FADE_OUT,                  // Animation of Fade-out, i.e. from scene to black screen.
+    ANIM_FADE = ANIM_FADE_IN | ANIM_FADE_OUT    // Shared fade anim. You can use it when performing step and render, but not init.
 };
 
 /// @brief Little class to apply transitions.
@@ -38,6 +39,9 @@ public:
     /// @param value value to be transitioned.
     /// @param frames frames count on this animation.
     /// @param transition transition function to be applied.
+    /// It's a function which takes linear input (float from 0 to 1)
+    /// and returns transitioned value (also float from 0 to 1).
+    /// Pass like this: &CoolTransition
     void ApplyTransition(float& value, int frames, float (*transition)(float))
     {
         if (frames <= this->frames_start)
@@ -69,7 +73,7 @@ public:
 struct PARAMS_WORLD_MANAGER_INIT
 {
     int frames = 0, frames_max = 290;
-    const char* levelname = "DEFAULT LEVEL";
+    std::string level_name = "";
     int text_scale = 4;
 
     float pos, text_opaque, bg_opaque;
@@ -102,10 +106,13 @@ public:
     /// It will reset all the values and start playing animation from beginning.
     static void InitAnim(Anim anim);
     /// @brief Make a logical step of animation.
-    /// @return true if animations next frame can be rendered. False if it's the end.
+    /// @return true if animation's next frame can be rendered. False if it's the end.
     static bool StepAnim(Anim anim);
     /// @brief Render animation.
     static void RenderAnim(Anim anim, Renderer* rr);
+
+    /// @brief Set Level name used in WorldManager initialization (WMI).
+    static void SetLevelName(std::string level_name);
 
     /// @brief Function used to make transition "Ease-In-Out Sine".
     /// Credits to easings.net

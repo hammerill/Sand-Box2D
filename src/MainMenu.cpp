@@ -20,19 +20,20 @@ void MainMenu::Init(std::string translations_base)
 
 bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
 {
-    if (AnimationManager::StepAnim(ANIM_FADE_IN))
-        return true; // If Fade-In anim is still rendering we don't take controls and can do early return.
-    
-    if (MainMenu::status == "fadeout")
+    if (AnimationManager::StepAnim(ANIM_FADE))
+        return true; // If screen still fades we don't care about controls and do early return.
+    else
     {
-        if (AnimationManager::StepAnim(ANIM_FADE_OUT))
-            return true; // If scene is still fading out we just don't take controls and can do early return.
-        else
-        { // But if scene have completely faded out we need to proceed it.
+        if (MainMenu::status == "fadeout")
+        {
             switch (MainMenu::hovered_item)
             {
             case 0:
                 MainMenu::status = "play";
+                MainMenu::level_name = "DEFAULT LEVELOS";
+                break;
+            case 1:
+                MainMenu::status = "about";
                 break;
             
             default:
@@ -70,9 +71,8 @@ bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
 
 void MainMenu::Render(Renderer* rr)
 {
-    bool do_not = false;
-    if (MainMenu::status == "fadeout" && (int)(rr->GetFrames() / 10) % 2)
-        do_not = true;
+    // There was some s***code but I've fixed it so you have to search git commits to see it.
+    bool hover_blinker = MainMenu::status == "fadeout" && (int)(rr->GetFrames() / 10) % 2;
 
     int menuScale = rr->GetWindowParams().height / 100;
     int fontWidth = rr->GetFont()->FontWidth;
@@ -93,7 +93,7 @@ void MainMenu::Render(Renderer* rr)
 
     for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
     {
-        if (i == MainMenu::hovered_item && !do_not)
+        if (i == MainMenu::hovered_item && !hover_blinker)
         {
             SDL_Rect hover_bg = rr->GetFont()->GetTextDimensions(MainMenu::menu_items[i].c_str(), menuScale);
 
@@ -110,8 +110,10 @@ void MainMenu::Render(Renderer* rr)
         else
             rr->RenderText(MainMenu::menu_items[i].c_str(), x_offset + fontWidth * menuScale, y_offset + fontWidth * menuScale * i, menuScale);
     }
-
-    AnimationManager::RenderAnim(ANIM_FADE_IN, rr);
+    
+    AnimationManager::RenderAnim(ANIM_FADE, rr);
 }
 
 std::string MainMenu::GetStatus()   { return MainMenu::status; }
+
+std::string MainMenu::GetLevelName()    { return MainMenu::level_name; }

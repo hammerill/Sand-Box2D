@@ -15,18 +15,27 @@ WorldManager::WorldManager(std::string path_to_def_texture, int physics_quality,
 }
 WorldManager::~WorldManager()
 {
+    WorldManager::FreeMemory();
+}
+
+void WorldManager::FreeMemory(bool destroy_world)
+{
     // Delete all the objects.
     for (int i = WorldManager::objects.size() - 1; i >= 0; i--)
     {
         WorldManager::DeleteObject(i);
     }
+    WorldManager::objects.clear();
+    WorldManager::order.clear();
     // Unload all the textures.
     for (std::map<std::string, SDL_Texture*>::iterator itr = WorldManager::textures.begin(); itr != WorldManager::textures.end(); itr++)
     {
         SDL_DestroyTexture(itr->second);
     }
+    WorldManager::textures.clear();
     // Destroy the world.
-    delete WorldManager::world;
+    if (destroy_world)
+        delete WorldManager::world;
 }
 
 // Fadeout handling happens a little below of the Step() start.
@@ -37,14 +46,11 @@ void WorldManager::LoadLevel(Level level, Renderer* rr)
     fadeout = false;
     WorldManager::level = level;
 
+    WorldManager::FreeMemory(false);
+
     WorldManager::textures[""] = SDL_CreateTextureFromSurface(rr->GetRenderer(), IMG_Load(WorldManager::path_to_def_texture.c_str()));
     
     // OBJECTS
-    for (int i = WorldManager::objects.size() - 1; i >= 0; i--)
-    { // Remove current loaded objects
-        WorldManager::DeleteObject(i);
-    }
-    
     auto objects = WorldManager::level.GetPObjects();
     for (size_t i = 0; i < objects.size(); i++)
     {

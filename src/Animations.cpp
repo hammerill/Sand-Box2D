@@ -62,7 +62,7 @@ bool AnimationManager::StepAnim(Anim anim)
         }
 
         return false;
-    case ANIM_FADE_IN: case ANIM_FADE_OUT:
+    case ANIM_FADE_IN: case ANIM_FADE_OUT: case ANIM_FADE:
         if (AnimationManager::fade.frames <= AnimationManager::fade.frames_max)
         {
             AnimationManager::fade.transition_opaque.ApplyTransition(
@@ -101,13 +101,13 @@ void AnimationManager::RenderAnim(Anim anim, Renderer* rr)
             uint8_t text_color = AnimationManager::wmi.text_opaque * 0xFF;
 
             rr->RenderText(
-                AnimationManager::wmi.levelname, rr->GetWindowParams().width / 2,
+                AnimationManager::wmi.level_name.c_str(), rr->GetWindowParams().width / 2,
                 (rr->GetWindowParams().height + pospx) / 2, AnimationManager::wmi.text_scale, true,
                 text_color, text_color, text_color);
         }
 
         break;
-    case ANIM_FADE_IN: case ANIM_FADE_OUT:
+    case ANIM_FADE_IN: case ANIM_FADE_OUT: case ANIM_FADE:
         {
             SDL_Rect rect {0, 0, rr->GetWindowParams().width, rr->GetWindowParams().height};
 
@@ -121,6 +121,11 @@ void AnimationManager::RenderAnim(Anim anim, Renderer* rr)
     default:
         break;
     }
+}
+
+void AnimationManager::SetLevelName(std::string level_name)
+{
+    AnimationManager::wmi.level_name = level_name;
 }
 
 float AnimationManager::TransitionEaseInOutSine(float linear)

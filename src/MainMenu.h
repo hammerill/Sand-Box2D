@@ -21,6 +21,8 @@ private:
     /// If it contains path to the level, this level has to be loaded (player pressed PLAY).
     /// If it's empty, it means that game needs to be closed (player pressed EXIT).
     std::string status = "";
+
+    std::string level_name = "";
 public:
     MainMenu();
     ~MainMenu();
@@ -41,7 +43,10 @@ public:
     /// @param rr link to renderer object (not link to SDL_Renderer) where to render.
     void Render(Renderer* rr);
 
-    /// @brief Get "status" variable. Its contains are what player decided to select in menu.
+    /// @brief Get "status" variable. It contains what item player decided to select in menu.
+    /// For more info refer to MainMenu::status.
     std::string GetStatus();
+    
+    std::string GetLevelName();
 };
 

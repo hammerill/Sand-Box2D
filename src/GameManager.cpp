@@ -73,10 +73,13 @@ bool GameManager::Step()
                     GameManager::settings.Get("path_to_def_level").asString()
                 );
                 GameManager::world_manager->LoadLevel(level, GameManager::rr);
-                GameManager::world_manager->Step(GameManager::rr, GameManager::ctrl, GameManager::old_ctrl);
-                // ^^ We give WorldManager first step here to avoid rendering problems
+                AnimationManager::SetLevelName(GameManager::main_menu.GetLevelName());
+                
+                // We give WorldManager first step here to avoid rendering problems
                 // (if you try to remove first step here it will try to call Render() before Step()
                 // which may cause some graphical issues).
+                GameManager::world_manager->Step(GameManager::rr, GameManager::ctrl, GameManager::old_ctrl);
+                
                 isInMenu = false;
             }
             else

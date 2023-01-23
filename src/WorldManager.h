@@ -76,6 +76,8 @@ public:
                     float zoom_speed = 0.03);
     ~WorldManager();
 
+    void FreeMemory(bool destroy_world = true);
+
     /// @brief Load level (object of class Level filled with required fields).
     /// First, it will destroy current loaded level (if it exists), then it will load attached level.
     /// @param level Level to be loaded.
