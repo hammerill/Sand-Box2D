@@ -47,6 +47,8 @@ private:
     uint64_t frames = 0;
 
     Font* font = new Font();
+    Font* font_jp = new Font();
+
     SoundManager* sounds = new SoundManager();
 
 public:
@@ -59,18 +61,21 @@ public:
     /// contain index.json which looks like this: {"big_sound_name": "PathTo/Big/Sound.wav", "...": "..."}
     /// @param path_to_font path to the font (*.ttf) file which will be always rendered.
     /// Leave nullptr if you don't want to render any text.
+    /// @param path_to_font_jp path to the font (*.ttf) file which will be used to render Japanese text.
+    /// Leave nullptr if you don't want to render any text.
     /// @param path_to_icon path to the icon that will be set to program instance.
     /// Leave nullptr if you're setting icon in CMake.
     void InitVideo(
         WindowParams params,
         const char* path_to_sfx_base = nullptr,
         const char* path_to_font = nullptr,
+        const char* path_to_font_jp = nullptr,
         const char* path_to_icon = nullptr);
 
     SDL_Renderer* GetRenderer();
     SDL_Window* GetWindow();
     SoundManager* GetSounds();
-    Font* GetFont();
+    Font* GetFont(bool jp = false);
     WindowParams GetWindowParams();
 
     /// @brief Increment frames count rendered.
@@ -89,8 +94,9 @@ public:
     /// @param y Y position of the beginning of the text.
     /// @param scale How much scale font? Also multiplied by const FontWidth.
     /// @param center Do we need to center text? If yes, given X and Y would be center of the text.
+    /// @param jp Do we want to render text using Japanese font?
     /// @param r Color.
     /// @param g Color.
     /// @param b Color.
-    void RenderText(const char* text, int x = 0, int y = 0, float scale = 1, bool center = false, Uint8 r = 0xFF, Uint8 g = 0xFF, Uint8 b = 0xFF);
+    void RenderText(const char* text, int x = 0, int y = 0, float scale = 1, bool center = false, bool jp = false, Uint8 r = 0xFF, Uint8 g = 0xFF, Uint8 b = 0xFF);
 };

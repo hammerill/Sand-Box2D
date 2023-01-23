@@ -23,7 +23,9 @@ public:
     /// @brief Load font to private field of this class, then you can render it later with Render().
     /// If can't load font it will just leave "loaded" field "false", so it just won't render text.
     /// @param path_to_font path to the font (*.ttf) file.
-    void LoadFont(const char* path_to_font);
+    /// @param font_width open font with which width? Caution, to change font width fully
+    /// you have to reload it with this function again. If you just want to scale it use render params.
+    void LoadFont(const char* path_to_font, int font_width = 16);
 
     /// @brief Render text.
     /// @param renderer the rendering context.
@@ -41,9 +43,6 @@ public:
     bool GetLoaded();
 
     /// @brief Will return SDL_Rect which will show how much pixels this text takes.
-    SDL_Rect GetTextDimensions(const char* text, float scale = 1);
-
-    /// @brief Constant scale of font width. If you use scale 1 at Render(), it will use scale 1 * FontWidth (8)
-    /// If 2, 2 * FontWidth (16) and etc.
-    const int FontWidth = 8;
+    /// You can leave no parameters to get factual font width and height (of one symbol).
+    SDL_Rect GetTextDimensions(const char* text = "-", float scale = 1);
 };

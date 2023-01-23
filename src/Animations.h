@@ -74,7 +74,7 @@ struct PARAMS_WORLD_MANAGER_INIT
 {
     int frames = 0, frames_max = 290;
     std::string level_name = "";
-    int text_scale = 4;
+    int text_scale = 2;
 
     float pos, text_opaque, bg_opaque;
     Transition transition_pos, transition_text_opaque, transition_bg_opaque;

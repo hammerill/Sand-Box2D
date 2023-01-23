@@ -17,7 +17,7 @@ Font::Font(const char* path_to_font)
     Font::LoadFont(path_to_font);
 }
 
-void Font::LoadFont(const char* path_to_font)
+void Font::LoadFont(const char* path_to_font, int font_width)
 {
     if (Font::loaded)
         TTF_CloseFont(Font::font);
@@ -26,7 +26,7 @@ void Font::LoadFont(const char* path_to_font)
     {
         TTF_Init();
 
-        Font::font = TTF_OpenFont(path_to_font, Font::FontWidth);
+        Font::font = TTF_OpenFont(path_to_font, font_width);
         Font::loaded = true;
     }
     catch (const std::exception& e)

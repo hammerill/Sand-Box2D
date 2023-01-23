@@ -4,9 +4,12 @@ Renderer::~Renderer()
 {
     SDL_DestroyRenderer(Renderer::renderer);
     SDL_DestroyWindow(Renderer::window);
+
+    delete Renderer::font;
+    delete Renderer::font_jp;
 }
 
-void Renderer::InitVideo(WindowParams params, const char* path_to_sfx_base, const char* path_to_font, const char* path_to_icon)
+void Renderer::InitVideo(WindowParams params, const char* path_to_sfx_base, const char* path_to_font, const char* path_to_font_jp, const char* path_to_icon)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
     
@@ -17,6 +20,9 @@ void Renderer::InitVideo(WindowParams params, const char* path_to_sfx_base, cons
 
     if (path_to_font != nullptr)
         Renderer::font->LoadFont(path_to_font);
+
+    if (path_to_font_jp != nullptr)
+        Renderer::font_jp->LoadFont(path_to_font_jp);
 
     if (path_to_icon != nullptr)
     {
@@ -34,7 +40,7 @@ void Renderer::InitVideo(WindowParams params, const char* path_to_sfx_base, cons
 SDL_Renderer* Renderer::GetRenderer()       { return renderer; }
 SDL_Window* Renderer::GetWindow()           { return window; }
 SoundManager* Renderer::GetSounds()         { return sounds; }
-Font* Renderer::GetFont()                   { return Renderer::font; }
+Font* Renderer::GetFont(bool jp)            { return jp ? Renderer::font_jp : Renderer::font; }
 WindowParams Renderer::GetWindowParams()    { return {window_mode, window_width, window_height}; }
 
 void Renderer::AddFrame()       { Renderer::frames++; }
@@ -86,7 +92,10 @@ void Renderer::ChangeRes(WindowParams params)
     }
 }
 
-void Renderer::RenderText(const char* text, int x, int y, float scale, bool center, Uint8 r, Uint8 g, Uint8 b)
+void Renderer::RenderText(const char* text, int x, int y, float scale, bool center, bool jp, Uint8 r, Uint8 g, Uint8 b)
 {
-    Renderer::font->Render(Renderer::renderer, text, x, y, scale, center, r, g, b);
+    if (jp)
+        Renderer::font_jp->Render(Renderer::renderer, text, x, y, scale, center, r, g, b);
+    else
+        Renderer::font->Render(Renderer::renderer, text, x, y, scale, center, r, g, b);
 }

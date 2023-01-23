@@ -321,10 +321,6 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
 // #endif
     ///////////////////////////////////////////////////////
 
-    // EXIT HANDLING
-
-    ////////////////
-
     // POBJECTS REGISTRATION
     for (int i = WorldManager::order.size() - 1; i >= 0; i--)
     {
@@ -427,15 +423,15 @@ void WorldManager::Render(Renderer* rr, Controls ctrl)
 
 void WorldManager::RenderDebugScreen(std::vector<std::string> debugStrings, Renderer* rr)
 {
-    float debugScale = 2;
-    int fontWidth = rr->GetFont()->FontWidth;
+    float debugScale = 1;
+    SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions();
 
     std::vector<int> debugWidths;
     for (size_t i = 0; i < debugStrings.size(); i++)
-        debugWidths.push_back((debugStrings[i].size() + 2) * fontWidth * debugScale);
+        debugWidths.push_back(rr->GetFont()->GetTextDimensions(debugStrings[i].c_str(), debugScale).w + textDimensions.w * 4);
 
     int debug_w = *std::max_element(debugWidths.begin(), debugWidths.end());
-    int debug_h = (debugStrings.size() + 2) * fontWidth * debugScale;
+    int debug_h = (debugStrings.size() + 2) * textDimensions.h * debugScale;
 
     SDL_Rect debugBg {0, 0, debug_w, debug_h};
 
@@ -446,7 +442,7 @@ void WorldManager::RenderDebugScreen(std::vector<std::string> debugStrings, Rend
 
     for (size_t i = 0; i < debugStrings.size(); i++)
     {
-        rr->RenderText(debugStrings[i].c_str(), fontWidth * debugScale, fontWidth * debugScale * (i+1), debugScale);
+        rr->RenderText(debugStrings[i].c_str(), textDimensions.w * debugScale, textDimensions.h * debugScale * (i+1), debugScale);
     }
 }
 

@@ -30,7 +30,7 @@ bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
             {
             case 0:
                 MainMenu::status = "play";
-                MainMenu::level_name = "DEFAULT LEVELOS";
+                MainMenu::level_name = "DEFAULT LEVEL";
                 break;
             case 1:
                 MainMenu::status = "about";
@@ -74,15 +74,15 @@ void MainMenu::Render(Renderer* rr)
     // There was some s***code but I've fixed it so you have to search git commits to see it.
     bool hover_blinker = MainMenu::status == "fadeout" && (int)(rr->GetFrames() / 10) % 2;
 
-    int menuScale = rr->GetWindowParams().height / 100;
-    int fontWidth = rr->GetFont()->FontWidth;
+    int menuScale = rr->GetWindowParams().height / 200;
+    SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions("-");
 
     std::vector<int> menuWidths;
     for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
         menuWidths.push_back(rr->GetFont()->GetTextDimensions(MainMenu::menu_items[i].c_str(), menuScale).w);
 
     int menu_w = *std::max_element(menuWidths.begin(), menuWidths.end());
-    int menu_h = (MainMenu::menu_items.size()) * fontWidth * menuScale;
+    int menu_h = (MainMenu::menu_items.size()) * textDimensions.h * menuScale;
 
     int x_offset = (rr->GetWindowParams().width / 4) - (menu_w / 2);
     int y_offset = (rr->GetWindowParams().height / 2) - (menu_h / 2);
@@ -97,18 +97,18 @@ void MainMenu::Render(Renderer* rr)
         {
             SDL_Rect hover_bg = rr->GetFont()->GetTextDimensions(MainMenu::menu_items[i].c_str(), menuScale);
 
-            hover_bg.x = x_offset + fontWidth * menuScale - fontWidth;
-            hover_bg.y = y_offset + fontWidth * menuScale * (int)i - fontWidth;
-            hover_bg.w += fontWidth;
-            hover_bg.h += fontWidth;
+            hover_bg.x = x_offset + textDimensions.w * menuScale - textDimensions.w / 2;
+            hover_bg.y = y_offset + textDimensions.h * menuScale * (int)i - textDimensions.h / 2;
+            hover_bg.w += textDimensions.w;
+            hover_bg.h += textDimensions.h;
 
             SDL_SetRenderDrawColor(rr->GetRenderer(), 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderFillRect(rr->GetRenderer(), &hover_bg);
 
-            rr->RenderText(MainMenu::menu_items[i].c_str(), x_offset + fontWidth * menuScale, y_offset + fontWidth * menuScale * i, menuScale, false, 0, 0, 0);
+            rr->RenderText(MainMenu::menu_items[i].c_str(), x_offset + textDimensions.w * menuScale, y_offset + textDimensions.h * menuScale * i, menuScale, false, false, 0, 0, 0);
         }
         else
-            rr->RenderText(MainMenu::menu_items[i].c_str(), x_offset + fontWidth * menuScale, y_offset + fontWidth * menuScale * i, menuScale);
+            rr->RenderText(MainMenu::menu_items[i].c_str(), x_offset + textDimensions.w * menuScale, y_offset + textDimensions.h * menuScale * i, menuScale);
     }
     
     AnimationManager::RenderAnim(ANIM_FADE, rr);

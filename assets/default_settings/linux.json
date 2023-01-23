@@ -3,6 +3,7 @@
     "url_levels": "https://raw.githubusercontent.com/Hammerill/Sand-Box2D-levels/main/levels",
     "path_to_sfx_base": "./assets/sfx",
     "path_to_font": "./assets/fonts/PressStart2P-vaV7.ttf",
+    "path_to_font_jp": "./assets/fonts/MadouFutoMaruGothic-d9Xo7.ttf",
     "path_to_icon": "./assets/img/icon.png",
     "path_to_def_texture": "./assets/img/box.png",
     "path_to_def_level_base": "./assets/default_level",

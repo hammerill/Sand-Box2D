@@ -174,8 +174,10 @@ Build for PS Vita should be performed in Linux environment (or in MSYS2 in Windo
 ## Credits
 - [eder13](https://github.com/eder13) - base project (Box2D-SDL2-Demo) author.
 - [codeman38](https://www.fontspace.com/codeman38) - main font (PressStart2P) author.
+- [Ultra Cool Fonts](https://www.fontspace.com/ultra-cool-fonts) - Japanese font (Madou Futo Maru Gothic Font) author.
 - [Hammerill](https://github.com/Hammerill) - author of this game.
 - To everybody who contributes to open source, to those who made these (used in the project) libraries exist.
 
 Translations:
-- English, French, Russian and Ukrainian - Hammerill.
+- English, Russian and Ukrainian - Hammerill.
+- French and Japanese - Hammerill with aide of Google Translate.
