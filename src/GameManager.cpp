@@ -20,7 +20,7 @@ GameManager::GameManager(const char* path_to_settings, const char* path_to_def_s
 
         GameManager::settings.Get("path_to_font_jp").asString() == "" ? nullptr : 
             GameManager::settings.Get("path_to_font_jp").asString().c_str(),
-            
+
         GameManager::settings.Get("path_to_icon").asString() == "" ? nullptr : 
             GameManager::settings.Get("path_to_icon").asString().c_str()
     );
@@ -86,6 +86,11 @@ bool GameManager::Step()
                 GameManager::world_manager->Step(GameManager::rr, GameManager::ctrl, GameManager::old_ctrl);
                 
                 isInMenu = false;
+            }
+            else if (GameManager::main_menu.GetStatus() == "about")
+            {
+                GameManager::settings.Clear();
+                return false;
             }
             else
                 return false;

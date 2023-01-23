@@ -180,4 +180,4 @@ Build for PS Vita should be performed in Linux environment (or in MSYS2 in Windo
 
 Translations:
 - English, Russian and Ukrainian - Hammerill.
-- French and Japanese - Hammerill with aide of Google Translate.
+- French and Japanese - Hammerill with aid of Google Translate.
