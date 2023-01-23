@@ -19,9 +19,9 @@ public:
     /// Will also call Set() when setting default value to
     /// parameter which was requested through Get() and doesn't have value.
     /// @param path_to_settings path to the JSON where user settings are stored.
-    /// If doesn't exist - it'll create it. If leave empty, settings affect only current session.
+    /// If doesn't exist - it'll create it. If leave nullptr, settings affect only current session.
     /// @param path_to_def_settings path to the JSON where default settings are stored.
-    /// If leave empty, all default settings will be considered as 0.
+    /// If leave nullptr, all default settings will be considered as 0.
     Settings(const char* path_to_settings = nullptr, const char* path_to_def_settings = nullptr);
 
     /// @brief Set some value at the settings.
