@@ -30,6 +30,8 @@ GameManager::GameManager(const char* path_to_settings, const char* path_to_def_s
     GameManager::main_menu.Init(GameManager::settings.Get("path_to_translations").asString());
 }
 
+const int mouse_frames_duration = 60;
+
 bool isInMenu = true;
 bool GameManager::Step()
 {
@@ -47,6 +49,16 @@ bool GameManager::Step()
         auto cur_mode = GameManager::rr->GetWindowParams().mode;
         GameManager::rr->ChangeRes(cur_mode != WINDOWED ? windowed : fullscreen);
     }
+
+#ifndef Vita
+    if ((ctrl.GetMouse().x != old_ctrl.GetMouse().x) || (ctrl.GetMouse().y != old_ctrl.GetMouse().y))
+        GameManager::mouse_last_frame_move = GameManager::rr->GetFrames();
+    
+    if (GameManager::rr->GetFrames() > GameManager::mouse_last_frame_move + mouse_frames_duration)
+        SDL_ShowCursor(SDL_DISABLE);
+    else
+        SDL_ShowCursor(SDL_ENABLE);
+#endif
 
     // STEPS
     if (isInMenu)

@@ -24,6 +24,8 @@ private:
     unsigned int a, b = 0;
     double delta = 0;
 
+    uint64_t mouse_last_frame_move = 0;
+
 public:
     /// @brief Init video and enter main menu.
     /// @param path_to_settings path to the JSON where user settings are stored.
