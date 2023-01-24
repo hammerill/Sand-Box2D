@@ -79,7 +79,7 @@ Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/discus
 5. ~~Realize simple MainMenu for beginning, buttons list like "PLAY", "ABOUT", "EXIT". When PLAY clicked everything dims and after that (when everything became black) tell GameManager somehow that MainMenu is no longer used and it needs to init WorldManager which will load desired level (and it will load animation from step 4)~~ ✅ Done!
 6. ~~Hide mouse when user doesn't use it~~ ✅ Done!
 7. MainMenu for release state at future:
-  - At first launch it asks to choose interface language (CHOOSE YOUR LANGUAGE (...) YOU CAN CHANGE IT LATER IN THE SETTINGS). When cycling through languages, interface language will automatically change to the hovered one.
+  - ~~At first launch it asks to choose interface language (CHOOSE YOUR LANGUAGE (...) YOU CAN CHANGE IT LATER IN THE SETTINGS). When cycling through languages, interface language will automatically change to the hovered one~~ ✅ Done!
   - If platform is PS Vita, when game just inited video it should fade out of the pics/sce_sys/pic0.png, because it's a picture that shown when game is loading on Vita.
   - In main menu at the top is Sand-Box2D logo shown. If player clicks at the box (either with mouse or touchscreen), it will fall off and collide with menu item selector, by moving it up-down player can throw the box, and all that happens while remaining Sand-Box2D text fades out. When player manages to lose the box, logo returns to its place.
   - Main menu consists of these items:
@@ -174,7 +174,7 @@ Build for PS Vita should be performed in Linux environment (or in MSYS2 in Windo
 ## Credits
 - [eder13](https://github.com/eder13) - base project (Box2D-SDL2-Demo) author.
 - [codeman38](https://www.fontspace.com/codeman38) - main font (PressStart2P) author.
-- [Ultra Cool Fonts](https://www.fontspace.com/ultra-cool-fonts) - Japanese font (Madou Futo Maru Gothic Font) author.
+- [Ultra Cool Fonts](https://www.fontspace.com/ultra-cool-fonts) - Japanese font (Madou Futo Maru Gothic) author.
 - [Hammerill](https://github.com/Hammerill) - author of this game.
 - To everybody who contributes to open source, to those who made these (used in the project) libraries exist.
 
