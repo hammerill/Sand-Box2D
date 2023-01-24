@@ -7,18 +7,13 @@ WorldManager::WorldManager(std::string path_to_def_texture, int physics_quality,
     WorldManager::moving_inertia_frames = moving_inertia_frames;
     WorldManager::move_speed = move_speed;
     WorldManager::zoom_speed = zoom_speed;
-
-    b2Vec2 gravity = b2Vec2(0.0f, 9.81f);
-    WorldManager::world = new b2World(gravity);
-
-    WorldManager::objects = std::vector<BasePObj*>();
 }
 WorldManager::~WorldManager()
 {
     WorldManager::FreeMemory();
 }
 
-void WorldManager::FreeMemory(bool destroy_world)
+void WorldManager::FreeMemory()
 {
     // Delete all the objects.
     for (int i = WorldManager::objects.size() - 1; i >= 0; i--)
@@ -27,15 +22,20 @@ void WorldManager::FreeMemory(bool destroy_world)
     }
     WorldManager::objects.clear();
     WorldManager::order.clear();
+
     // Unload all the textures.
     for (std::map<std::string, SDL_Texture*>::iterator itr = WorldManager::textures.begin(); itr != WorldManager::textures.end(); itr++)
     {
         SDL_DestroyTexture(itr->second);
     }
     WorldManager::textures.clear();
+
     // Destroy the world.
-    if (destroy_world)
+    if (WorldManager::world != nullptr)
+    {
         delete WorldManager::world;
+        WorldManager::world = nullptr;
+    }
 }
 
 // Fadeout handling happens a little below of the Step() start.
@@ -46,7 +46,11 @@ void WorldManager::LoadLevel(Level level, Renderer* rr)
     fadeout = false;
     WorldManager::level = level;
 
-    WorldManager::FreeMemory(false);
+    WorldManager::FreeMemory();
+
+    b2Vec2 gravity = b2Vec2(0.0f, 9.81f);
+    WorldManager::world = new b2World(gravity);
+    WorldManager::objects = std::vector<BasePObj*>();
 
     WorldManager::textures[""] = SDL_CreateTextureFromSurface(rr->GetRenderer(), IMG_Load(WorldManager::path_to_def_texture.c_str()));
     
@@ -379,7 +383,7 @@ void WorldManager::Render(Renderer* rr, Controls ctrl)
         }        
     }
 
-    if (WorldManager::isDebug && rr->GetFont()->GetLoaded())
+    if (WorldManager::isDebug && rr->GetFont(Translations::GetJp())->GetLoaded())
     {
         SDL_Point mouse = ctrl.GetMouse();
 
@@ -424,11 +428,11 @@ void WorldManager::Render(Renderer* rr, Controls ctrl)
 void WorldManager::RenderDebugScreen(std::vector<std::string> debugStrings, Renderer* rr)
 {
     float debugScale = 1;
-    SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions();
+    SDL_Rect textDimensions = rr->GetFont(Translations::GetJp())->GetTextDimensions();
 
     std::vector<int> debugWidths;
     for (size_t i = 0; i < debugStrings.size(); i++)
-        debugWidths.push_back(rr->GetFont()->GetTextDimensions(debugStrings[i].c_str(), debugScale).w + textDimensions.w * 4);
+        debugWidths.push_back(rr->GetFont(Translations::GetJp())->GetTextDimensions(debugStrings[i].c_str(), debugScale).w + textDimensions.w * 4);
 
     int debug_w = *std::max_element(debugWidths.begin(), debugWidths.end());
     int debug_h = (debugStrings.size() + 2) * textDimensions.h * debugScale;

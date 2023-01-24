@@ -102,8 +102,10 @@ void LangSelector::Render(Renderer* rr)
 
     int langSelectScale = rr->GetWindowParams().height / 200;
     SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions("-", langSelectScale);
+
+    float distanceScale = 1.2;
     
-    int menu_h = (LangSelector::langs.size()) * textDimensions.h;
+    int menu_h = (LangSelector::langs.size()) * textDimensions.h * distanceScale;
     int y_offset = (rr->GetWindowParams().height / 2) - (menu_h / 2);
 
     SDL_SetRenderDrawColor(rr->GetRenderer(), 0, 0, 0, 0);
@@ -117,17 +119,39 @@ void LangSelector::Render(Renderer* rr)
             SDL_Rect hover_bg = rr->GetFont()->GetTextDimensions(lang.second.c_str(), langSelectScale);
 
             hover_bg.x = (rr->GetWindowParams().width / 2) - (hover_bg.w / 2) - textDimensions.w / 16;
-            hover_bg.y = y_offset + textDimensions.h * (int)i - (hover_bg.h / 2) - textDimensions.h / 16;
+            hover_bg.y = y_offset + textDimensions.h * distanceScale * (int)i - (hover_bg.h / 2) - textDimensions.h / 16;
             hover_bg.w += textDimensions.w / 8;
             hover_bg.h += textDimensions.h / 8;
 
             SDL_SetRenderDrawColor(rr->GetRenderer(), 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderFillRect(rr->GetRenderer(), &hover_bg);
 
-            rr->RenderText(lang.second.c_str(), rr->GetWindowParams().width / 2, y_offset + textDimensions.h * i, langSelectScale, true, Translations::GetJp(), 0, 0, 0);
+            rr->RenderText(
+                lang.second.c_str(),
+                rr->GetWindowParams().width / 2,
+                y_offset + textDimensions.h * distanceScale * i,
+                langSelectScale,
+                true,
+                Translations::GetJp(), 0, 0, 0
+            );
+            rr->RenderText(
+                "▶",
+                rr->GetWindowParams().width / 2 - rr->GetFont()->GetTextDimensions(lang.second.c_str(), langSelectScale).w / 2 - textDimensions.w,
+                y_offset + textDimensions.h * distanceScale * i,
+                langSelectScale,
+                true,
+                true
+            );
         }
         else
-            rr->RenderText(lang.second.c_str(), rr->GetWindowParams().width / 2, y_offset + textDimensions.h * i, langSelectScale, true, Translations::GetJp());
+            rr->RenderText(
+                lang.second.c_str(),
+                rr->GetWindowParams().width / 2,
+                y_offset + textDimensions.h * distanceScale * i,
+                langSelectScale,
+                true,
+                Translations::GetJp()
+            );
         
         i++;
     }

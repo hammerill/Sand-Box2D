@@ -20,7 +20,7 @@ class WorldManager
 {
 private:
     /// @brief Main Box2D world.
-    b2World* world;
+    b2World* world = nullptr;
     
     /// @brief Array of physics objects of the world. BasePObj is an abstract class and this array
     /// should only contain realizations of it (for example, PObjBox).
@@ -76,7 +76,7 @@ public:
                     float zoom_speed = 0.03);
     ~WorldManager();
 
-    void FreeMemory(bool destroy_world = true);
+    void FreeMemory();
 
     /// @brief Load level (object of class Level filled with required fields).
     /// First, it will destroy current loaded level (if it exists), then it will load attached level.

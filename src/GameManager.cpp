@@ -99,6 +99,7 @@ bool GameManager::Step()
     else
         if (!GameManager::world_manager->Step(GameManager::rr, GameManager::ctrl, GameManager::old_ctrl))
         {
+            GameManager::world_manager->FreeMemory();
             GameManager::main_menu.Init(GameManager::settings.Get("path_to_translations").asString());
             GameManager::main_menu.Step(&(GameManager::settings), GameManager::rr, GameManager::ctrl, GameManager::old_ctrl);
             // ^^ We give MainMenu first step here to avoid rendering problems
