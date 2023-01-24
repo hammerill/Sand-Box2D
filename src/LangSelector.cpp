@@ -3,7 +3,7 @@
 LangSelector::LangSelector() {}
 LangSelector::~LangSelector() {}
 
-void ReloadLangs(std::map<std::string, std::string>& langs, std::string translations_base, std::string lang_code)
+void ReloadLangs(std::map<std::string, std::string>& langs, std::string& choose_title, std::string& settings_reminder, std::string translations_base, std::string lang_code)
 {
     Translations::LoadTranslation(translations_base, lang_code);
 
@@ -12,6 +12,9 @@ void ReloadLangs(std::map<std::string, std::string>& langs, std::string translat
     langs["jp"] = Translations::Load("lang_selector.json/lang_jp");
     langs["ru"] = Translations::Load("lang_selector.json/lang_ru");
     langs["ua"] = Translations::Load("lang_selector.json/lang_ua");
+
+    choose_title = Translations::Load("lang_selector.json/choose_title");
+    settings_reminder = Translations::Load("lang_selector.json/settings_reminder");
 }
 
 void LangSelector::Init(std::string translations_base)
@@ -21,7 +24,7 @@ void LangSelector::Init(std::string translations_base)
     LangSelector::langs = std::map<std::string, std::string>();
     LangSelector::hovered_lang = 0;
 
-    ReloadLangs(LangSelector::langs, LangSelector::translations_base, "en");
+    ReloadLangs(LangSelector::langs, LangSelector::choose_title, LangSelector::settings_reminder, LangSelector::translations_base, "en");
 
     AnimationManager::InitAnim(ANIM_FADE_IN);
     LangSelector::fadeout = false;
@@ -62,6 +65,7 @@ bool LangSelector::Step(Settings* settings, Renderer* rr, Controls ctrl, Control
         
         ReloadLangs(
             LangSelector::langs,
+            LangSelector::choose_title, LangSelector::settings_reminder,
             LangSelector::translations_base,
             GetLangCodeByIndex(LangSelector::langs, LangSelector::hovered_lang)
         );
@@ -75,6 +79,7 @@ bool LangSelector::Step(Settings* settings, Renderer* rr, Controls ctrl, Control
         
         ReloadLangs(
             LangSelector::langs,
+            LangSelector::choose_title, LangSelector::settings_reminder,
             LangSelector::translations_base,
             GetLangCodeByIndex(LangSelector::langs, LangSelector::hovered_lang)
         );
@@ -126,6 +131,21 @@ void LangSelector::Render(Renderer* rr)
         
         i++;
     }
+
+    rr->RenderText(
+        LangSelector::choose_title.c_str(),
+        rr->GetWindowParams().width / 2,
+        rr->GetWindowParams().height / 16,
+        Translations::GetJp() ? langSelectScale : langSelectScale / 2,
+        true, Translations::GetJp()
+    );
+    rr->RenderText(
+        LangSelector::settings_reminder.c_str(),
+        rr->GetWindowParams().width / 2,
+        (rr->GetWindowParams().height / 16) * 15,
+        Translations::GetJp() ? langSelectScale : langSelectScale / 2,
+        true, Translations::GetJp()
+    );
     
     AnimationManager::RenderAnim(ANIM_FADE, rr);
 }

@@ -17,6 +17,8 @@ private:
     std::map<std::string, std::string> langs;
     size_t hovered_lang = 0;
 
+    std::string choose_title = "", settings_reminder = "";
+
     std::string translations_base = "";
 
     bool fadeout = false;
