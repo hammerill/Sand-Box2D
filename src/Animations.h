@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Renderer.h"
+#include "Translations.h"
 #include <math.h>
 
 #ifndef M_PI

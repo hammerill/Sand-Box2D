@@ -9,17 +9,28 @@ void MainMenu::Init(std::string translations_base)
     MainMenu::hovered_item = 0;
     MainMenu::status = "";
 
-    Translations::LoadTranslation(translations_base, "en");
-
-    MainMenu::menu_items.push_back(Translations::Load("menu.json/item_play"));
-    MainMenu::menu_items.push_back(Translations::Load("menu.json/item_about"));
-    MainMenu::menu_items.push_back(Translations::Load("menu.json/item_exit"));
-
-    AnimationManager::InitAnim(ANIM_FADE_IN);
+    MainMenu::lang_selector.Init(translations_base);
+    MainMenu::lang_chosen = false;
 }
 
-bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
+bool MainMenu::Step(Settings* settings, Renderer* rr, Controls ctrl, Controls old_ctrl)
 {
+    if (!MainMenu::lang_chosen)
+    {
+        if (MainMenu::lang_selector.Step(settings, rr, ctrl, old_ctrl))
+            return true;
+        else
+        {
+            MainMenu::menu_items.push_back(Translations::Load("menu.json/item_play"));
+            MainMenu::menu_items.push_back(Translations::Load("menu.json/item_about"));
+            MainMenu::menu_items.push_back(Translations::Load("menu.json/item_exit"));
+
+            AnimationManager::InitAnim(ANIM_FADE_IN);
+
+            MainMenu::lang_chosen = true;
+        }
+    }
+    
     if (AnimationManager::StepAnim(ANIM_FADE))
         return true; // If screen still fades we don't care about controls and do early return.
     else
@@ -71,23 +82,28 @@ bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
 
 void MainMenu::Render(Renderer* rr)
 {
+    if (!MainMenu::lang_chosen)
+    {
+        MainMenu::lang_selector.Render(rr);
+        return;
+    }
+
     // There was some s***code but I've fixed it so you have to search git commits to see it.
     bool hover_blinker = MainMenu::status == "fadeout" && (int)(rr->GetFrames() / 10) % 2;
 
     int menuScale = rr->GetWindowParams().height / 200;
-    SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions("-");
+    SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions("-", menuScale);
 
     std::vector<int> menuWidths;
     for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
         menuWidths.push_back(rr->GetFont()->GetTextDimensions(MainMenu::menu_items[i].c_str(), menuScale).w);
 
     int menu_w = *std::max_element(menuWidths.begin(), menuWidths.end());
-    int menu_h = (MainMenu::menu_items.size()) * textDimensions.h * menuScale;
+    int menu_h = (MainMenu::menu_items.size()) * textDimensions.h;
 
     int x_offset = (rr->GetWindowParams().width / 4) - (menu_w / 2);
     int y_offset = (rr->GetWindowParams().height / 2) - (menu_h / 2);
 
-    SDL_SetRenderDrawBlendMode(rr->GetRenderer(), SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(rr->GetRenderer(), 0, 0, 0, 0);
     SDL_RenderClear(rr->GetRenderer());
 
@@ -97,18 +113,18 @@ void MainMenu::Render(Renderer* rr)
         {
             SDL_Rect hover_bg = rr->GetFont()->GetTextDimensions(MainMenu::menu_items[i].c_str(), menuScale);
 
-            hover_bg.x = x_offset + textDimensions.w * menuScale - textDimensions.w / 2;
-            hover_bg.y = y_offset + textDimensions.h * menuScale * (int)i - textDimensions.h / 2;
-            hover_bg.w += textDimensions.w;
-            hover_bg.h += textDimensions.h;
+            hover_bg.x = x_offset - textDimensions.w / 16;
+            hover_bg.y = y_offset + textDimensions.h * (int)i - textDimensions.h / 16;
+            hover_bg.w += textDimensions.w / 8;
+            hover_bg.h += textDimensions.h / 8;
 
             SDL_SetRenderDrawColor(rr->GetRenderer(), 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderFillRect(rr->GetRenderer(), &hover_bg);
 
-            rr->RenderText(MainMenu::menu_items[i].c_str(), x_offset + textDimensions.w * menuScale, y_offset + textDimensions.h * menuScale * i, menuScale, false, false, 0, 0, 0);
+            rr->RenderText(MainMenu::menu_items[i].c_str(), x_offset, y_offset + textDimensions.h * i, menuScale, false, Translations::GetJp(), 0, 0, 0);
         }
         else
-            rr->RenderText(MainMenu::menu_items[i].c_str(), x_offset + textDimensions.w * menuScale, y_offset + textDimensions.h * menuScale * i, menuScale);
+            rr->RenderText(MainMenu::menu_items[i].c_str(), x_offset, y_offset + textDimensions.h * i, menuScale, false, Translations::GetJp());
     }
     
     AnimationManager::RenderAnim(ANIM_FADE, rr);

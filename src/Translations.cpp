@@ -1,6 +1,7 @@
 #include "Translations.h"
 
 std::string Translations::translations_base = "", Translations::translation_code = "";
+bool Translations::isJp = false;
 
 Translations::Translations() {}
 Translations::~Translations() {}
@@ -9,6 +10,7 @@ void Translations::LoadTranslation(std::string translations_base, std::string tr
 {
     Translations::translations_base = translations_base;
     Translations::translation_code = translation_code;
+    Translations::isJp = Translations::translation_code == "jp";
 }
 
 std::string Translations::Load(std::string to_load)
@@ -33,3 +35,5 @@ std::string Translations::Load(std::string to_load)
 
     return loaded_json[to_load.substr(slash_ptr + 1)].asString();
 }
+
+bool Translations::GetJp()  { return Translations::isJp; }

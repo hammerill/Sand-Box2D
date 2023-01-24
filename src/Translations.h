@@ -12,6 +12,7 @@ class Translations
 {
 private:
     static std::string translations_base, translation_code;
+    static bool isJp;
 public:
     Translations(/* args */);
     ~Translations();
@@ -28,4 +29,7 @@ public:
     /// For example, "menu.json/item_play" to get "PLAY" when "en" language is loaded.
     /// @return localized string. Empty string if there was problem.
     static std::string Load(std::string to_load);
+
+    /// @brief Is loaded language is Japanese? Used because we need to render Japanese text with another font.
+    static bool GetJp();
 };

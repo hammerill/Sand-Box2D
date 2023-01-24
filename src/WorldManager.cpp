@@ -442,7 +442,7 @@ void WorldManager::RenderDebugScreen(std::vector<std::string> debugStrings, Rend
 
     for (size_t i = 0; i < debugStrings.size(); i++)
     {
-        rr->RenderText(debugStrings[i].c_str(), textDimensions.w * debugScale, textDimensions.h * debugScale * (i+1), debugScale);
+        rr->RenderText(debugStrings[i].c_str(), textDimensions.w * debugScale, textDimensions.h * debugScale * (i+1), debugScale, false, Translations::GetJp());
     }
 }
 

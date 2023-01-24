@@ -102,7 +102,7 @@ void AnimationManager::RenderAnim(Anim anim, Renderer* rr)
 
             rr->RenderText(
                 AnimationManager::wmi.level_name.c_str(), rr->GetWindowParams().width / 2,
-                (rr->GetWindowParams().height + pospx) / 2, AnimationManager::wmi.text_scale, true, false,
+                (rr->GetWindowParams().height + pospx) / 2, AnimationManager::wmi.text_scale, true, Translations::GetJp(),
                 text_color, text_color, text_color);
         }
 

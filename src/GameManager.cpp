@@ -68,7 +68,7 @@ bool GameManager::Step()
     // STEPS
     if (isInMenu)
     {
-        if (!GameManager::main_menu.Step(GameManager::rr, GameManager::ctrl, GameManager::old_ctrl))
+        if (!GameManager::main_menu.Step(&(GameManager::settings), GameManager::rr, GameManager::ctrl, GameManager::old_ctrl))
         {
             if (GameManager::main_menu.GetStatus() == "play")
             {
@@ -100,7 +100,7 @@ bool GameManager::Step()
         if (!GameManager::world_manager->Step(GameManager::rr, GameManager::ctrl, GameManager::old_ctrl))
         {
             GameManager::main_menu.Init(GameManager::settings.Get("path_to_translations").asString());
-            GameManager::main_menu.Step(GameManager::rr, GameManager::ctrl, GameManager::old_ctrl);
+            GameManager::main_menu.Step(&(GameManager::settings), GameManager::rr, GameManager::ctrl, GameManager::old_ctrl);
             // ^^ We give MainMenu first step here to avoid rendering problems
             // (if you try to remove first step here it will try to call Render() before Step()
             // which may cause some graphical issues).
