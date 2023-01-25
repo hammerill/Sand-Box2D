@@ -92,7 +92,7 @@ struct PARAMS_FADE
 
 struct PARAMS_VITA_INIT
 {
-    int frames = 0, frames_max = 60;
+    int frames = 0, frames_max = 100;
 
     SDL_Texture* pic = nullptr;
 

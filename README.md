@@ -80,7 +80,7 @@ Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/discus
 6. ~~Hide mouse when user doesn't use it~~ ✅ Done!
 7. MainMenu for release state at future:
   - ~~At first launch it asks to choose interface language (CHOOSE YOUR LANGUAGE (...) YOU CAN CHANGE IT LATER IN THE SETTINGS). When cycling through languages, interface language will automatically change to the hovered one~~ ✅ Done!
-  - If platform is PS Vita, when game just inited video it should fade out of the pics/sce_sys/pic0.png, because it's a picture that shown when game is loading on Vita.
+  - ~~If platform is PS Vita, when game just inited video it should fade out of the pics/sce_sys/pic0.png, because it's a picture that shown when game is loading on Vita~~ ✅ Done!
   - In main menu at the top is Sand-Box2D logo shown. If player clicks at the box (either with mouse or touchscreen), it will fall off and collide with menu item selector, by moving it up-down player can throw the box, and all that happens while remaining Sand-Box2D text fades out. When player manages to lose the box, logo returns to its place.
   - Main menu consists of these items:
     * `PLAY` - will load list of default levels that always shipped with game.

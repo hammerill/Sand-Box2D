@@ -3,7 +3,7 @@
 #ifdef Vita
 bool vita_inited_video = false;
 #else
-bool vita_inited_video = false;//
+bool vita_inited_video = true;
 #endif
 
 GameManager::GameManager(const char* path_to_settings, const char* path_to_def_settings)
@@ -69,7 +69,7 @@ bool GameManager::Step()
         SDL_ShowCursor(SDL_DISABLE);
     else
         SDL_ShowCursor(SDL_ENABLE);
-// #else
+#else
     if (!vita_inited_video)
     {
         if (AnimationManager::StepAnim(ANIM_VITA_INIT))

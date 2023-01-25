@@ -22,16 +22,16 @@ void AnimationManager::InitAnim(Anim anim)
 
     case ANIM_FADE_IN:
         AnimationManager::fade = {};
-        AnimationManager::fade.transition_opaque.SetTransition(1, 0, 0, 60);
+        AnimationManager::fade.transition_opaque.SetTransition(1, 0, 0, AnimationManager::fade.frames_max);
         break;
     case ANIM_FADE_OUT:
         AnimationManager::fade = {};
-        AnimationManager::fade.transition_opaque.SetTransition(0, 1, 0, 60);
+        AnimationManager::fade.transition_opaque.SetTransition(0, 1, 0, AnimationManager::fade.frames_max);
         break;
 
     case ANIM_VITA_INIT:
         AnimationManager::vita = {};
-        AnimationManager::vita.transition_opaque.SetTransition(1, 0, 0, 60);
+        AnimationManager::vita.transition_opaque.SetTransition(1, 0, 0, AnimationManager::vita.frames_max);
         break;
     
     default:
@@ -91,6 +91,11 @@ bool AnimationManager::StepAnim(Anim anim)
 
             return true;
         }
+        else if (AnimationManager::vita.pic != nullptr)
+        {
+            SDL_DestroyTexture(AnimationManager::vita.pic);
+            AnimationManager::vita.pic = nullptr;
+        }
         return false;
 
     default:
@@ -144,11 +149,11 @@ void AnimationManager::RenderAnim(Anim anim, Renderer* rr)
 
             SDL_RenderCopyEx(rr->GetRenderer(), AnimationManager::vita.pic, NULL, NULL, 0, NULL, SDL_FLIP_NONE);
             
-            SDL_SetRenderDrawBlendMode(rr->GetRenderer(), SDL_BLENDMODE_BLEND);
-            SDL_SetRenderDrawColor(rr->GetRenderer(), 0, 0, 0, (1 - AnimationManager::fade.opaque) * 0xFF);
-            
             SDL_Rect rect {0, 0, rr->GetWindowParams().width, rr->GetWindowParams().height};
-            SDL_SetRenderDrawBlendMode(rr->GetRenderer(), SDL_BLENDMODE_NONE);
+
+            SDL_SetRenderDrawBlendMode(rr->GetRenderer(), SDL_BLENDMODE_BLEND);
+            SDL_SetRenderDrawColor(rr->GetRenderer(), 0, 0, 0, (1 - AnimationManager::vita.opaque) * 0xFF);
+
             SDL_RenderFillRect(rr->GetRenderer(), &rect);
         }
         break;
