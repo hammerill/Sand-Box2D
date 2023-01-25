@@ -157,7 +157,21 @@ bool Level::LoadFile(std::string base, std::string filepath)
 
 JsonOptions Level::GetOptions()
 {
-    return JsonOptions(); //lol
+    auto options = JsonOptions();
+
+    options.bg_r = Level::LoadNumber(Level::jsonLevel["options"]["bg_r"]);
+    options.bg_g = Level::LoadNumber(Level::jsonLevel["options"]["bg_g"]);
+    options.bg_b = Level::LoadNumber(Level::jsonLevel["options"]["bg_b"]);
+
+    options.gravity = {
+        Level::LoadNumber(Level::jsonLevel["options"]["gravity_x"]),
+        Level::LoadNumber(Level::jsonLevel["options"]["gravity_y"])
+    };
+
+    options.border_width = Level::LoadNumber(Level::jsonLevel["options"]["border_width"]);
+    options.border_height = Level::LoadNumber(Level::jsonLevel["options"]["border_height"]);
+
+    return options;
 }
 
 JsonCamera Level::GetCamera()

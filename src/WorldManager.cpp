@@ -48,8 +48,7 @@ void WorldManager::LoadLevel(Level level, Renderer* rr)
 
     WorldManager::FreeMemory();
 
-    b2Vec2 gravity = b2Vec2(0.0f, 9.81f);
-    WorldManager::world = new b2World(gravity);
+    WorldManager::world = new b2World(WorldManager::level.GetOptions().gravity);
     WorldManager::objects = std::vector<BasePObj*>();
 
     WorldManager::textures[""] = SDL_CreateTextureFromSurface(rr->GetRenderer(), IMG_Load(WorldManager::path_to_def_texture.c_str()));
@@ -342,12 +341,19 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
     for (size_t i = 0; i < WorldManager::objects.size(); i++)
     {
         if (
-               (WorldManager::objects[i]->GetBody()->GetPosition().x > 100 ||
-                WorldManager::objects[i]->GetBody()->GetPosition().y > 100 ||
-                WorldManager::objects[i]->GetBody()->GetPosition().x < -100 ||
-                WorldManager::objects[i]->GetBody()->GetPosition().y < -100)
-            &&
-                !WorldManager::objects[i]->GetParam("undeletable").asBool()
+               !WorldManager::objects[i]->GetParam("undeletable").asBool()
+                &&
+                (
+                    (WorldManager::level.GetOptions().border_width != 0 &&
+                        (WorldManager::objects[i]->GetBody()->GetPosition().x > WorldManager::level.GetOptions().border_width / 2 ||
+                         WorldManager::objects[i]->GetBody()->GetPosition().x < WorldManager::level.GetOptions().border_width / -2)
+                    )
+                    ||
+                    (WorldManager::level.GetOptions().border_height != 0 &&
+                        (WorldManager::objects[i]->GetBody()->GetPosition().y > WorldManager::level.GetOptions().border_height / 2 ||
+                         WorldManager::objects[i]->GetBody()->GetPosition().y < WorldManager::level.GetOptions().border_height / -2)
+                    )
+                )
             )
         {
             WorldManager::DeleteObject(i);
@@ -366,18 +372,25 @@ int renderedItemsCount;
 void WorldManager::Render(Renderer* rr, Controls ctrl)
 {
     SDL_SetRenderDrawBlendMode(rr->GetRenderer(), SDL_BLENDMODE_NONE);
-    SDL_SetRenderDrawColor(rr->GetRenderer(), 0x32, 0x32, 0x32, 0); //BG OPTION TO WORK ON
+    SDL_SetRenderDrawColor(
+        rr->GetRenderer(),
+        WorldManager::level.GetOptions().bg_r,
+        WorldManager::level.GetOptions().bg_g,
+        WorldManager::level.GetOptions().bg_b,
+        0
+    );
     SDL_RenderClear(rr->GetRenderer());
 
     renderedItemsCount = 0;
     for (size_t i = 0; i < WorldManager::objects.size(); i++)   
     {
-        if (WorldManager::objects[i]->Render(   rr->GetRenderer(), 
-                                                WorldManager::x_offset, 
-                                                WorldManager::y_offset, 
-                                                WorldManager::zoom,
-                                                rr->GetWindowParams().width,
-                                                rr->GetWindowParams().height))
+        if (WorldManager::objects[i]->Render(
+                rr->GetRenderer(), 
+                WorldManager::x_offset, 
+                WorldManager::y_offset, 
+                WorldManager::zoom,
+                rr->GetWindowParams().width,
+                rr->GetWindowParams().height))
         {
             renderedItemsCount++;
         }        

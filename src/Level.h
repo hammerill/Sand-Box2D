@@ -13,7 +13,9 @@
 
 struct JsonOptions
 {
-    // Gonna be filled in some time.
+    uint8_t bg_r, bg_g, bg_b;
+    b2Vec2 gravity;
+    float border_width, border_height;
 };
 
 enum JsonCameraType

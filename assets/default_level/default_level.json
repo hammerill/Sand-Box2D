@@ -6,6 +6,15 @@
         "zoom": true,
         "height": 8
     },
+    "options": {
+        "bg_r": 50,
+        "bg_g": 50,
+        "bg_b": 50,
+        "gravity_x": 0,
+        "gravity_y": 9.81,
+        "border_width": 200,
+        "border_height": 200
+    },
     "actions": {
         "up": {
             "keydown_hold": [
