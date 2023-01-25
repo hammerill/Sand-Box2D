@@ -13,7 +13,8 @@ enum Anim
     ANIM_WORLD_MANAGER_INIT = 0,    // Animation of WorldManager initialization (WMI). Will show levels name.
     ANIM_FADE_IN,                   // Animation of Fade-in, i.e. from black screen to scene.
     ANIM_FADE_OUT,                  // Animation of Fade-out, i.e. from scene to black screen.
-    ANIM_FADE = ANIM_FADE_IN | ANIM_FADE_OUT    // Shared fade anim. You can use it when performing step and render, but not init.
+    ANIM_FADE = ANIM_FADE_IN | ANIM_FADE_OUT,   // Shared fade anim. You can use it when performing step and render, but not init.
+    ANIM_VITA_INIT                  // Animation of video init on Vita (fadeout sce_sys/pic0.png).
 };
 
 /// @brief Little class to apply transitions.
@@ -89,6 +90,16 @@ struct PARAMS_FADE
     Transition transition_opaque;
 };
 
+struct PARAMS_VITA_INIT
+{
+    int frames = 0, frames_max = 60;
+
+    SDL_Texture* pic = nullptr;
+
+    float opaque;
+    Transition transition_opaque;
+};
+
 /// Static class for managing game animations.
 /// 
 /// First you need to init some animation (InitAnim(ANIM_NAME)).
@@ -99,6 +110,7 @@ class AnimationManager
 private:
     static PARAMS_WORLD_MANAGER_INIT wmi;
     static PARAMS_FADE fade;
+    static PARAMS_VITA_INIT vita;
 public:
     AnimationManager();
     ~AnimationManager();

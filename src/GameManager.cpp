@@ -1,5 +1,11 @@
 #include "GameManager.h"
 
+#ifdef Vita
+bool vita_inited_video = false;
+#else
+bool vita_inited_video = false;//
+#endif
+
 GameManager::GameManager(const char* path_to_settings, const char* path_to_def_settings)
 {
     if (std::string(path_to_settings).find_last_of("\\/") != std::string::npos)
@@ -63,6 +69,14 @@ bool GameManager::Step()
         SDL_ShowCursor(SDL_DISABLE);
     else
         SDL_ShowCursor(SDL_ENABLE);
+// #else
+    if (!vita_inited_video)
+    {
+        if (AnimationManager::StepAnim(ANIM_VITA_INIT))
+            return true;
+        else
+            vita_inited_video = true;
+    }
 #endif
 
     // STEPS
@@ -101,10 +115,11 @@ bool GameManager::Step()
         {
             GameManager::world_manager->FreeMemory();
             GameManager::main_menu.Init(GameManager::settings.Get("path_to_translations").asString());
-            GameManager::main_menu.Step(&(GameManager::settings), GameManager::rr, GameManager::ctrl, GameManager::old_ctrl);
-            // ^^ We give MainMenu first step here to avoid rendering problems
+            
+            // We give MainMenu first step here to avoid rendering problems
             // (if you try to remove first step here it will try to call Render() before Step()
             // which may cause some graphical issues).
+            GameManager::main_menu.Step(&(GameManager::settings), GameManager::rr, GameManager::ctrl, GameManager::old_ctrl);
             isInMenu = true;
         }
     ////////
@@ -114,6 +129,13 @@ bool GameManager::Step()
 
 void GameManager::Render()
 {
+    if (!vita_inited_video)
+    {
+        AnimationManager::RenderAnim(ANIM_VITA_INIT, rr);
+        SDL_RenderPresent(GameManager::rr->GetRenderer());
+        return;
+    }
+
     // RENDER
     if (isInMenu)
         GameManager::main_menu.Render(GameManager::rr);
@@ -122,7 +144,6 @@ void GameManager::Render()
     /////////
 
     GameManager::rr->AddFrame();
-
     SDL_RenderPresent(GameManager::rr->GetRenderer());
 }
 
@@ -133,6 +154,9 @@ void GameManager::Cycle()
     // Network::SetRepo(GameManager::settings.Get("url_levels").asString());
     // Network::DownloadFile(GameManager::settings.Get("path_to_levels").asString(), "index.json");
     // Network::DownloadFile(GameManager::settings.Get("path_to_levels").asString(), "default_level/default_level.json");
+
+    if (!vita_inited_video)
+        AnimationManager::InitAnim(ANIM_VITA_INIT);
 
     if (GameManager::settings.Get("speed_correction").asBool())
     {
