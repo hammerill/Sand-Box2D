@@ -1,0 +1,23 @@
+# Hammerill DLG (dialogue) file.
+# 
+# Special characters: 
+# "#": Comment.
+# "/": Insert special char into the start of sentence
+# or in the middle of command or run it (commands are below).
+# ":": Create GOTO mark.
+# ">": Send to the GOTO mark.
+# Regular sentences start without any characters.
+# 
+# Commands:
+# /branch Variant1:MARK1;Variant2:MARK2
+#   Ask player to choose between Variant1 and Variant2
+#   and send them into corresponding GOTO mark.
+#   Previous sentence will stay as title.
+
+ねえ、何をしているか知っていますか？
+他人の文書を調べるのは違法です！
+まだ日本語も話せません！
+それは私がまだ成熟していないことを意味します!!
+そして、あなたはすでに私をスパイしています！ なんて混乱
+さよなら。
+     - 敬具、右上コーナー。

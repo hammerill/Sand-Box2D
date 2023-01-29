@@ -89,6 +89,7 @@ Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/discus
     * `SETTINGS` - will fade out MainMenu and load OptionsMenu (how?!1).
     * `ABOUT` - will load About menu, where player can see list of contributors, credits, and QR code with link to this repo, in order if they will want to contribute.
     * `EXIT` - yes.
+  - my name? my name is Corner. Upper-Right Corner.
 
 ## Future architecture
 ![Arch](./pics/project-arch.drawio.svg)

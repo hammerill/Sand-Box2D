@@ -1,0 +1,23 @@
+# Hammerill DLG (dialogue) file.
+# 
+# Special characters: 
+# "#": Comment.
+# "/": Insert special char into the start of sentence
+# or in the middle of command or run it (commands are below).
+# ":": Create GOTO mark.
+# ">": Send to the GOTO mark.
+# Regular sentences start without any characters.
+# 
+# Commands:
+# /branch Variant1:MARK1;Variant2:MARK2
+#   Ask player to choose between Variant1 and Variant2
+#   and send them into corresponding GOTO mark.
+#   Previous sentence will stay as title.
+
+э, шо ты делаешь?
+нельзя смотреть в чужие документы!
+у меня даже ФОРМАТА нет своего ещё!
+то есть я не РОДИЛСЯ ещё толком!!
+и ты уже подглядываешь! чё за бред
+до встречи.
+    - Искренне ваш, Верхне-Правый Угол.
