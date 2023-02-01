@@ -67,7 +67,7 @@ bool LangSelector::Step(Settings* settings, Renderer* rr, Controls ctrl, Control
         return true;
     }
 
-    if (rr->GetCursor(ctrl))
+    if (rr->GetCursor(old_ctrl))
     {
         int langSelectScale = rr->GetWindowParams().height / 200;
         SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions("-", langSelectScale);
