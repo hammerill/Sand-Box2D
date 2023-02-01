@@ -44,6 +44,7 @@ GameManager::GameManager(const char* path_to_settings, const char* path_to_def_s
 const int mouse_frames_duration = 60;
 
 bool isInMenu = true;
+
 bool GameManager::Step()
 {
     if (GameManager::settings.Get("speed_correction").asBool())
@@ -65,10 +66,7 @@ bool GameManager::Step()
     if ((ctrl.GetMouse().x != old_ctrl.GetMouse().x) || (ctrl.GetMouse().y != old_ctrl.GetMouse().y))
         GameManager::mouse_last_frame_move = GameManager::rr->GetFrames();
     
-    if (GameManager::rr->GetFrames() > GameManager::mouse_last_frame_move + mouse_frames_duration)
-        SDL_ShowCursor(SDL_DISABLE);
-    else
-        SDL_ShowCursor(SDL_ENABLE);
+    GameManager::rr->SetCursor(!(GameManager::rr->GetFrames() > GameManager::mouse_last_frame_move + mouse_frames_duration));
 #else
     if (!vita_inited_video)
     {

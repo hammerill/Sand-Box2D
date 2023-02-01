@@ -55,6 +55,59 @@ bool MainMenu::Step(Settings* settings, Renderer* rr, Controls ctrl, Controls ol
             // From now on, its `will` will be stored only at "status" variable.
         }
     }
+
+    if (ctrl.MenuEnter() && !old_ctrl.MenuEnter())
+    {
+        rr->GetSounds()->PlaySfx("menu_enter");
+        MainMenu::status = "fadeout";
+        AnimationManager::InitAnim(ANIM_FADE_OUT);
+        return true;
+    }
+
+    if (rr->GetCursor())
+    {
+        int menuScale = rr->GetWindowParams().height / 200;
+        SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions("-", menuScale);
+
+        float distanceScale = 1.2;
+
+        std::vector<int> menuWidths;
+        for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
+            menuWidths.push_back(rr->GetFont()->GetTextDimensions(MainMenu::menu_items[i].c_str(), menuScale).w);
+
+        int menu_w = *std::max_element(menuWidths.begin(), menuWidths.end());
+        int menu_h = (MainMenu::menu_items.size()) * textDimensions.h * distanceScale;
+
+        int x_offset = (rr->GetWindowParams().width / 4) - (menu_w / 2);
+        int y_offset = (rr->GetWindowParams().height / 2) - (menu_h / 2);
+
+        for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
+        {
+            SDL_Rect hover = rr->GetFont()->GetTextDimensions(MainMenu::menu_items[i].c_str(), menuScale);
+
+            hover.x = x_offset - textDimensions.w / 16;
+            hover.y = y_offset + textDimensions.h * distanceScale * (int)i - textDimensions.h / 16;
+            hover.w += textDimensions.w / 8;
+            hover.h += textDimensions.h / 8;
+
+            SDL_Point temp = ctrl.GetMouse();
+            if (SDL_PointInRect(&temp, &hover))
+            {
+                if (i != MainMenu::hovered_item)
+                {
+                    rr->GetSounds()->PlaySfx("menu_switch");
+                    MainMenu::hovered_item = i;
+                }
+                if (old_ctrl.IsMoving() && !ctrl.IsMoving()) // Maybe I should set another name for this ctrl.
+                {
+                    rr->GetSounds()->PlaySfx("menu_enter");
+                    MainMenu::status = "fadeout";
+                    AnimationManager::InitAnim(ANIM_FADE_OUT);
+                }
+                return true;
+            }
+        }
+    }
     
     if (ctrl.MenuUp() && !old_ctrl.MenuUp())
     {
@@ -70,12 +123,6 @@ bool MainMenu::Step(Settings* settings, Renderer* rr, Controls ctrl, Controls ol
                                     ? 0
                                     : MainMenu::hovered_item + 1;
     }
-    if (ctrl.MenuEnter() && !old_ctrl.MenuEnter())
-    {
-        rr->GetSounds()->PlaySfx("menu_enter");
-        MainMenu::status = "fadeout";
-        AnimationManager::InitAnim(ANIM_FADE_OUT);
-    }
         
     return true;
 }
@@ -88,7 +135,6 @@ void MainMenu::Render(Renderer* rr)
         return;
     }
 
-    // There was some s***code but I've fixed it so you have to search git commits to see it.
     bool hover_blinker = MainMenu::status == "fadeout" && (int)(rr->GetFrames() / 10) % 2;
 
     int menuScale = rr->GetWindowParams().height / 200;

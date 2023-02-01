@@ -44,6 +44,8 @@ private:
 
     const char* path_to_icon;
 
+    bool cursor;
+
     uint64_t frames = 0;
 
     Font* font = new Font();
@@ -77,6 +79,7 @@ public:
     SoundManager* GetSounds();
     Font* GetFont(bool jp = false);
     WindowParams GetWindowParams();
+    bool GetCursor();
 
     /// @brief Increment frames count rendered.
     void AddFrame();
@@ -86,6 +89,9 @@ public:
     /// @brief Change game resolution and go/exit fullscreen if need.
     /// @param params declare settings of your window here (see struct WindowParams).
     void ChangeRes(WindowParams params);
+
+    /// @brief Enable or disable cursor render.
+    void SetCursor(bool enable = true);
 
     /// @brief Render text. Will use internal Font object to do that
     /// (pass this function into it).

@@ -55,6 +55,67 @@ bool LangSelector::Step(Settings* settings, Renderer* rr, Controls ctrl, Control
         return true;
     else if (fadeout)
         return false;
+    
+    if (ctrl.MenuEnter() && !old_ctrl.MenuEnter())
+    {
+        rr->GetSounds()->PlaySfx("menu_enter");
+        LangSelector::fadeout = true;
+        AnimationManager::InitAnim(ANIM_FADE_OUT);
+        
+        settings->Set("language", Json::Value(GetLangCodeByIndex(LangSelector::langs, LangSelector::hovered_lang)));
+
+        return true;
+    }
+
+    if (rr->GetCursor())
+    {
+        int langSelectScale = rr->GetWindowParams().height / 200;
+        SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions("-", langSelectScale);
+
+        float distanceScale = 1.2;
+        
+        int menu_h = (LangSelector::langs.size()) * textDimensions.h * distanceScale;
+        int y_offset = (rr->GetWindowParams().height / 2) - (menu_h / 2);
+
+        size_t i = 0;
+        for (auto const& lang : LangSelector::langs)
+        {
+            SDL_Rect hover = rr->GetFont()->GetTextDimensions(lang.second.c_str(), langSelectScale);
+
+            hover.x = (rr->GetWindowParams().width / 2) - (hover.w / 2) - textDimensions.w / 16;
+            hover.y = y_offset + textDimensions.h * distanceScale * (int)i - (hover.h / 2) - textDimensions.h / 16;
+            hover.w += textDimensions.w / 8;
+            hover.h += textDimensions.h / 8;
+
+            SDL_Point temp = ctrl.GetMouse();
+            if (SDL_PointInRect(&temp, &hover))
+            {
+                if (i != LangSelector::hovered_lang)
+                {
+                    rr->GetSounds()->PlaySfx("menu_switch");
+                    LangSelector::hovered_lang = i;
+                    
+                    ReloadLangs(
+                        LangSelector::langs,
+                        LangSelector::choose_title, LangSelector::settings_reminder,
+                        LangSelector::translations_base,
+                        GetLangCodeByIndex(LangSelector::langs, LangSelector::hovered_lang)
+                    );
+                }
+                if (old_ctrl.IsMoving() && !ctrl.IsMoving()) // Maybe I should set another name for this ctrl.
+                {
+                    rr->GetSounds()->PlaySfx("menu_enter");
+                    LangSelector::fadeout = true;
+                    AnimationManager::InitAnim(ANIM_FADE_OUT);
+                    
+                    settings->Set("language", Json::Value(GetLangCodeByIndex(LangSelector::langs, LangSelector::hovered_lang)));
+                }
+                return true;
+            }
+
+            i++;
+        }
+    }
 
     if (ctrl.MenuUp() && !old_ctrl.MenuUp())
     {
@@ -83,14 +144,6 @@ bool LangSelector::Step(Settings* settings, Renderer* rr, Controls ctrl, Control
             LangSelector::translations_base,
             GetLangCodeByIndex(LangSelector::langs, LangSelector::hovered_lang)
         );
-    }
-    if (ctrl.MenuEnter() && !old_ctrl.MenuEnter())
-    {
-        rr->GetSounds()->PlaySfx("menu_enter");
-        LangSelector::fadeout = true;
-        AnimationManager::InitAnim(ANIM_FADE_OUT);
-        
-        settings->Set("language", Json::Value(GetLangCodeByIndex(LangSelector::langs, LangSelector::hovered_lang)));
     }
         
     return true;
