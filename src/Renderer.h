@@ -5,6 +5,7 @@
 
 #include "Fonts.h"
 #include "SoundManager.h"
+#include "Controls.h"
 
 /// @brief Window modes for game (fullscreen or no and etc.).
 enum WindowMode
@@ -79,7 +80,6 @@ public:
     SoundManager* GetSounds();
     Font* GetFont(bool jp = false);
     WindowParams GetWindowParams();
-    bool GetCursor();
 
     /// @brief Increment frames count rendered.
     void AddFrame();
@@ -92,6 +92,8 @@ public:
 
     /// @brief Enable or disable cursor render.
     void SetCursor(bool enable = true);
+    /// @brief Is cursor is showed now? If platform is Vita it's true when touch screen.
+    bool GetCursor(Controls ctrl);
 
     /// @brief Render text. Will use internal Font object to do that
     /// (pass this function into it).

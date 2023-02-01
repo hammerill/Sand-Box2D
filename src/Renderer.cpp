@@ -44,7 +44,6 @@ SDL_Window* Renderer::GetWindow()           { return window; }
 SoundManager* Renderer::GetSounds()         { return sounds; }
 Font* Renderer::GetFont(bool jp)            { return jp ? Renderer::font_jp : Renderer::font; }
 WindowParams Renderer::GetWindowParams()    { return {window_mode, window_width, window_height}; }
-bool Renderer::GetCursor()                  { return cursor; }
 
 void Renderer::AddFrame()       { Renderer::frames++; }
 uint64_t Renderer::GetFrames()  { return Renderer::frames; }
@@ -99,6 +98,14 @@ void Renderer::SetCursor(bool enable)
 {
     Renderer::cursor = enable;
     SDL_ShowCursor(Renderer::cursor ? SDL_ENABLE : SDL_DISABLE);
+}
+bool Renderer::GetCursor(Controls ctrl)
+{
+#ifdef Vita
+    return ctrl.IsMoving();
+#else
+    return cursor;
+#endif
 }
 
 void Renderer::RenderText(const char* text, int x, int y, float scale, bool center, bool jp, Uint8 r, Uint8 g, Uint8 b)

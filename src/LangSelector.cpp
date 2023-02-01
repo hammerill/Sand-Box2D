@@ -67,7 +67,7 @@ bool LangSelector::Step(Settings* settings, Renderer* rr, Controls ctrl, Control
         return true;
     }
 
-    if (rr->GetCursor())
+    if (rr->GetCursor(ctrl))
     {
         int langSelectScale = rr->GetWindowParams().height / 200;
         SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions("-", langSelectScale);
@@ -94,7 +94,7 @@ bool LangSelector::Step(Settings* settings, Renderer* rr, Controls ctrl, Control
                 {
                     rr->GetSounds()->PlaySfx("menu_switch");
                     LangSelector::hovered_lang = i;
-                    
+
                     ReloadLangs(
                         LangSelector::langs,
                         LangSelector::choose_title, LangSelector::settings_reminder,

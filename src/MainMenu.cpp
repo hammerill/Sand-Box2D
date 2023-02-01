@@ -64,7 +64,7 @@ bool MainMenu::Step(Settings* settings, Renderer* rr, Controls ctrl, Controls ol
         return true;
     }
 
-    if (rr->GetCursor())
+    if (rr->GetCursor(ctrl))
     {
         int menuScale = rr->GetWindowParams().height / 200;
         SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions("-", menuScale);
