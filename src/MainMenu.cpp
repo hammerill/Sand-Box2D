@@ -1,7 +1,12 @@
 #include "MainMenu.h"
 
+SDL_Texture* logo;
+
 MainMenu::MainMenu() {}
-MainMenu::~MainMenu() {}
+MainMenu::~MainMenu()
+{
+    SDL_DestroyTexture(logo);
+}
 
 void MainMenu::Init(std::string translations_base)
 {
@@ -11,10 +16,42 @@ void MainMenu::Init(std::string translations_base)
 
     MainMenu::lang_selector.Init(translations_base);
     MainMenu::lang_chosen = false;
+    
+    logo = nullptr;    
+}
+
+SDL_Rect GetItemRect(Renderer* rr, std::vector<std::string> menu_items, size_t item_index)
+{
+    int menuScale = rr->GetWindowParams().height / 200;
+    SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions("-", menuScale);
+
+    float distanceScale = 1.2;
+
+    std::vector<int> menuWidths;
+    for (size_t i = 0; i < menu_items.size(); i++)
+        menuWidths.push_back(rr->GetFont()->GetTextDimensions(menu_items[i].c_str(), menuScale).w);
+
+    int menu_w = *std::max_element(menuWidths.begin(), menuWidths.end());
+    int menu_h = (menu_items.size()) * textDimensions.h * distanceScale;
+
+    int x_offset = (rr->GetWindowParams().width / 3.5) - (menu_w / 2);
+    int y_offset = (rr->GetWindowParams().height / 1.5) - (menu_h / 2);
+
+    SDL_Rect rect = rr->GetFont()->GetTextDimensions(menu_items[item_index].c_str(), menuScale);
+
+    rect.x = x_offset - textDimensions.w / 16;
+    rect.y = y_offset + textDimensions.h * distanceScale * (int)item_index - textDimensions.h / 16;
+    rect.w += textDimensions.w / 8;
+    rect.h += textDimensions.h / 8;
+
+    return rect;
 }
 
 bool MainMenu::Step(Settings* settings, Renderer* rr, Controls ctrl, Controls old_ctrl)
 {
+    if (logo == nullptr)
+        logo = SDL_CreateTextureFromSurface(rr->GetRenderer(), IMG_Load("./assets/img/logo.png"));
+
     if (!MainMenu::lang_chosen)
     {
         if (MainMenu::lang_selector.Step(settings, rr, ctrl, old_ctrl))
@@ -66,32 +103,12 @@ bool MainMenu::Step(Settings* settings, Renderer* rr, Controls ctrl, Controls ol
 
     if (rr->GetCursor(old_ctrl))
     {
-        int menuScale = rr->GetWindowParams().height / 200;
-        SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions("-", menuScale);
-
-        float distanceScale = 1.2;
-
-        std::vector<int> menuWidths;
-        for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
-            menuWidths.push_back(rr->GetFont()->GetTextDimensions(MainMenu::menu_items[i].c_str(), menuScale).w);
-
-        int menu_w = *std::max_element(menuWidths.begin(), menuWidths.end());
-        int menu_h = (MainMenu::menu_items.size()) * textDimensions.h * distanceScale;
-
-        int x_offset = (rr->GetWindowParams().width / 4) - (menu_w / 2);
-        int y_offset = (rr->GetWindowParams().height / 2) - (menu_h / 2);
-
         for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
         {
-            SDL_Rect hover = rr->GetFont()->GetTextDimensions(MainMenu::menu_items[i].c_str(), menuScale);
+            SDL_Point point = ctrl.GetMouse();
+            SDL_Rect rect = GetItemRect(rr, MainMenu::menu_items, i);
 
-            hover.x = x_offset - textDimensions.w / 16;
-            hover.y = y_offset + textDimensions.h * distanceScale * (int)i - textDimensions.h / 16;
-            hover.w += textDimensions.w / 8;
-            hover.h += textDimensions.h / 8;
-
-            SDL_Point temp = ctrl.GetMouse();
-            if (SDL_PointInRect(&temp, &hover))
+            if (SDL_PointInRect(&point, &rect))
             {
                 if (i != MainMenu::hovered_item)
                 {
@@ -149,8 +166,8 @@ void MainMenu::Render(Renderer* rr)
     int menu_w = *std::max_element(menuWidths.begin(), menuWidths.end());
     int menu_h = (MainMenu::menu_items.size()) * textDimensions.h * distanceScale;
 
-    int x_offset = (rr->GetWindowParams().width / 4) - (menu_w / 2);
-    int y_offset = (rr->GetWindowParams().height / 2) - (menu_h / 2);
+    int x_offset = (rr->GetWindowParams().width / 3.5) - (menu_w / 2);
+    int y_offset = (rr->GetWindowParams().height / 1.5) - (menu_h / 2);
 
     SDL_SetRenderDrawColor(rr->GetRenderer(), 0, 0, 0, 0);
     SDL_RenderClear(rr->GetRenderer());
@@ -196,6 +213,14 @@ void MainMenu::Render(Renderer* rr)
                 Translations::GetJp()
             );
     }
+
+    SDL_Rect logo_rect = {
+        rr->GetWindowParams().width / 3,
+        rr->GetWindowParams().height / 8,
+        rr->GetWindowParams().height / 10,
+        rr->GetWindowParams().height / 10
+    };
+    // SDL_RenderCopyEx(rr->GetRenderer(), logo, NULL, &logo_rect, 0, NULL, SDL_FLIP_NONE);
     
     AnimationManager::RenderAnim(ANIM_FADE, rr);
 }
