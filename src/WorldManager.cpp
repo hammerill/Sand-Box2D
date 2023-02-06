@@ -85,10 +85,7 @@ void WorldManager::LoadLevel(Level level, Renderer* rr)
                 pos = {0, 0};
             else
             {
-                pos = {
-                    pobj->GetParam("x").asFloat(),
-                    pobj->GetParam("y").asFloat()
-                };
+                pos = {pobj->GetX(), pobj->GetY()};
             }
 
             WorldManager::x_offset =    -(pos.x * WorldManager::zoom)
@@ -107,7 +104,7 @@ void WorldManager::LoadLevel(Level level, Renderer* rr)
     // CYCLES (everything other at the end of the Step())
     WorldManager::cyclesDelays = std::vector<int>();
 
-    for (size_t i = 0; i < WorldManager::level.GetCycles().size(); i++)
+    for (size_t i = 0; i < WorldManager::level.GetCyclesCount(); i++)
     {
         WorldManager::cyclesDelays.push_back(1);
     }    
@@ -214,10 +211,12 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
     previous_frame = std::chrono::high_resolution_clock::now();
 
     // 4. BUTTONS
+    auto camera = WorldManager::level.GetCamera();
+
     if (ctrl.Debug() && !old_ctrl.Debug())
         WorldManager::isDebug = !WorldManager::isDebug;
 
-    if (WorldManager::level.GetCamera().move)
+    if (camera.move)
     {
         WorldManager::y_offset += ctrl.MoveUp() * WorldManager::move_speed;
         WorldManager::x_offset -= ctrl.MoveRight() * WorldManager::move_speed;
@@ -253,11 +252,11 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
     // 5. ZOOM WHEEL/PINCH
     SDL_Point scr_center = {rr->GetWindowParams().width / 2, rr->GetWindowParams().height / 2};
 
-    if (WorldManager::level.GetCamera().zoom)
+    if (camera.zoom)
     {
         if (ctrl.IsPinching() && ((WorldManager::zoom + (ctrl.GetPinch() - old_ctrl.GetPinch())) > 10))
         {
-            CorrectOffset(  WorldManager::level.GetCamera().move
+            CorrectOffset(  camera.move
                                 ? ctrl.GetMouse() : scr_center,
                             (ctrl.GetPinch() - old_ctrl.GetPinch()));
             WorldManager::zoom += (ctrl.GetPinch() - old_ctrl.GetPinch());
@@ -265,14 +264,14 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
 
         if (WorldManager::zoom <= 1)
         {
-            CorrectOffset(  ctrl.IsWheel() && WorldManager::level.GetCamera().move
+            CorrectOffset(  ctrl.IsWheel() && camera.move
                                 ? ctrl.GetMouse() : scr_center,
                             WorldManager::zoom - 1);
             WorldManager::zoom = 1;
         }
         else
         {
-            CorrectOffset(  ctrl.IsWheel() && WorldManager::level.GetCamera().move
+            CorrectOffset(  ctrl.IsWheel() && camera.move
                                 ? ctrl.GetMouse() : scr_center,
                             ctrl.ZoomOut() * WorldManager::zoom_speed * -1 * WorldManager::zoom);
             WorldManager::zoom -= ctrl.ZoomOut() * WorldManager::zoom_speed * WorldManager::zoom;
@@ -280,14 +279,14 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
 
         if (WorldManager::zoom >= 1000)
         {
-            CorrectOffset(  ctrl.IsWheel() && WorldManager::level.GetCamera().move
+            CorrectOffset(  ctrl.IsWheel() && camera.move
                                 ? ctrl.GetMouse() : scr_center,
                             1000 - WorldManager::zoom);
             WorldManager::zoom = 1000;
         }
         else
         {
-            CorrectOffset(  ctrl.IsWheel() && WorldManager::level.GetCamera().move
+            CorrectOffset(  ctrl.IsWheel() && camera.move
                                 ? ctrl.GetMouse() : scr_center,
                             ctrl.ZoomIn() * WorldManager::zoom_speed * WorldManager::zoom);
             WorldManager::zoom += ctrl.ZoomIn() * WorldManager::zoom_speed * WorldManager::zoom;
@@ -299,23 +298,23 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
     previous_frame = std::chrono::high_resolution_clock::now();
     
     // 6. CAMERA TYPE PROCESSING
-    if (WorldManager::level.GetCamera().type == CAMERA_TYPE_ATTACHED)
+    if (camera.type == CAMERA_TYPE_ATTACHED)
     {
         b2Vec2 pos;
-        BasePObj* pobj = WorldManager::level.GetObjectById(WorldManager::level.GetCamera().attached_id, WorldManager::objects);
+        BasePObj* pobj = WorldManager::level.GetObjectById(camera.attached_id, WorldManager::objects);
 
         if (pobj == nullptr)
             pos = {x_offset, y_offset};
         else
         {
             pos = {
-                pobj->GetParam("x").asFloat() * WorldManager::zoom + x_offset,
-                pobj->GetParam("y").asFloat() * WorldManager::zoom + y_offset
+                pobj->GetX() * WorldManager::zoom + x_offset,
+                pobj->GetY() * WorldManager::zoom + y_offset
             };
         }
         
-        WorldManager::x_offset += (scr_center.x - pos.x) * ((100 - WorldManager::level.GetCamera().attached_remain) / 100.0);
-        WorldManager::y_offset += (scr_center.y - pos.y) * ((100 - WorldManager::level.GetCamera().attached_remain) / 100.0);
+        WorldManager::x_offset += (scr_center.x - pos.x) * ((100 - camera.attached_remain) / 100.0);
+        WorldManager::y_offset += (scr_center.y - pos.y) * ((100 - camera.attached_remain) / 100.0);
     }
     ////////////////////////////
     duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
@@ -335,12 +334,11 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
     previous_frame = std::chrono::high_resolution_clock::now();
 
     // 8. CYCLES
-    auto cycles = WorldManager::level.GetCycles();
     for (size_t i = 0; i < WorldManager::cyclesDelays.size(); i++)
     {
         if (--(WorldManager::cyclesDelays[i]) <= 0)
         {
-            auto cycle = cycles[i];
+            auto cycle = WorldManager::level.GetCycle(i);
 
             WorldManager::cyclesDelays[i] = cycle.delay;
 

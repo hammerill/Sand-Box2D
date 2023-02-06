@@ -86,10 +86,11 @@ public:
     /// (not the BasePObj itself because it's an abstract class).
     std::vector<BasePObj*> GetPObjects();
 
-    /// @brief Get array of cycles from JSON represented as structs.
-    /// @return empty vector if something went wrong, otherwise filled JsonCycle vector
-    /// (which contains delay info and PObjects array).
-    std::vector<JsonCycle> GetCycles();
+    /// @brief Get Json Cycle represented as JsonCycle object.
+    /// @param index index of the desired cycle.
+    JsonCycle GetCycle(int index);
+
+    size_t GetCyclesCount();
 
     /// @brief Get JSON of the actions list. Its contents has to be 
     /// parsed outside and PerformAction() method called.

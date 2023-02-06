@@ -220,37 +220,32 @@ std::vector<BasePObj*> Level::GetPObjects()
     return objects;
 }
 
-std::vector<JsonCycle> Level::GetCycles()
+JsonCycle Level::GetCycle(int index)
 {
-    auto cycles = std::vector<JsonCycle>();
-
+    auto cycle = JsonCycle();
     try
     {
-        Json::Value jsonCycles = Level::jsonLevel["cycles"];
-        for (unsigned int i = 0; i < jsonCycles.size(); i++)
+        Json::Value jsonCycle = Level::jsonLevel["cycles"][index];
+
+        cycle.delay = Level::LoadNumber(jsonCycle["delay"]);
+
+        auto objects = std::vector<BasePObj*>();
+        Json::Value jsonCycleObjects = jsonCycle["objects"];
+        for (unsigned int j = 0; j < jsonCycleObjects.size(); j++)
         {
-            auto cycle = JsonCycle();
-
-            cycle.delay = Level::LoadNumber(jsonCycles[i]["delay"]);
-
-            auto objects = std::vector<BasePObj*>();
-            Json::Value jsonCycleObjects = jsonCycles[i]["objects"];
-            for (unsigned int j = 0; j < jsonCycleObjects.size(); j++)
-            {
-                objects.push_back(Level::ParseJsonPObj(jsonCycleObjects[j]));
-            }
-            cycle.objects = objects;
-
-            cycles.push_back(cycle);
+            objects.push_back(Level::ParseJsonPObj(jsonCycleObjects[j]));
         }
+        cycle.objects = objects;
     }
     catch(const std::exception& e)
     {
-        return std::vector<JsonCycle>();
+        return JsonCycle();
     }
         
-    return cycles;
+    return cycle;
 }
+
+size_t Level::GetCyclesCount() { return Level::jsonLevel["cycles"].size(); }
 
 Json::Value Level::GetActions()
 {
