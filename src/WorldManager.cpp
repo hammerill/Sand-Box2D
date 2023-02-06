@@ -494,10 +494,23 @@ void WorldManager::RenderDebugScreen(std::vector<std::string> debugStrings, Rend
     SDL_Rect debugBg {0, 0, debug_w, debug_h};
 
     SDL_SetRenderDrawBlendMode(rr->GetRenderer(), SDL_BLENDMODE_BLEND);
-    SDL_SetRenderDrawColor(rr->GetRenderer(), 4, 4, 4, 0xA0);
 
+    SDL_SetRenderDrawColor(rr->GetRenderer(), 4, 4, 4, 0xA0);
     SDL_RenderFillRect(rr->GetRenderer(), &debugBg);
 
+    for (size_t i = 0; i < 11; i++)
+    {
+        SDL_Rect perf = {
+            (int)(textDimensions.w * 5 * debugScale),
+            (int)(textDimensions.h * debugScale * (i+1 + 10)),
+            (int)(frame_times[i] * 50),
+            textDimensions.h
+        };
+
+        SDL_SetRenderDrawColor(rr->GetRenderer(), 0xC0, 0xC0, 0xC0, 0xA0);
+        SDL_RenderFillRect(rr->GetRenderer(), &perf);
+    }
+    
     for (size_t i = 0; i < debugStrings.size(); i++)
     {
         rr->RenderText(debugStrings[i].c_str(), textDimensions.w * debugScale, textDimensions.h * debugScale * (i+1), debugScale, false, Translations::GetJp());
