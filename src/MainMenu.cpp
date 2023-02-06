@@ -214,12 +214,12 @@ void MainMenu::Render(Renderer* rr)
             );
     }
 
-    SDL_Rect logo_rect = {
-        rr->GetWindowParams().width / 3,
-        rr->GetWindowParams().height / 8,
-        rr->GetWindowParams().height / 10,
-        rr->GetWindowParams().height / 10
-    };
+    // SDL_Rect logo_rect = {
+    //     rr->GetWindowParams().width / 3,
+    //     rr->GetWindowParams().height / 8,
+    //     rr->GetWindowParams().height / 10,
+    //     rr->GetWindowParams().height / 10
+    // };
     // SDL_RenderCopyEx(rr->GetRenderer(), logo, NULL, &logo_rect, 0, NULL, SDL_FLIP_NONE);
     
     AnimationManager::RenderAnim(ANIM_FADE, rr);

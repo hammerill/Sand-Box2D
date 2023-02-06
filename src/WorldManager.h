@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <numeric>
 #include <map>
+#include <chrono>
 
 /// @brief Class for managing either SDL2 window, renderer and Box2D world with physics objects within it.
 class WorldManager
