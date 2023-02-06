@@ -370,25 +370,23 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
     previous_frame = std::chrono::high_resolution_clock::now();
 
     // 10. OUT OF BORDERS CHECK
+    auto options = WorldManager::level.GetOptions();
     for (size_t i = 0; i < WorldManager::objects.size(); i++)
     {
         if (
-               !WorldManager::objects[i]->GetParam("undeletable").asBool()
-                &&
-                (
-                    (WorldManager::level.GetOptions().border_width != 0 &&
-                        (WorldManager::objects[i]->GetBody()->GetPosition().x > WorldManager::level.GetOptions().border_width / 2 ||
-                         WorldManager::objects[i]->GetBody()->GetPosition().x < WorldManager::level.GetOptions().border_width / -2)
-                    )
-                    ||
-                    (WorldManager::level.GetOptions().border_height != 0 &&
-                        (WorldManager::objects[i]->GetBody()->GetPosition().y > WorldManager::level.GetOptions().border_height / 2 ||
-                         WorldManager::objects[i]->GetBody()->GetPosition().y < WorldManager::level.GetOptions().border_height / -2)
-                    )
+                (options.border_width != 0 &&
+                    (WorldManager::objects[i]->GetX() > options.border_width / 2 ||
+                        WorldManager::objects[i]->GetX() < options.border_width / -2)
+                )
+                ||
+                (options.border_height != 0 &&
+                    (WorldManager::objects[i]->GetY() > options.border_height / 2 ||
+                        WorldManager::objects[i]->GetY() < options.border_height / -2)
                 )
             )
         {
-            WorldManager::DeleteObject(i);
+            if (!WorldManager::objects[i]->GetParam("undeletable").asBool())
+                WorldManager::DeleteObject(i);
         }
     }
     ///////////////////////////

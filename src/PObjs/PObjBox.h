@@ -53,4 +53,7 @@ public:
     /// @param height screen height in pixels.
     /// @return true if box rendered. False if didn't render because it's out of screen bounds. 
     bool Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height);
+
+    float GetX();
+    float GetY();
 };

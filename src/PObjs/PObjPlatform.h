@@ -53,4 +53,7 @@ public:
     /// @param height screen height in pixels.
     /// @return true if Platform rendered. False if didn't render because it's out of screen bounds. 
     bool Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width = 0, int height = 0);
+
+    float GetX();
+    float GetY();
 };

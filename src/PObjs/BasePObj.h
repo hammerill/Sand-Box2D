@@ -54,6 +54,9 @@ protected:
 public:
     virtual ~BasePObj() {};
 
+    b2Body* GetBody();
+    int GetId();
+
     /// @brief Set some parameter of this PObj. For example, X or Y pos.
     /// @param name name of the parameter to be setted. For example, "x" or "y".
     /// @param value value of the parameter to be setted.
@@ -70,9 +73,6 @@ public:
     /// @param renderer the rendering context.
     /// @param textures textures vector to work with.
     virtual void Register(b2World* world, SDL_Renderer* renderer, std::map<std::string, SDL_Texture*>& textures) = 0;
-
-    b2Body* GetBody();
-    int GetId();
     
     /// @brief Render this PObj.
     /// @param renderer the rendering context.
@@ -83,4 +83,7 @@ public:
     /// @param height screen height in pixels.
     /// @return true if object rendered. False if didn't render because it's out of screen bounds. 
     virtual bool Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width = 0, int height = 0) = 0;
+
+    virtual float GetX() = 0;
+    virtual float GetY() = 0;
 };

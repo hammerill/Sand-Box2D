@@ -197,3 +197,18 @@ bool PObjCircle::Render(SDL_Renderer* renderer, float x_offset, float y_offset, 
     else
         return false;
 }
+
+float PObjCircle::GetX() 
+{
+    if (PObjCircle::isRegistered)
+        return PObjCircle::body->GetPosition().x;
+    else
+        return PObjCircle::circleDesc.x;
+}
+float PObjCircle::GetY() 
+{
+    if (PObjCircle::isRegistered)
+        return PObjCircle::body->GetPosition().y;
+    else
+        return PObjCircle::circleDesc.y;
+}

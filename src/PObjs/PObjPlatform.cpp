@@ -87,3 +87,12 @@ bool PObjPlatform::Render(SDL_Renderer* renderer, float x_offset, float y_offset
     else
         return false;
 }
+
+float PObjPlatform::GetX() 
+{
+    return PObjPlatform::platformDesc.x1;
+}
+float PObjPlatform::GetY() 
+{
+    return PObjPlatform::platformDesc.y1;
+}

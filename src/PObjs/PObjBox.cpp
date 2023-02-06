@@ -150,3 +150,18 @@ bool PObjBox::Render(SDL_Renderer* renderer, float x_offset, float y_offset, flo
     else
         return false;
 }
+
+float PObjBox::GetX() 
+{
+    if (PObjBox::isRegistered)
+        return PObjBox::body->GetPosition().x;
+    else
+        return PObjBox::boxDesc.x;
+}
+float PObjBox::GetY() 
+{
+    if (PObjBox::isRegistered)
+        return PObjBox::body->GetPosition().y;
+    else
+        return PObjBox::boxDesc.y;
+}
