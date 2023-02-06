@@ -160,6 +160,8 @@ float zoomChange, zoomChangeCoeff;
 
 std::vector<double> frame_times;
 
+JsonOptions options;
+
 bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
 {
     auto previous_frame = std::chrono::high_resolution_clock::now();
@@ -370,7 +372,7 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
     previous_frame = std::chrono::high_resolution_clock::now();
 
     // 10. OUT OF BORDERS CHECK
-    auto options = WorldManager::level.GetOptions();
+    options = WorldManager::level.GetOptions();
     for (size_t i = 0; i < WorldManager::objects.size(); i++)
     {
         if (
@@ -420,9 +422,9 @@ void WorldManager::Render(Renderer* rr, Controls ctrl)
     SDL_SetRenderDrawBlendMode(rr->GetRenderer(), SDL_BLENDMODE_NONE);
     SDL_SetRenderDrawColor(
         rr->GetRenderer(),
-        WorldManager::level.GetOptions().bg_r,
-        WorldManager::level.GetOptions().bg_g,
-        WorldManager::level.GetOptions().bg_b,
+        options.bg_r,
+        options.bg_g,
+        options.bg_b,
         0
     );
     SDL_RenderClear(rr->GetRenderer());
