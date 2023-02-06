@@ -21,7 +21,7 @@ private:
     WindowParams fullscreen = {};
     WindowParams windowed = {WINDOWED, 960, 544};
 
-    unsigned int a, b = 0;
+    uint64_t a, b = 0;
     double delta = 0;
 
     uint64_t mouse_last_frame_move = 0;

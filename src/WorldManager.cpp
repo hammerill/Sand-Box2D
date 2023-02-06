@@ -158,10 +158,20 @@ std::vector<int> last_frames_speed_y = std::vector<int>();
 WindowParams old_wparams, now_wparams;
 float zoomChange, zoomChangeCoeff;
 
+uint64_t frame_begin;
+std::vector<uint64_t> frame_times;
+
 bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
 {
+    frame_begin = SDL_GetTicks64();
+    frame_times = std::vector<uint64_t>();
+
+    // 1. BOX2D (physics) STEP
     WorldManager::world->Step(1.0f / 60.0f, WorldManager::physics_quality * 3, WorldManager::physics_quality);
-    
+    //////////////////////////
+    frame_times.push_back(SDL_GetTicks64() - frame_begin);
+
+    // 2. GAME WINDOW UPDATE ON RESOLUTION CHANGE
     old_wparams = now_wparams;
     now_wparams = rr->GetWindowParams();
 
@@ -181,8 +191,10 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
             WorldManager::zoom += zoomChange;
         }
     }
+    /////////////////////////////////////////////
+    frame_times.push_back(SDL_GetTicks64() - frame_begin - frame_times[frame_times.size()-1]);
 
-    // FADEOUT HANDLING
+    // 3. FADEOUT HANDLING
     if (fadeout)
         return AnimationManager::StepAnim(ANIM_FADE_OUT);
     else if (ctrl.Pause())
@@ -190,8 +202,10 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
         fadeout = true;
         AnimationManager::InitAnim(ANIM_FADE_OUT);
     }
-    ///////////////////
+    //////////////////////
+    frame_times.push_back(SDL_GetTicks64() - frame_begin - frame_times[frame_times.size()-1]);
 
+    // 4. BUTTONS
     if (ctrl.Debug() && !old_ctrl.Debug())
         WorldManager::isDebug = !WorldManager::isDebug;
 
@@ -223,7 +237,10 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
             last_frames_speed_y.push_back(0);
         }
     }
+    /////////////
+    frame_times.push_back(SDL_GetTicks64() - frame_begin - frame_times[frame_times.size()-1]);
 
+    // 5. ZOOM WHEEL/PINCH
     SDL_Point scr_center = {rr->GetWindowParams().width / 2, rr->GetWindowParams().height / 2};
 
     if (WorldManager::level.GetCamera().zoom)
@@ -266,7 +283,10 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
             WorldManager::zoom += ctrl.ZoomIn() * WorldManager::zoom_speed * WorldManager::zoom;
         }
     }
-
+    //////////////////////
+    frame_times.push_back(SDL_GetTicks64() - frame_begin - frame_times[frame_times.size()-1]);
+    
+    // 6. CAMERA TYPE PROCESSING
     if (WorldManager::level.GetCamera().type == CAMERA_TYPE_ATTACHED)
     {
         b2Vec2 pos;
@@ -285,17 +305,20 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
         WorldManager::x_offset += (scr_center.x - pos.x) * ((100 - WorldManager::level.GetCamera().attached_remain) / 100.0);
         WorldManager::y_offset += (scr_center.y - pos.y) * ((100 - WorldManager::level.GetCamera().attached_remain) / 100.0);
     }
+    ////////////////////////////
+    frame_times.push_back(SDL_GetTicks64() - frame_begin - frame_times[frame_times.size()-1]);
 
-    // ACTIONS
+    // 7. ACTIONS
     HandleActionCtrl(old_ctrl.ActionUp(), ctrl.ActionUp(), WorldManager::actions["up"],WorldManager::level, WorldManager::objects);
     HandleActionCtrl(old_ctrl.ActionRight(), ctrl.ActionRight(), WorldManager::actions["right"], WorldManager::level, WorldManager::objects);
     HandleActionCtrl(old_ctrl.ActionDown(), ctrl.ActionDown(), WorldManager::actions["down"], WorldManager::level, WorldManager::objects);
     HandleActionCtrl(old_ctrl.ActionLeft(), ctrl.ActionLeft(), WorldManager::actions["left"], WorldManager::level, WorldManager::objects);
     
     HandleActionCtrl(old_ctrl.ActionEnter(), ctrl.ActionEnter(), WorldManager::actions["enter"], WorldManager::level, WorldManager::objects);
-    //////////
+    /////////////
+    frame_times.push_back(SDL_GetTicks64() - frame_begin - frame_times[frame_times.size()-1]);
 
-    // CYCLES
+    // 8. CYCLES
     auto cycles = WorldManager::level.GetCycles();
     for (size_t i = 0; i < WorldManager::cyclesDelays.size(); i++)
     {
@@ -311,20 +334,10 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
             }
         }
     }    
-    /////////
+    ////////////
+    frame_times.push_back(SDL_GetTicks64() - frame_begin - frame_times[frame_times.size()-1]);
 
-    // NETWORK SAMPLE CODE (for me to not forget)
-//         Network::SetRepo("https://raw.githubusercontent.com/Hammerill/Sand-Box2D-levels/main/levels");
-// #ifdef Vita
-//         Network::DownloadFile("ux0:Data/Sand-Box2D/levels", "index.json");
-//         Network::DownloadFile("ux0:Data/Sand-Box2D/levels", "default_level/default_level.json");
-// #else
-//         Network::DownloadFile("./levels", "index.json");
-//         Network::DownloadFile("./levels", "default_level/default_level.json");
-// #endif
-    ///////////////////////////////////////////////////////
-
-    // POBJECTS REGISTRATION
+    // 9. POBJECTS REGISTRATION
     for (int i = WorldManager::order.size() - 1; i >= 0; i--)
     {
         WorldManager::objects.push_back(WorldManager::order[i]);
@@ -335,9 +348,10 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
         
         WorldManager::order.pop_back();        
     }
-    ////////////////////////
+    ///////////////////////////
+    frame_times.push_back(SDL_GetTicks64() - frame_begin - frame_times[frame_times.size()-1]);
 
-    // OUT OF BORDERS CHECK
+    // 10. OUT OF BORDERS CHECK
     for (size_t i = 0; i < WorldManager::objects.size(); i++)
     {
         if (
@@ -359,11 +373,24 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
             WorldManager::DeleteObject(i);
         }
     }
-    ///////////////////////
+    ///////////////////////////
+    frame_times.push_back(SDL_GetTicks64() - frame_begin - frame_times[frame_times.size()-1]);
 
-    // ANIMATIONS
+    // 11. ANIMATIONS
     AnimationManager::StepAnim(ANIM_WORLD_MANAGER_INIT);
-    /////////////
+    /////////////////
+    frame_times.push_back(SDL_GetTicks64() - frame_begin - frame_times[frame_times.size()-1]);
+
+    // NETWORK SAMPLE CODE (for me to not forget)
+//         Network::SetRepo("https://raw.githubusercontent.com/Hammerill/Sand-Box2D-levels/main/levels");
+// #ifdef Vita
+//         Network::DownloadFile("ux0:Data/Sand-Box2D/levels", "index.json");
+//         Network::DownloadFile("ux0:Data/Sand-Box2D/levels", "default_level/default_level.json");
+// #else
+//         Network::DownloadFile("./levels", "index.json");
+//         Network::DownloadFile("./levels", "default_level/default_level.json");
+// #endif
+    ///////////////////////////////////////////////////////
 
     return true;
 }
@@ -398,8 +425,6 @@ void WorldManager::Render(Renderer* rr, Controls ctrl)
 
     if (WorldManager::isDebug && rr->GetFont(Translations::GetJp())->GetLoaded())
     {
-        SDL_Point mouse = ctrl.GetMouse();
-
         std::vector<std::string> debugStrings;
 
         debugStrings.push_back("DEBUG");
@@ -407,27 +432,22 @@ void WorldManager::Render(Renderer* rr, Controls ctrl)
         debugStrings.push_back("Camera offset X = " + std::to_string(WorldManager::x_offset));
         debugStrings.push_back("Camera offset Y = " + std::to_string(WorldManager::y_offset));
         debugStrings.push_back("Zoom = " + std::to_string(WorldManager::zoom));
-        debugStrings.push_back("Mouse X = " + std::to_string(mouse.x));
-        debugStrings.push_back("Mouse Y = " + std::to_string(mouse.y));
-        debugStrings.push_back("IsMoving? = " + std::to_string(ctrl.IsMoving()));
-        debugStrings.push_back("Pinch = " + std::to_string(ctrl.GetPinch()));
-        debugStrings.push_back("IsPinching? = " + std::to_string(ctrl.IsPinching()));
-        debugStrings.push_back("Zoom In = " + std::to_string(ctrl.ZoomIn()));
-        debugStrings.push_back("Zoom Out = " + std::to_string(ctrl.ZoomOut()));
-        debugStrings.push_back("Zoom Change coeff = " + std::to_string(zoomChangeCoeff));
-        debugStrings.push_back("Zoom Change = " + std::to_string(zoomChange));
         debugStrings.push_back("Objects count = " + std::to_string(WorldManager::world->GetBodyCount()));
         debugStrings.push_back("Objects rendered = " + std::to_string(renderedItemsCount));
         debugStrings.push_back("Loaded textures = " + std::to_string(WorldManager::textures.size()));
         debugStrings.push_back("");
-        debugStrings.push_back("MENU");
-        debugStrings.push_back("Up = " + std::to_string(ctrl.MenuUp()));
-        debugStrings.push_back("Right = " + std::to_string(ctrl.MenuRight()));
-        debugStrings.push_back("Down = " + std::to_string(ctrl.MenuDown()));
-        debugStrings.push_back("Left = " + std::to_string(ctrl.MenuLeft()));
-        debugStrings.push_back("Enter = " + std::to_string(ctrl.MenuEnter()));
-        debugStrings.push_back("Back = " + std::to_string(ctrl.MenuBack()));
-        debugStrings.push_back("Pause = " + std::to_string(ctrl.Pause()));
+        debugStrings.push_back("STEP TIMES");
+        debugStrings.push_back("01. Physics = " + std::to_string(frame_times[0]));
+        debugStrings.push_back("02. Window change = " + std::to_string(frame_times[1]));
+        debugStrings.push_back("03. Fadeout handling = " + std::to_string(frame_times[2]));
+        debugStrings.push_back("04. Buttons = " + std::to_string(frame_times[3]));
+        debugStrings.push_back("05. Zoom = " + std::to_string(frame_times[4]));
+        debugStrings.push_back("06. Camera type = " + std::to_string(frame_times[5]));
+        debugStrings.push_back("07. Actions = " + std::to_string(frame_times[6]));
+        debugStrings.push_back("08. Cycles = " + std::to_string(frame_times[7]));
+        debugStrings.push_back("09. PObj registration = " + std::to_string(frame_times[8]));
+        debugStrings.push_back("10. OOB check = " + std::to_string(frame_times[9]));
+        debugStrings.push_back("11. Animations = " + std::to_string(frame_times[10]));
 
         WorldManager::RenderDebugScreen(debugStrings, rr);        
     }

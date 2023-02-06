@@ -160,7 +160,7 @@ void GameManager::Cycle()
     {
         while (isRunning)
         {
-            GameManager::a = SDL_GetTicks();
+            GameManager::a = SDL_GetTicks64();
             GameManager::delta = GameManager::a - GameManager::b;
 
             if (GameManager::delta > 1000/60.0)
