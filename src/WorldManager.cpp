@@ -139,14 +139,38 @@ double GetAverage(std::vector<T> const& v)
 }
 
 // Used for decreasing actions code
-void HandleActionCtrl(bool old, bool now, Json::Value key, Level level, std::vector<BasePObj*> objects)
+void HandleActionCtrl(bool old, bool now, Json::Value& key, int index, Level& level, std::vector<BasePObj*>& objects)
 {
+    if (!now && !old)
+        return;
+    
+    const char* key_button;
+    switch (index)
+    {
+    case 0:
+        key_button = "up";
+        break;
+    case 1:
+        key_button = "right";
+        break;
+    case 2:
+        key_button = "down";
+        break;
+    case 3:
+        key_button = "left";
+        break;
+    
+    default:
+        key_button = "enter";
+        break;
+    }
+
     if (now && !old)
-        level.PerformAction(key["keydown_once"], objects);
+        level.PerformAction(key[key_button]["keydown_once"], objects);
     else if (now)
-        level.PerformAction(key["keydown_hold"], objects);
+        level.PerformAction(key[key_button]["keydown_hold"], objects);
     else if (!now && old)
-        level.PerformAction(key["keyup"], objects);
+        level.PerformAction(key[key_button]["keyup"], objects);
 }
 
 std::vector<int> last_frames_speed_x = std::vector<int>();
@@ -322,12 +346,12 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
     previous_frame = std::chrono::high_resolution_clock::now();
 
     // 7. ACTIONS
-    HandleActionCtrl(old_ctrl.ActionUp(), ctrl.ActionUp(), WorldManager::actions["up"],WorldManager::level, WorldManager::objects);
-    HandleActionCtrl(old_ctrl.ActionRight(), ctrl.ActionRight(), WorldManager::actions["right"], WorldManager::level, WorldManager::objects);
-    HandleActionCtrl(old_ctrl.ActionDown(), ctrl.ActionDown(), WorldManager::actions["down"], WorldManager::level, WorldManager::objects);
-    HandleActionCtrl(old_ctrl.ActionLeft(), ctrl.ActionLeft(), WorldManager::actions["left"], WorldManager::level, WorldManager::objects);
+    HandleActionCtrl(old_ctrl.ActionUp(), ctrl.ActionUp(), WorldManager::actions, 0, WorldManager::level, WorldManager::objects);
+    HandleActionCtrl(old_ctrl.ActionRight(), ctrl.ActionRight(), WorldManager::actions, 1, WorldManager::level, WorldManager::objects);
+    HandleActionCtrl(old_ctrl.ActionDown(), ctrl.ActionDown(), WorldManager::actions, 2, WorldManager::level, WorldManager::objects);
+    HandleActionCtrl(old_ctrl.ActionLeft(), ctrl.ActionLeft(), WorldManager::actions, 3, WorldManager::level, WorldManager::objects);
     
-    HandleActionCtrl(old_ctrl.ActionEnter(), ctrl.ActionEnter(), WorldManager::actions["enter"], WorldManager::level, WorldManager::objects);
+    HandleActionCtrl(old_ctrl.ActionEnter(), ctrl.ActionEnter(), WorldManager::actions, 4, WorldManager::level, WorldManager::objects);
     /////////////
     duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
     frame_times.push_back(duration_measure.count());
