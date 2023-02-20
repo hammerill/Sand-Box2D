@@ -1,5 +1,8 @@
 {
     "item_play": "ГРАТИ",
+    "item_community": "КОМ'ЮНІТІ",
+    "item_level_editor": "РЕДАКТОР РІВНІВ",
+    "item_settings": "ПАРАМЕТРИ",
     "item_about": "ПРО ГРУ",
     "item_exit": "ВИЙТИ"
 }

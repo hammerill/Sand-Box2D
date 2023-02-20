@@ -23,7 +23,7 @@ protected:
     double zoomIn = 0;
     double zoomOut = 0;
 
-    bool isMoving = false;
+    bool mousePress = false;
     SDL_Point mouse;
 
     bool isPinching = false;
@@ -93,7 +93,7 @@ public:
     double ZoomOut();
     
     /// @brief Is user pressing left mouse button or touchscreen right now in order to move camera?
-    bool IsMoving();
+    bool MousePress();
     /// @brief Get current mouse (or touchscreen) position.
     /// @return SDL_Point object with fields X and Y.
     SDL_Point GetMouse();

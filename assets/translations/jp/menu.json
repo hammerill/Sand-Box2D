@@ -1,5 +1,8 @@
 {
     "item_play": "スタート",
+    "item_community": "コミュニティ",
+    "item_level_editor": "レベルエディター",
+    "item_settings": "設定",
     "item_about": "ついて",
     "item_exit": "出口"
 }

@@ -1,5 +1,8 @@
 {
     "item_play": "ИГРАТЬ",
+    "item_community": "КОМЬЮНИТИ",
+    "item_level_editor": "РЕДАКТОР УРОВНЕЙ",
+    "item_settings": "НАСТРОЙКИ",
     "item_about": "ОБ ИГРЕ",
     "item_exit": "ВЫЙТИ"
 }

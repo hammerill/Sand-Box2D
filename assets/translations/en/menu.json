@@ -1,5 +1,8 @@
 {
     "item_play": "PLAY",
+    "item_community": "COMMUNITY",
+    "item_level_editor": "LEVEL EDITOR",
+    "item_settings": "SETTINGS",
     "item_about": "ABOUT",
     "item_exit": "EXIT"
 }

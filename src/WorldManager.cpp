@@ -253,7 +253,7 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
             last_frames_speed_y.erase(last_frames_speed_y.begin());
         }
 
-        if (ctrl.IsMoving())
+        if (ctrl.MousePress())
         {
             WorldManager::x_offset += (ctrl.GetMouse().x - old_ctrl.GetMouse().x);
             WorldManager::y_offset += (ctrl.GetMouse().y - old_ctrl.GetMouse().y);

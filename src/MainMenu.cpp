@@ -22,7 +22,7 @@ void MainMenu::Init(std::string translations_base)
 
 SDL_Rect GetItemRect(Renderer* rr, std::vector<std::string> menu_items, size_t item_index)
 {
-    int menuScale = rr->GetWindowParams().height / 200;
+    int menuScale = rr->GetWindowParams().height / 250;
     SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions("-", menuScale);
 
     float distanceScale = 1.2;
@@ -34,7 +34,7 @@ SDL_Rect GetItemRect(Renderer* rr, std::vector<std::string> menu_items, size_t i
     int menu_w = *std::max_element(menuWidths.begin(), menuWidths.end());
     int menu_h = (menu_items.size()) * textDimensions.h * distanceScale;
 
-    int x_offset = (rr->GetWindowParams().width / 3.5) - (menu_w / 2);
+    int x_offset = (rr->GetWindowParams().width / 2.5) - (menu_w / 2);
     int y_offset = (rr->GetWindowParams().height / 1.5) - (menu_h / 2);
 
     SDL_Rect rect = rr->GetFont()->GetTextDimensions(menu_items[item_index].c_str(), menuScale);
@@ -59,6 +59,9 @@ bool MainMenu::Step(Settings* settings, Renderer* rr, Controls ctrl, Controls ol
         else
         {
             MainMenu::menu_items.push_back(Translations::Load("menu.json/item_play"));
+            MainMenu::menu_items.push_back(Translations::Load("menu.json/item_community"));
+            MainMenu::menu_items.push_back(Translations::Load("menu.json/item_level_editor"));
+            MainMenu::menu_items.push_back(Translations::Load("menu.json/item_settings"));
             MainMenu::menu_items.push_back(Translations::Load("menu.json/item_about"));
             MainMenu::menu_items.push_back(Translations::Load("menu.json/item_exit"));
 
@@ -81,6 +84,15 @@ bool MainMenu::Step(Settings* settings, Renderer* rr, Controls ctrl, Controls ol
                 MainMenu::level_name = "DEFAULT LEVEL";
                 break;
             case 1:
+                MainMenu::status = "community";
+                break;
+            case 2:
+                MainMenu::status = "level_editor";
+                break;
+            case 3:
+                MainMenu::status = "settings";
+                break;
+            case 4:
                 MainMenu::status = "about";
                 break;
             
@@ -115,7 +127,7 @@ bool MainMenu::Step(Settings* settings, Renderer* rr, Controls ctrl, Controls ol
                     rr->GetSounds()->PlaySfx("menu_switch");
                     MainMenu::hovered_item = i;
                 }
-                if (old_ctrl.IsMoving() && !ctrl.IsMoving()) // Maybe I should set another name for this ctrl.
+                if (old_ctrl.MousePress() && !ctrl.MousePress())
                 {
                     rr->GetSounds()->PlaySfx("menu_enter");
                     MainMenu::status = "fadeout";
@@ -154,7 +166,7 @@ void MainMenu::Render(Renderer* rr)
 
     bool hover_blinker = MainMenu::status == "fadeout" && (int)(rr->GetFrames() / 10) % 2;
 
-    int menuScale = rr->GetWindowParams().height / 200;
+    int menuScale = rr->GetWindowParams().height / 250;
     SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions("-", menuScale);
 
     float distanceScale = 1.2;
@@ -166,7 +178,7 @@ void MainMenu::Render(Renderer* rr)
     int menu_w = *std::max_element(menuWidths.begin(), menuWidths.end());
     int menu_h = (MainMenu::menu_items.size()) * textDimensions.h * distanceScale;
 
-    int x_offset = (rr->GetWindowParams().width / 3.5) - (menu_w / 2);
+    int x_offset = (rr->GetWindowParams().width / 2.5) - (menu_w / 2);
     int y_offset = (rr->GetWindowParams().height / 1.5) - (menu_h / 2);
 
     SDL_SetRenderDrawColor(rr->GetRenderer(), 0, 0, 0, 0);

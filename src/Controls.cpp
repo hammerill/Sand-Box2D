@@ -62,12 +62,12 @@ void Controls::Check()
 
         if (old == now)
         {
-            Controls::isMoving = true;
+            Controls::mousePress = true;
             Controls::isPinching = false;
         }
         else
         {
-            Controls::isMoving = false;
+            Controls::mousePress = false;
             Controls::isPinching = false;
         }
     }
@@ -88,18 +88,18 @@ void Controls::Check()
         
         if (old == now)
         {
-            Controls::isMoving = true;
+            Controls::mousePress = true;
             Controls::isPinching = true;
         }
         else
         {
-            Controls::isMoving = false;
+            Controls::mousePress = false;
             Controls::isPinching = false;
         }
     }
     else
     {
-        Controls::isMoving = false;
+        Controls::mousePress = false;
         Controls::isPinching = false;
     }
     
@@ -162,7 +162,7 @@ void Controls::Check()
         case SDL_MOUSEBUTTONDOWN:
             if (e.button.button == SDL_BUTTON_LEFT)
             {
-                Controls::isMoving = true;
+                Controls::mousePress = true;
                 
                 if (e.button.clicks == 2)
                     Controls::fullscreen = true;
@@ -170,7 +170,7 @@ void Controls::Check()
             
             break;
         case SDL_MOUSEBUTTONUP:
-            Controls::isMoving = false;
+            Controls::mousePress = false;
             Controls::fullscreen = false;
             break;
         case SDL_MOUSEMOTION:
@@ -289,7 +289,7 @@ double Controls::MoveLeft()     { return Controls::moveLeft; }
 double Controls::ZoomIn()       { return Controls::zoomIn; }
 double Controls::ZoomOut()      { return Controls::zoomOut; }
 
-bool Controls::IsMoving()       { return Controls::isMoving; }
+bool Controls::MousePress()       { return Controls::mousePress; }
 SDL_Point Controls::GetMouse()  { return Controls::mouse; }
 
 bool Controls::IsPinching()     { return Controls::isPinching; }

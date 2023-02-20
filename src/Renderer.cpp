@@ -102,7 +102,7 @@ void Renderer::SetCursor(bool enable)
 bool Renderer::GetCursor(Controls ctrl)
 {
 #ifdef Vita
-    return ctrl.IsMoving();
+    return ctrl.MousePress();
 #else
     return cursor;
 #endif
