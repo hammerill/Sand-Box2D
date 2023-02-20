@@ -1,6 +1,7 @@
 #include "MainMenu.h"
 
 SDL_Texture* logo;
+SDL_Texture* title;
 
 MainMenu::MainMenu() {}
 MainMenu::~MainMenu()
@@ -17,7 +18,8 @@ void MainMenu::Init(std::string translations_base)
     MainMenu::lang_selector.Init(translations_base);
     MainMenu::lang_chosen = false;
     
-    logo = nullptr;    
+    logo = nullptr;  
+    title = nullptr;    
 }
 
 SDL_Rect GetItemRect(Renderer* rr, std::vector<std::string> menu_items, size_t item_index)
@@ -51,6 +53,8 @@ bool MainMenu::Step(Settings* settings, Renderer* rr, Controls ctrl, Controls ol
 {
     if (logo == nullptr)
         logo = SDL_CreateTextureFromSurface(rr->GetRenderer(), IMG_Load("./assets/img/logo.png"));
+    if (title == nullptr)
+        title = SDL_CreateTextureFromSurface(rr->GetRenderer(), IMG_Load("./assets/img/title.png"));
 
     if (!MainMenu::lang_chosen)
     {
@@ -181,7 +185,7 @@ void MainMenu::Render(Renderer* rr)
     int x_offset = (rr->GetWindowParams().width / 2.5) - (menu_w / 2);
     int y_offset = (rr->GetWindowParams().height / 1.5) - (menu_h / 2);
 
-    SDL_SetRenderDrawColor(rr->GetRenderer(), 0, 0, 0, 0);
+    SDL_SetRenderDrawColor(rr->GetRenderer(), 10, 10, 10, 0);
     SDL_RenderClear(rr->GetRenderer());
 
     for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
@@ -226,13 +230,43 @@ void MainMenu::Render(Renderer* rr)
             );
     }
 
-    // SDL_Rect logo_rect = {
-    //     rr->GetWindowParams().width / 3,
-    //     rr->GetWindowParams().height / 8,
-    //     rr->GetWindowParams().height / 10,
-    //     rr->GetWindowParams().height / 10
-    // };
-    // SDL_RenderCopyEx(rr->GetRenderer(), logo, NULL, &logo_rect, 0, NULL, SDL_FLIP_NONE);
+    SDL_Rect logo_rect = {
+        rr->GetWindowParams().width / 3 - rr->GetWindowParams().height / 16,
+        rr->GetWindowParams().height / 5 - rr->GetWindowParams().height / 16,
+        rr->GetWindowParams().height / 8,
+        rr->GetWindowParams().height / 8
+    };
+    SDL_RenderCopyEx(rr->GetRenderer(), logo, NULL, &logo_rect, 0, NULL, SDL_FLIP_NONE);
+
+    SDL_Rect title_rect = {
+        rr->GetWindowParams().width / 3 + rr->GetWindowParams().height / 11,
+        rr->GetWindowParams().height / 5 - 7 * menuScale,
+        78 * menuScale * 2,
+        7 * menuScale * 2
+    };
+    SDL_RenderCopyEx(rr->GetRenderer(), title, NULL, &title_rect, 0, NULL, SDL_FLIP_NONE);
+
+    const char* version_string = "v1.0.0 PRE-RELEASE";
+    SDL_Rect version_dimensions = rr->GetFont()->GetTextDimensions(version_string, menuScale / 2);
+    rr->RenderText(
+        version_string,
+        rr->GetWindowParams().width - version_dimensions.w,
+        rr->GetWindowParams().height - version_dimensions.h,
+        menuScale / 2,
+        false, false,
+        0x40, 0x40, 0x40
+    );
+
+    const char* warning_string = "MOST OF THE BUTTONS DON'T WORK YET";
+    SDL_Rect warning_dimensions = rr->GetFont()->GetTextDimensions(warning_string, menuScale / 2);
+    rr->RenderText(
+        warning_string,
+        0,
+        rr->GetWindowParams().height - warning_dimensions.h,
+        menuScale / 2,
+        false, false,
+        0x40, 0x40, 0x40
+    );
     
     AnimationManager::RenderAnim(ANIM_FADE, rr);
 }

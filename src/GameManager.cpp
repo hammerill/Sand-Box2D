@@ -99,7 +99,7 @@ bool GameManager::Step()
                 
                 isInMenu = false;
             }
-            else if (GameManager::main_menu.GetStatus() == "about")
+            else if (GameManager::main_menu.GetStatus() == "settings")
             {
                 GameManager::settings.Clear();
                 return false;

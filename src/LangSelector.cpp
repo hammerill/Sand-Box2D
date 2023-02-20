@@ -161,7 +161,7 @@ void LangSelector::Render(Renderer* rr)
     int menu_h = (LangSelector::langs.size()) * textDimensions.h * distanceScale;
     int y_offset = (rr->GetWindowParams().height / 2) - (menu_h / 2);
 
-    SDL_SetRenderDrawColor(rr->GetRenderer(), 0, 0, 0, 0);
+    SDL_SetRenderDrawColor(rr->GetRenderer(), 10, 10, 10, 0);
     SDL_RenderClear(rr->GetRenderer());
 
     size_t i = 0;
