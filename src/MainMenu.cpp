@@ -43,7 +43,7 @@ SDL_Rect GetItemRect(Renderer* rr, std::vector<std::string> menu_items, size_t i
     int menu_h = (menu_items.size()) * textDimensions.h * distanceScale;
 
     int x_offset = (rr->GetWindowParams().width / 2.5) - (menu_w / 2);
-    int y_offset = (rr->GetWindowParams().height / 1.5) - (menu_h / 2);
+    int y_offset = (rr->GetWindowParams().height / 1.5) - (menu_h / 2.25);
 
     SDL_Rect rect = rr->GetFont()->GetTextDimensions(menu_items[item_index].c_str(), menuScale);
 
@@ -164,9 +164,9 @@ void MainMenu::Render(Renderer* rr)
     int menu_h = (MainMenu::menu_items.size()) * textDimensions.h * distanceScale;
 
     int x_offset = (rr->GetWindowParams().width / 2.5) - (menu_w / 2);
-    int y_offset = (rr->GetWindowParams().height / 1.5) - (menu_h / 2);
+    int y_offset = (rr->GetWindowParams().height / 1.5) - (menu_h / 2.25);
 
-    SDL_SetRenderDrawColor(rr->GetRenderer(), 10, 10, 10, 0);
+    SDL_SetRenderDrawColor(rr->GetRenderer(), 0x10, 0x10, 0x10, 0);
     SDL_RenderClear(rr->GetRenderer());
 
     for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
@@ -236,23 +236,12 @@ void MainMenu::Render(Renderer* rr)
     };
     SDL_RenderCopyEx(rr->GetRenderer(), title, NULL, &title_rect, 0, NULL, SDL_FLIP_NONE);
 
-    const char* version_string = "v1.0.0 PRE-RELEASE";
+    const char* version_string = "v1.0.0 DEMO";
     SDL_Rect version_dimensions = rr->GetFont()->GetTextDimensions(version_string, menuScale / 2);
     rr->RenderText(
         version_string,
         rr->GetWindowParams().width - version_dimensions.w,
         rr->GetWindowParams().height - version_dimensions.h,
-        menuScale / 2,
-        false, false,
-        0x40, 0x40, 0x40
-    );
-
-    const char* warning_string = "MOST OF THE BUTTONS DON'T WORK YET";
-    SDL_Rect warning_dimensions = rr->GetFont()->GetTextDimensions(warning_string, menuScale / 2);
-    rr->RenderText(
-        warning_string,
-        0,
-        rr->GetWindowParams().height - warning_dimensions.h,
         menuScale / 2,
         false, false,
         0x40, 0x40, 0x40
