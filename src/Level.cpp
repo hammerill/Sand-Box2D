@@ -126,11 +126,7 @@ BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
     }    
 }
 
-Level::~Level()
-{
-    // SDL_DestroyTexture(texture); 
-    // I need to think about how to load/unload textures later.
-}
+Level::~Level() {}
 
 bool Level::LoadFile(std::string base, std::string filepath)
 {

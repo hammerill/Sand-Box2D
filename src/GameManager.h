@@ -7,6 +7,13 @@
 #include "MainMenu.h"
 #include "WorldManager.h"
 
+/// @brief Which single class is responsible for the entire screen?
+enum CurrentVisual 
+{
+    MAIN_MENU_VISUAL = 0,           // MainMenu is used now.
+    WORLD_MANAGER_VISUAL            // WorldManager is used now.
+};
+
 /// @brief Class that manages everything.
 class GameManager
 {
@@ -17,6 +24,8 @@ private:
 
     MainMenu main_menu;
     WorldManager* world_manager;
+
+    CurrentVisual current_visual;
 
     WindowParams fullscreen = {};
     WindowParams windowed = {WINDOWED, 960, 544};

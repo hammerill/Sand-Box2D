@@ -43,8 +43,6 @@ GameManager::GameManager(const char* path_to_settings, const char* path_to_def_s
 
 const int mouse_frames_duration = 60;
 
-bool isInMenu = true;
-
 bool GameManager::Step()
 {
     if (GameManager::settings.Get("speed_correction").asBool())
@@ -78,48 +76,54 @@ bool GameManager::Step()
 #endif
 
     // STEPS
-    if (isInMenu)
+    bool key;
+    do
     {
-        if (!GameManager::main_menu.Step(&(GameManager::settings), GameManager::rr, GameManager::ctrl, GameManager::old_ctrl))
+        key = false;
+        switch (current_visual)
         {
-            if (GameManager::main_menu.GetStatus() == "play")
+        case MAIN_MENU_VISUAL:
+            if (!GameManager::main_menu.Step(&(GameManager::settings), GameManager::rr, GameManager::ctrl, GameManager::old_ctrl))
             {
-                Level level;
-                level.LoadFile(
-                    GameManager::settings.Get("path_to_def_level_base").asString(), 
-                    GameManager::settings.Get("path_to_def_level").asString()
-                );
-                GameManager::world_manager->LoadLevel(level, GameManager::rr);
-                AnimationManager::SetLevelName(GameManager::main_menu.GetLevelName());
-                
-                // We give WorldManager first step here to avoid rendering problems
-                // (if you try to remove first step here it will try to call Render() before Step()
-                // which may cause some graphical issues).
-                GameManager::world_manager->Step(GameManager::rr, GameManager::ctrl, GameManager::old_ctrl);
-                
-                isInMenu = false;
+                if (GameManager::main_menu.GetStatus() == "play")
+                {
+                    Level level;
+                    level.LoadFile(
+                        GameManager::settings.Get("path_to_def_level_base").asString(), 
+                        GameManager::settings.Get("path_to_def_level").asString()
+                    );
+                    GameManager::world_manager->LoadLevel(level, GameManager::rr);
+                    
+                    AnimationManager::SetLevelName(GameManager::main_menu.GetLevelName());
+                    
+                    key = true;
+                    current_visual = WORLD_MANAGER_VISUAL;
+                }
+                else if (GameManager::main_menu.GetStatus() == "settings")
+                {
+                    GameManager::settings.Clear();
+                    return false;
+                }
+                else
+                    return false;
             }
-            else if (GameManager::main_menu.GetStatus() == "settings")
+            break;
+        
+        case WORLD_MANAGER_VISUAL:
+            if (!GameManager::world_manager->Step(GameManager::rr, GameManager::ctrl, GameManager::old_ctrl))
             {
-                GameManager::settings.Clear();
-                return false;
+                GameManager::world_manager->FreeMemory();
+                GameManager::main_menu.Init(GameManager::settings.Get("path_to_translations").asString());
+
+                key = true;
+                current_visual = MAIN_MENU_VISUAL;
             }
-            else
-                return false;
+            break;
+        
+        default:
+            break;
         }
-    }
-    else
-        if (!GameManager::world_manager->Step(GameManager::rr, GameManager::ctrl, GameManager::old_ctrl))
-        {
-            GameManager::world_manager->FreeMemory();
-            GameManager::main_menu.Init(GameManager::settings.Get("path_to_translations").asString());
-            
-            // We give MainMenu first step here to avoid rendering problems
-            // (if you try to remove first step here it will try to call Render() before Step()
-            // which may cause some graphical issues).
-            GameManager::main_menu.Step(&(GameManager::settings), GameManager::rr, GameManager::ctrl, GameManager::old_ctrl);
-            isInMenu = true;
-        }
+    } while (key);
     ////////
 
     return true;
@@ -135,10 +139,19 @@ void GameManager::Render()
     }
 
     // RENDER
-    if (isInMenu)
+    switch (current_visual)
+    {
+    case MAIN_MENU_VISUAL:
         GameManager::main_menu.Render(GameManager::rr);
-    else
+        break;
+    
+    case WORLD_MANAGER_VISUAL:
         GameManager::world_manager->Render(GameManager::rr, GameManager::ctrl);
+        break;
+    
+    default:
+        break;
+    }
     /////////
 
     GameManager::rr->AddFrame();
@@ -148,6 +161,7 @@ void GameManager::Render()
 void GameManager::Cycle()
 {
     bool isRunning = true;
+    current_visual = MAIN_MENU_VISUAL;
 
     // Network::SetRepo(GameManager::settings.Get("url_levels").asString());
     // Network::DownloadFile(GameManager::settings.Get("path_to_levels").asString(), "index.json");
