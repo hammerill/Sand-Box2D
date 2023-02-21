@@ -96,7 +96,7 @@ bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
         }
     }
 
-    if (ctrl.MenuEnter() && !old_ctrl.MenuEnter())
+    if (ctrl.MenuEnter())
     {
         rr->GetSounds()->PlaySfx("menu_enter");
         MainMenu::status = "fadeout";

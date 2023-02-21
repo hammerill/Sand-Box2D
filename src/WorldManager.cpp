@@ -278,12 +278,12 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
 
     if (camera.zoom)
     {
-        if (ctrl.IsPinching() && ((WorldManager::zoom + (ctrl.GetPinch() - old_ctrl.GetPinch())) > 10))
+        if (ctrl.IsPinching() && ((WorldManager::zoom * ((float)ctrl.GetPinch() / (float)old_ctrl.GetPinch())) >= 1))
         {
             CorrectOffset(  camera.move
                                 ? ctrl.GetMouse() : scr_center,
-                            (ctrl.GetPinch() - old_ctrl.GetPinch()));
-            WorldManager::zoom += (ctrl.GetPinch() - old_ctrl.GetPinch());
+                            (WorldManager::zoom * ((float)ctrl.GetPinch() / (float)old_ctrl.GetPinch())) - WorldManager::zoom);
+            WorldManager::zoom *= ((float)ctrl.GetPinch() / (float)old_ctrl.GetPinch());
         }
 
         if (WorldManager::zoom <= 1)

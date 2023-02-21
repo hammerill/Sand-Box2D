@@ -56,7 +56,7 @@ bool LangSelector::Step(Settings* settings, Renderer* rr, Controls ctrl, Control
     else if (fadeout)
         return false;
     
-    if (ctrl.MenuEnter() && !old_ctrl.MenuEnter())
+    if (ctrl.MenuEnter())
     {
         rr->GetSounds()->PlaySfx("menu_enter");
         LangSelector::fadeout = true;
