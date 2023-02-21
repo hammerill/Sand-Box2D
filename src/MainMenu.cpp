@@ -211,19 +211,28 @@ void MainMenu::Render(Renderer* rr)
             );
     }
 
+    int logo_length = 
+        (rr->GetWindowParams().height / 6) 
+        +
+        (rr->GetWindowParams().height / 16)
+        +
+        (78 * menuScale * 3);
+    
+    int logo_height = y_offset - textDimensions.h / 16;
+
     SDL_Rect logo_rect = {
-        rr->GetWindowParams().width / 3 - rr->GetWindowParams().height / 16,
-        rr->GetWindowParams().height / 5 - rr->GetWindowParams().height / 16,
-        rr->GetWindowParams().height / 8,
-        rr->GetWindowParams().height / 8
+        rr->GetWindowParams().width / 2 - logo_length / 2,
+        logo_height / 2 - rr->GetWindowParams().height / 12,
+        rr->GetWindowParams().height / 6,
+        rr->GetWindowParams().height / 6
     };
     SDL_RenderCopyEx(rr->GetRenderer(), logo, NULL, &logo_rect, 0, NULL, SDL_FLIP_NONE);
 
     SDL_Rect title_rect = {
-        rr->GetWindowParams().width / 3 + rr->GetWindowParams().height / 11,
-        rr->GetWindowParams().height / 5 - 7 * menuScale,
-        78 * menuScale * 2,
-        7 * menuScale * 2
+        rr->GetWindowParams().width / 2 - logo_length / 2 + (rr->GetWindowParams().height / 6) + (rr->GetWindowParams().height / 16),
+        logo_height / 2 - (7 * menuScale * 3) / 2,
+        78 * menuScale * 3,
+        7 * menuScale * 3
     };
     SDL_RenderCopyEx(rr->GetRenderer(), title, NULL, &title_rect, 0, NULL, SDL_FLIP_NONE);
 
