@@ -38,7 +38,10 @@ GameManager::GameManager(const char* path_to_settings, const char* path_to_def_s
     );
 
     GameManager::main_menu = MainMenu();
-    GameManager::main_menu.Init(GameManager::settings.Get("path_to_translations").asString());
+    GameManager::main_menu.Init();
+
+    GameManager::lang_selector = LangSelector();
+    GameManager::lang_selector.Init(GameManager::settings.Get("path_to_translations").asString());
 }
 
 const int mouse_frames_duration = 60;
@@ -83,7 +86,7 @@ bool GameManager::Step()
         switch (current_visual)
         {
         case MAIN_MENU_VISUAL:
-            if (!GameManager::main_menu.Step(&(GameManager::settings), GameManager::rr, GameManager::ctrl, GameManager::old_ctrl))
+            if (!GameManager::main_menu.Step(GameManager::rr, GameManager::ctrl, GameManager::old_ctrl))
             {
                 if (GameManager::main_menu.GetStatus() == "play")
                 {
@@ -93,7 +96,7 @@ bool GameManager::Step()
                         GameManager::settings.Get("path_to_def_level").asString()
                     );
                     GameManager::world_manager->LoadLevel(level, GameManager::rr);
-                    
+
                     AnimationManager::SetLevelName(GameManager::main_menu.GetLevelName());
                     
                     key = true;
@@ -102,7 +105,11 @@ bool GameManager::Step()
                 else if (GameManager::main_menu.GetStatus() == "settings")
                 {
                     GameManager::settings.Clear();
-                    return false;
+                    
+                    GameManager::lang_selector.Init(GameManager::settings.Get("path_to_translations").asString());
+
+                    key = true;
+                    current_visual = LANG_SELECTOR_VISUAL;
                 }
                 else
                     return false;
@@ -113,7 +120,17 @@ bool GameManager::Step()
             if (!GameManager::world_manager->Step(GameManager::rr, GameManager::ctrl, GameManager::old_ctrl))
             {
                 GameManager::world_manager->FreeMemory();
-                GameManager::main_menu.Init(GameManager::settings.Get("path_to_translations").asString());
+                GameManager::main_menu.Init();
+
+                key = true;
+                current_visual = MAIN_MENU_VISUAL;
+            }
+            break;
+        
+        case LANG_SELECTOR_VISUAL:
+            if (!GameManager::lang_selector.Step(&(GameManager::settings), GameManager::rr, GameManager::ctrl, GameManager::old_ctrl))
+            {
+                GameManager::main_menu.Init();
 
                 key = true;
                 current_visual = MAIN_MENU_VISUAL;
@@ -149,6 +166,10 @@ void GameManager::Render()
         GameManager::world_manager->Render(GameManager::rr, GameManager::ctrl);
         break;
     
+    case LANG_SELECTOR_VISUAL:
+        GameManager::lang_selector.Render(GameManager::rr);
+        break;
+    
     default:
         break;
     }
@@ -161,7 +182,8 @@ void GameManager::Render()
 void GameManager::Cycle()
 {
     bool isRunning = true;
-    current_visual = MAIN_MENU_VISUAL;
+
+    current_visual = LANG_SELECTOR_VISUAL;
 
     // Network::SetRepo(GameManager::settings.Get("url_levels").asString());
     // Network::DownloadFile(GameManager::settings.Get("path_to_levels").asString(), "index.json");

@@ -6,12 +6,14 @@
 
 #include "MainMenu.h"
 #include "WorldManager.h"
+#include "LangSelector.h"
 
 /// @brief Which single class is responsible for the entire screen?
 enum CurrentVisual 
 {
     MAIN_MENU_VISUAL = 0,           // MainMenu is used now.
-    WORLD_MANAGER_VISUAL            // WorldManager is used now.
+    WORLD_MANAGER_VISUAL,           // WorldManager is used now.
+    LANG_SELECTOR_VISUAL            // LangSelector is used now.
 };
 
 /// @brief Class that manages everything.
@@ -24,6 +26,7 @@ private:
 
     MainMenu main_menu;
     WorldManager* world_manager;
+    LangSelector lang_selector;
 
     CurrentVisual current_visual;
 

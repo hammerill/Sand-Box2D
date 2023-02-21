@@ -9,14 +9,20 @@ MainMenu::~MainMenu()
     SDL_DestroyTexture(logo);
 }
 
-void MainMenu::Init(std::string translations_base)
+void MainMenu::Init()
 {
     MainMenu::menu_items = std::vector<std::string>();
     MainMenu::hovered_item = 0;
     MainMenu::status = "";
 
-    MainMenu::lang_selector.Init(translations_base);
-    MainMenu::lang_chosen = false;
+    MainMenu::menu_items.push_back(Translations::Load("menu.json/item_play"));
+    MainMenu::menu_items.push_back(Translations::Load("menu.json/item_community"));
+    MainMenu::menu_items.push_back(Translations::Load("menu.json/item_level_editor"));
+    MainMenu::menu_items.push_back(Translations::Load("menu.json/item_settings"));
+    MainMenu::menu_items.push_back(Translations::Load("menu.json/item_about"));
+    MainMenu::menu_items.push_back(Translations::Load("menu.json/item_exit"));
+
+    AnimationManager::InitAnim(ANIM_FADE_IN);
     
     logo = nullptr;  
     title = nullptr;    
@@ -49,31 +55,12 @@ SDL_Rect GetItemRect(Renderer* rr, std::vector<std::string> menu_items, size_t i
     return rect;
 }
 
-bool MainMenu::Step(Settings* settings, Renderer* rr, Controls ctrl, Controls old_ctrl)
+bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
 {
     if (logo == nullptr)
         logo = SDL_CreateTextureFromSurface(rr->GetRenderer(), IMG_Load("./assets/img/logo.png"));
     if (title == nullptr)
         title = SDL_CreateTextureFromSurface(rr->GetRenderer(), IMG_Load("./assets/img/title.png"));
-
-    if (!MainMenu::lang_chosen)
-    {
-        if (MainMenu::lang_selector.Step(settings, rr, ctrl, old_ctrl))
-            return true;
-        else
-        {
-            MainMenu::menu_items.push_back(Translations::Load("menu.json/item_play"));
-            MainMenu::menu_items.push_back(Translations::Load("menu.json/item_community"));
-            MainMenu::menu_items.push_back(Translations::Load("menu.json/item_level_editor"));
-            MainMenu::menu_items.push_back(Translations::Load("menu.json/item_settings"));
-            MainMenu::menu_items.push_back(Translations::Load("menu.json/item_about"));
-            MainMenu::menu_items.push_back(Translations::Load("menu.json/item_exit"));
-
-            AnimationManager::InitAnim(ANIM_FADE_IN);
-
-            MainMenu::lang_chosen = true;
-        }
-    }
     
     if (AnimationManager::StepAnim(ANIM_FADE))
         return true; // If screen still fades we don't care about controls and do early return.
@@ -162,12 +149,6 @@ bool MainMenu::Step(Settings* settings, Renderer* rr, Controls ctrl, Controls ol
 
 void MainMenu::Render(Renderer* rr)
 {
-    if (!MainMenu::lang_chosen)
-    {
-        MainMenu::lang_selector.Render(rr);
-        return;
-    }
-
     bool hover_blinker = MainMenu::status == "fadeout" && (int)(rr->GetFrames() / 10) % 2;
 
     int menuScale = rr->GetWindowParams().height / 250;
