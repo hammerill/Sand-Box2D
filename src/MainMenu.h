@@ -12,6 +12,10 @@
 #include "Translations.h"
 #include "Animations.h"
 
+#ifndef M_PI
+#define M_PI           3.14159265358979323846264338327950288  /* pi */
+#endif
+
 class MainMenuPhysics
 {
 private:
@@ -21,6 +25,10 @@ private:
     b2Body* paddle = nullptr;
     b2Body* box_logo = nullptr;
 
+    float paddle_width, paddle_height;
+
+    float RAD2DEG;
+
 public:
     MainMenuPhysics();
     ~MainMenuPhysics();
@@ -28,7 +36,9 @@ public:
     void Init();
     
     void Step();
-    void Render();
+    void RenderBG(Renderer* rr, int x_offset, int y_offset);
+    void RenderBox(Renderer* rr, int x_offset, int y_offset);
+    void RenderPaddle(Renderer* rr, int x_offset, int y_offset);
 
     void FreeMemory();
 };
@@ -40,6 +50,8 @@ class MainMenu
 private:
     std::vector<std::string> menu_items;
     size_t hovered_item = 0;
+
+    MainMenuPhysics physics;
 
     /// Status that used after unloading MainMenu.
     /// 

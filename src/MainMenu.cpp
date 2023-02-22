@@ -6,10 +6,21 @@ SDL_Texture* title;
 MainMenuPhysics::MainMenuPhysics() {}
 MainMenuPhysics::~MainMenuPhysics() { MainMenuPhysics::FreeMemory(); }
 
+float GetRandomFloat(float min, float max)
+{
+    return  min
+            +
+            static_cast<float> (rand())
+            /
+            (static_cast<float> (RAND_MAX / (max-min)));
+}
+
 void MainMenuPhysics::Init()
 {
     MainMenuPhysics::FreeMemory();
     MainMenuPhysics::world = new b2World({0, 9.81});
+
+    MainMenuPhysics::RAD2DEG = 180 / M_PI;
 
     // PADDLE
     b2BodyDef paddle_def = b2BodyDef();
@@ -18,9 +29,12 @@ void MainMenuPhysics::Init()
 
     paddle_def.type = b2_kinematicBody;
     paddle_def.angle = 0;
-    paddle_def.position.Set(0, 0);
+    paddle_def.position.Set(1, 4);
 
-    paddle_shape.SetAsBox(5, 1);
+    MainMenuPhysics::paddle_width = 2;
+    MainMenuPhysics::paddle_height = 0.5;
+
+    paddle_shape.SetAsBox(paddle_width / 2.0, paddle_height / 2.0);
     
     paddle_fixture_def.shape = &(paddle_shape);
     paddle_fixture_def.density = 1;
@@ -40,7 +54,7 @@ void MainMenuPhysics::Init()
     box_logo_def.angle = 0;
     box_logo_def.position.Set(0.5, 0.5);
 
-    box_logo_shape.SetAsBox(2, 2);
+    box_logo_shape.SetAsBox(0.5, 0.5);
     
     box_logo_fixture_def.shape = &(box_logo_shape);
     box_logo_fixture_def.density = 1;
@@ -48,14 +62,70 @@ void MainMenuPhysics::Init()
     box_logo_fixture_def.restitution = 0.5f;
 
     MainMenuPhysics::box_logo = world->CreateBody(&(box_logo_def));
+    MainMenuPhysics::box_logo->SetAngularVelocity(GetRandomFloat(-0.5, 0.5));
     MainMenuPhysics::box_logo->CreateFixture(&(box_logo_fixture_def));
     ///////////
 }
 
-void MainMenuPhysics::Step() {}
-void MainMenuPhysics::Render() {}
+void MainMenuPhysics::Step()
+{
+    MainMenuPhysics::world->Step(1.0 / 60.0, 3, 3);
+}
+void MainMenuPhysics::RenderBG(Renderer* rr, int x_offset, int y_offset)
+{
+    
+}
+void MainMenuPhysics::RenderBox(Renderer* rr, int x_offset, int y_offset)
+{
+    const int zoom = rr->GetWindowParams().height / 6;
 
-void MainMenuPhysics::FreeMemory() {}
+    b2Vec2 box_logo_pos = MainMenuPhysics::box_logo->GetPosition();
+    SDL_Rect box_logo_rect;
+    
+    box_logo_rect.w = zoom;
+    box_logo_rect.h = zoom;
+
+    box_logo_rect.x = (box_logo_pos.x * zoom) + x_offset - (box_logo_rect.w / 2.0f);
+    box_logo_rect.y = (box_logo_pos.y * zoom) + y_offset - (box_logo_rect.h / 2.0f);
+
+    SDL_RenderCopyEx(rr->GetRenderer(), logo, NULL, &box_logo_rect, MainMenuPhysics::box_logo->GetAngle() * MainMenuPhysics::RAD2DEG, NULL, SDL_FLIP_NONE);
+}
+void MainMenuPhysics::RenderPaddle(Renderer* rr, int x_offset, int y_offset)
+{
+    const int zoom = rr->GetWindowParams().height / 6;
+    
+    b2Vec2 paddle_pos = MainMenuPhysics::paddle->GetPosition();
+    SDL_Rect paddle_rect;
+    
+    paddle_rect.w = MainMenuPhysics::paddle_width * zoom;
+    paddle_rect.h = MainMenuPhysics::paddle_height * zoom;
+
+    paddle_rect.x = (paddle_pos.x * zoom) + x_offset - (paddle_rect.w / 2.0f);
+    paddle_rect.y = (paddle_pos.y * zoom) + y_offset - (paddle_rect.h / 2.0f);
+
+    SDL_SetRenderDrawColor(rr->GetRenderer(), 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_RenderFillRect(rr->GetRenderer(), &paddle_rect);
+}
+
+void MainMenuPhysics::FreeMemory()
+{
+    if (MainMenuPhysics::paddle != nullptr)
+    {
+        MainMenuPhysics::world->DestroyBody(MainMenuPhysics::paddle);
+        MainMenuPhysics::paddle = nullptr;
+    }
+    if (MainMenuPhysics::box_logo != nullptr)
+    {
+        MainMenuPhysics::world->DestroyBody(MainMenuPhysics::box_logo);
+        MainMenuPhysics::box_logo = nullptr;
+    }
+
+    if (MainMenuPhysics::world != nullptr)
+    {
+        delete MainMenuPhysics::world;
+        MainMenuPhysics::world = nullptr;
+    }
+}
 
 MainMenu::MainMenu() {}
 MainMenu::~MainMenu()
@@ -77,6 +147,8 @@ void MainMenu::Init()
     MainMenu::menu_items.push_back(Translations::Load("menu.json/item_exit"));
 
     AnimationManager::InitAnim(ANIM_FADE_IN);
+
+    MainMenu::physics.Init();
     
     logo = nullptr;  
     title = nullptr;    
@@ -115,6 +187,8 @@ bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
         logo = SDL_CreateTextureFromSurface(rr->GetRenderer(), IMG_Load("./assets/img/logo.png"));
     if (title == nullptr)
         title = SDL_CreateTextureFromSurface(rr->GetRenderer(), IMG_Load("./assets/img/title.png"));
+
+    // MainMenu::physics.Step();
     
     if (AnimationManager::StepAnim(ANIM_FADE))
         return true; // If screen still fades we don't care about controls and do early return.
@@ -274,13 +348,13 @@ void MainMenu::Render(Renderer* rr)
     
     int logo_height = y_offset - textDimensions.h / 16;
 
-    SDL_Rect logo_rect = {
+    SDL_Point physics_center_offset = {
         rr->GetWindowParams().width / 2 - logo_length / 2,
-        logo_height / 2 - rr->GetWindowParams().height / 12,
-        rr->GetWindowParams().height / 6,
-        rr->GetWindowParams().height / 6
+        logo_height / 2 - rr->GetWindowParams().height / 12
     };
-    SDL_RenderCopyEx(rr->GetRenderer(), logo, NULL, &logo_rect, 0, NULL, SDL_FLIP_NONE);
+
+    MainMenu::physics.RenderBox(rr, physics_center_offset.x, physics_center_offset.y);
+    // MainMenu::physics.RenderPaddle(rr, physics_center_offset.x, physics_center_offset.y);
 
     SDL_Rect title_rect = {
         rr->GetWindowParams().width / 2 - logo_length / 2 + (rr->GetWindowParams().height / 6) + (rr->GetWindowParams().height / 16),
