@@ -1,13 +1,38 @@
 #pragma once
 
+#include <box2d/box2d.h>
+
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <map>
 
 #include "Renderer.h"
 #include "Controls.h"
 #include "Translations.h"
 #include "Animations.h"
+
+class MainMenuPhysics
+{
+private:
+    b2World* world = nullptr;
+
+    std::vector<std::map<b2Body*, b2Body*>> constellation;
+    b2Body* paddle = nullptr;
+    b2Body* box_logo = nullptr;
+
+public:
+    MainMenuPhysics();
+    ~MainMenuPhysics();
+
+    void Init();
+    
+    void Step();
+    void Render();
+
+    void FreeMemory();
+};
+
 
 /// @brief Class that manages main menu and can download levels.
 class MainMenu

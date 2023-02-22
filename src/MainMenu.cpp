@@ -3,6 +3,60 @@
 SDL_Texture* logo;
 SDL_Texture* title;
 
+MainMenuPhysics::MainMenuPhysics() {}
+MainMenuPhysics::~MainMenuPhysics() { MainMenuPhysics::FreeMemory(); }
+
+void MainMenuPhysics::Init()
+{
+    MainMenuPhysics::FreeMemory();
+    MainMenuPhysics::world = new b2World({0, 9.81});
+
+    // PADDLE
+    b2BodyDef paddle_def = b2BodyDef();
+    b2PolygonShape paddle_shape = b2PolygonShape();
+    b2FixtureDef paddle_fixture_def = b2FixtureDef();
+
+    paddle_def.type = b2_kinematicBody;
+    paddle_def.angle = 0;
+    paddle_def.position.Set(0, 0);
+
+    paddle_shape.SetAsBox(5, 1);
+    
+    paddle_fixture_def.shape = &(paddle_shape);
+    paddle_fixture_def.density = 1;
+    paddle_fixture_def.friction = 0.3f;
+    paddle_fixture_def.restitution = 0.5f;
+
+    MainMenuPhysics::paddle = world->CreateBody(&(paddle_def));
+    MainMenuPhysics::paddle->CreateFixture(&(paddle_fixture_def));
+    /////////
+
+    // BOX LOGO
+    b2BodyDef box_logo_def = b2BodyDef();
+    b2PolygonShape box_logo_shape = b2PolygonShape();
+    b2FixtureDef box_logo_fixture_def = b2FixtureDef();
+
+    box_logo_def.type = b2_dynamicBody;
+    box_logo_def.angle = 0;
+    box_logo_def.position.Set(0.5, 0.5);
+
+    box_logo_shape.SetAsBox(2, 2);
+    
+    box_logo_fixture_def.shape = &(box_logo_shape);
+    box_logo_fixture_def.density = 1;
+    box_logo_fixture_def.friction = 0.3f;
+    box_logo_fixture_def.restitution = 0.5f;
+
+    MainMenuPhysics::box_logo = world->CreateBody(&(box_logo_def));
+    MainMenuPhysics::box_logo->CreateFixture(&(box_logo_fixture_def));
+    ///////////
+}
+
+void MainMenuPhysics::Step() {}
+void MainMenuPhysics::Render() {}
+
+void MainMenuPhysics::FreeMemory() {}
+
 MainMenu::MainMenu() {}
 MainMenu::~MainMenu()
 {

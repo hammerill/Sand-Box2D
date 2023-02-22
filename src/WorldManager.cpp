@@ -38,7 +38,6 @@ void WorldManager::FreeMemory()
     }
 }
 
-// Fadeout handling happens a little below of the Step() start.
 bool fadeout = false;
 
 void WorldManager::LoadLevel(Level level, Renderer* rr)
@@ -101,7 +100,7 @@ void WorldManager::LoadLevel(Level level, Renderer* rr)
     }
     /////////
 
-    // CYCLES (everything other at the end of the Step())
+    // CYCLES
     WorldManager::cyclesDelays = std::vector<int>();
 
     for (size_t i = 0; i < WorldManager::level.GetCyclesCount(); i++)
@@ -110,7 +109,7 @@ void WorldManager::LoadLevel(Level level, Renderer* rr)
     }    
     /////////
 
-    // ACTIONS (everything other at control handling sector)
+    // ACTIONS
     WorldManager::actions = WorldManager::level.GetActions();
     //////////
 
