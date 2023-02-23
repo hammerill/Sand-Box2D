@@ -3,6 +3,8 @@
 SDL_Texture* logo;
 SDL_Texture* title;
 
+int zoom;
+
 MainMenuPhysics::MainMenuPhysics() {}
 MainMenuPhysics::~MainMenuPhysics() { MainMenuPhysics::FreeMemory(); }
 
@@ -15,7 +17,7 @@ float GetRandomFloat(float min, float max)
             (static_cast<float> (RAND_MAX / (max-min)));
 }
 
-void MainMenuPhysics::Init()
+void MainMenuPhysics::Init(float paddle_width)
 {
     MainMenuPhysics::FreeMemory();
     MainMenuPhysics::world = new b2World({0, 9.81});
@@ -23,16 +25,18 @@ void MainMenuPhysics::Init()
     MainMenuPhysics::RAD2DEG = 180 / M_PI;
 
     // PADDLE
+    MainMenuPhysics::paddle_width = paddle_width;
+    MainMenuPhysics::paddle_height = 0.45;
+    
+    MainMenuPhysics::SetPaddleDesiredPosition({1, 2});
+
     b2BodyDef paddle_def = b2BodyDef();
     b2PolygonShape paddle_shape = b2PolygonShape();
     b2FixtureDef paddle_fixture_def = b2FixtureDef();
 
     paddle_def.type = b2_kinematicBody;
-    paddle_def.angle = 0;
-    paddle_def.position.Set(1, 4);
-
-    MainMenuPhysics::paddle_width = 2;
-    MainMenuPhysics::paddle_height = 0.5;
+    paddle_def.angle = 0.1;
+    paddle_def.position.Set(1, 3);
 
     paddle_shape.SetAsBox(paddle_width / 2.0, paddle_height / 2.0);
     
@@ -67,8 +71,16 @@ void MainMenuPhysics::Init()
     ///////////
 }
 
+const float paddle_speed = 5;
 void MainMenuPhysics::Step()
 {
+    b2Vec2 paddle_pos = MainMenuPhysics::paddle->GetPosition();
+    b2Vec2 paddle_vec = {
+        (MainMenuPhysics::paddle_desired_pos.x - paddle_pos.x) * paddle_speed,
+        (MainMenuPhysics::paddle_desired_pos.y - paddle_pos.y) * paddle_speed
+    };
+    MainMenuPhysics::paddle->SetLinearVelocity(paddle_vec);
+
     MainMenuPhysics::world->Step(1.0 / 60.0, 3, 3);
 }
 void MainMenuPhysics::RenderBG(Renderer* rr, int x_offset, int y_offset)
@@ -77,8 +89,6 @@ void MainMenuPhysics::RenderBG(Renderer* rr, int x_offset, int y_offset)
 }
 void MainMenuPhysics::RenderBox(Renderer* rr, int x_offset, int y_offset)
 {
-    const int zoom = rr->GetWindowParams().height / 6;
-
     b2Vec2 box_logo_pos = MainMenuPhysics::box_logo->GetPosition();
     SDL_Rect box_logo_rect;
     
@@ -92,8 +102,6 @@ void MainMenuPhysics::RenderBox(Renderer* rr, int x_offset, int y_offset)
 }
 void MainMenuPhysics::RenderPaddle(Renderer* rr, int x_offset, int y_offset)
 {
-    const int zoom = rr->GetWindowParams().height / 6;
-    
     b2Vec2 paddle_pos = MainMenuPhysics::paddle->GetPosition();
     SDL_Rect paddle_rect;
     
@@ -105,6 +113,16 @@ void MainMenuPhysics::RenderPaddle(Renderer* rr, int x_offset, int y_offset)
 
     SDL_SetRenderDrawColor(rr->GetRenderer(), 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_RenderFillRect(rr->GetRenderer(), &paddle_rect);
+}
+
+void MainMenuPhysics::SetPaddleDesiredPosition(b2Vec2 pos)
+{
+    MainMenuPhysics::paddle_desired_pos = pos;
+}
+void MainMenuPhysics::SetPaddlePositionPermanently(b2Vec2 pos)
+{
+    MainMenuPhysics::paddle->SetTransform(pos, 0);
+    MainMenuPhysics::paddle_desired_pos = pos;
 }
 
 void MainMenuPhysics::FreeMemory()
@@ -131,8 +149,10 @@ MainMenu::MainMenu() {}
 MainMenu::~MainMenu()
 {
     SDL_DestroyTexture(logo);
+    SDL_DestroyTexture(title);
 }
 
+const float paddle_width = 6.5; 
 void MainMenu::Init()
 {
     MainMenu::menu_items = std::vector<std::string>();
@@ -148,7 +168,7 @@ void MainMenu::Init()
 
     AnimationManager::InitAnim(ANIM_FADE_IN);
 
-    MainMenu::physics.Init();
+    MainMenu::physics.Init(paddle_width);
     
     logo = nullptr;  
     title = nullptr;    
@@ -175,10 +195,52 @@ SDL_Rect GetItemRect(Renderer* rr, std::vector<std::string> menu_items, size_t i
 
     rect.x = x_offset - textDimensions.w / 16;
     rect.y = y_offset + textDimensions.h * distanceScale * (int)item_index - textDimensions.h / 16;
-    rect.w += textDimensions.w / 8;
+    rect.w = menu_w + textDimensions.w / 8;
     rect.h += textDimensions.h / 8;
 
     return rect;
+}
+
+SDL_Point GetPaddleCenterInPx(Renderer* rr, std::vector<std::string> menu_items, size_t item_index)
+{
+    int menuScale = rr->GetWindowParams().height / 250;
+    SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions("-", menuScale);
+
+    float distanceScale = 1.2;
+
+    std::vector<int> menuWidths;
+    for (size_t i = 0; i < menu_items.size(); i++)
+        menuWidths.push_back(rr->GetFont()->GetTextDimensions(menu_items[i].c_str(), menuScale).w);
+
+    int menu_w = *std::max_element(menuWidths.begin(), menuWidths.end());
+    int menu_h = (menu_items.size()) * textDimensions.h * distanceScale;
+
+    int x_offset = (rr->GetWindowParams().width / 2.5) - (menu_w / 2);
+    int y_offset = (rr->GetWindowParams().height / 1.5) - (menu_h / 2.25);
+
+    SDL_Point result = {
+        x_offset + menu_w / 2,
+        (int)(y_offset + textDimensions.h * distanceScale * item_index + textDimensions.h / 2)
+    };
+
+    int logo_length = 
+        (rr->GetWindowParams().height / 6) 
+        +
+        (rr->GetWindowParams().height / 16)
+        +
+        (78 * menuScale * 3);
+    
+    int logo_height = y_offset - textDimensions.h / 16;
+
+    SDL_Point physics_center_offset = {
+        rr->GetWindowParams().width / 2 - logo_length / 2,
+        logo_height / 2 - rr->GetWindowParams().height / 12
+    };
+
+    result.x -= physics_center_offset.x;
+    result.y -= physics_center_offset.y;
+
+    return result;
 }
 
 bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
@@ -187,13 +249,26 @@ bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
         logo = SDL_CreateTextureFromSurface(rr->GetRenderer(), IMG_Load("./assets/img/logo.png"));
     if (title == nullptr)
         title = SDL_CreateTextureFromSurface(rr->GetRenderer(), IMG_Load("./assets/img/title.png"));
+    
+    zoom = rr->GetWindowParams().height / 6;
 
-    // MainMenu::physics.Step();
+    SDL_Point paddle_center_px = GetPaddleCenterInPx(rr, MainMenu::menu_items, MainMenu::hovered_item);
+    b2Vec2 paddle_desired_pos = {
+        paddle_center_px.x / (float)zoom,
+        paddle_center_px.y / (float)zoom
+    };
+
+    // MainMenu::physics.Step(); // comment line below when realized
+        MainMenu::physics.SetPaddlePositionPermanently(paddle_desired_pos);
     
     if (AnimationManager::StepAnim(ANIM_FADE))
-        return true; // If screen still fades we don't care about controls and do early return.
+    {
+        MainMenu::physics.SetPaddlePositionPermanently(paddle_desired_pos);
+        return true;
+    }
     else
     {
+        MainMenu::physics.SetPaddleDesiredPosition(paddle_desired_pos);
         if (MainMenu::status == "fadeout")
         {
             switch (MainMenu::hovered_item)
@@ -297,48 +372,6 @@ void MainMenu::Render(Renderer* rr)
     SDL_SetRenderDrawColor(rr->GetRenderer(), 0x10, 0x10, 0x10, 0);
     SDL_RenderClear(rr->GetRenderer());
 
-    for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
-    {
-        if (i == MainMenu::hovered_item && !hover_blinker)
-        {
-            SDL_Rect hover_bg = rr->GetFont()->GetTextDimensions(MainMenu::menu_items[i].c_str(), menuScale);
-
-            hover_bg.x = x_offset - textDimensions.w / 16;
-            hover_bg.y = y_offset + textDimensions.h * distanceScale * (int)i - textDimensions.h / 16;
-            hover_bg.w += textDimensions.w / 8;
-            hover_bg.h += textDimensions.h / 8;
-
-            SDL_SetRenderDrawColor(rr->GetRenderer(), 0xFF, 0xFF, 0xFF, 0xFF);
-            SDL_RenderFillRect(rr->GetRenderer(), &hover_bg);
-
-            rr->RenderText(
-                MainMenu::menu_items[i].c_str(),
-                x_offset,
-                y_offset + textDimensions.h * distanceScale * i,
-                menuScale,
-                false,
-                Translations::GetJp(), 0, 0, 0
-            );
-            rr->RenderText(
-                "▶",
-                x_offset - textDimensions.w * distanceScale,
-                y_offset + textDimensions.h * distanceScale * i,
-                menuScale,
-                false,
-                true
-            );
-        }
-        else
-            rr->RenderText(
-                MainMenu::menu_items[i].c_str(),
-                x_offset,
-                y_offset + textDimensions.h * distanceScale * i,
-                menuScale,
-                false,
-                Translations::GetJp()
-            );
-    }
-
     int logo_length = 
         (rr->GetWindowParams().height / 6) 
         +
@@ -353,8 +386,51 @@ void MainMenu::Render(Renderer* rr)
         logo_height / 2 - rr->GetWindowParams().height / 12
     };
 
+    MainMenu::physics.RenderPaddle(rr, physics_center_offset.x, physics_center_offset.y);
+
+    for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
+    {
+        if (i == MainMenu::hovered_item && !hover_blinker)
+        {
+            // SDL_Rect hover_bg = rr->GetFont()->GetTextDimensions(MainMenu::menu_items[i].c_str(), menuScale);
+
+            // hover_bg.x = x_offset - textDimensions.w / 16;
+            // hover_bg.y = y_offset + textDimensions.h * distanceScale * (int)i - textDimensions.h / 16;
+            // hover_bg.w += textDimensions.w / 8;
+            // hover_bg.h += textDimensions.h / 8;
+
+            // SDL_SetRenderDrawColor(rr->GetRenderer(), 0xFF, 0xFF, 0xFF, 0xFF);
+            // SDL_RenderFillRect(rr->GetRenderer(), &hover_bg);
+
+            rr->RenderText(
+                MainMenu::menu_items[i].c_str(),
+                x_offset,
+                y_offset + textDimensions.h * distanceScale * i,
+                menuScale,
+                false,
+                Translations::GetJp(), 0, 0, 0
+            );
+            // rr->RenderText(
+            //     "▶",
+            //     x_offset - textDimensions.w * distanceScale,
+            //     y_offset + textDimensions.h * distanceScale * i,
+            //     menuScale,
+            //     false,
+            //     true
+            // );
+        }
+        else
+            rr->RenderText(
+                MainMenu::menu_items[i].c_str(),
+                x_offset,
+                y_offset + textDimensions.h * distanceScale * i,
+                menuScale,
+                false,
+                Translations::GetJp()
+            );
+    }
+
     MainMenu::physics.RenderBox(rr, physics_center_offset.x, physics_center_offset.y);
-    // MainMenu::physics.RenderPaddle(rr, physics_center_offset.x, physics_center_offset.y);
 
     SDL_Rect title_rect = {
         rr->GetWindowParams().width / 2 - logo_length / 2 + (rr->GetWindowParams().height / 6) + (rr->GetWindowParams().height / 16),

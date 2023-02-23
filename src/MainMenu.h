@@ -25,6 +25,8 @@ private:
     b2Body* paddle = nullptr;
     b2Body* box_logo = nullptr;
 
+    b2Vec2 paddle_desired_pos;
+
     float paddle_width, paddle_height;
 
     float RAD2DEG;
@@ -33,12 +35,15 @@ public:
     MainMenuPhysics();
     ~MainMenuPhysics();
 
-    void Init();
+    void Init(float paddle_width);
     
     void Step();
     void RenderBG(Renderer* rr, int x_offset, int y_offset);
     void RenderBox(Renderer* rr, int x_offset, int y_offset);
     void RenderPaddle(Renderer* rr, int x_offset, int y_offset);
+
+    void SetPaddleDesiredPosition(b2Vec2 pos);
+    void SetPaddlePositionPermanently(b2Vec2 pos);
 
     void FreeMemory();
 };
