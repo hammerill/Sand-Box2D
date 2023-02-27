@@ -69,20 +69,20 @@ bool LangSelector::Step(Settings* settings, Renderer* rr, Controls ctrl, Control
 
     if (rr->GetCursor(old_ctrl))
     {
-        int langSelectScale = rr->GetWindowParams().height / 200;
+        int langSelectScale = rr->GetHeight() / 200;
         SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions("-", langSelectScale);
 
         float distanceScale = 1.2;
         
         int menu_h = (LangSelector::langs.size()) * textDimensions.h * distanceScale;
-        int y_offset = (rr->GetWindowParams().height / 2) - (menu_h / 2);
+        int y_offset = (rr->GetHeight() / 2) - (menu_h / 2);
 
         size_t i = 0;
         for (auto const& lang : LangSelector::langs)
         {
             SDL_Rect hover = rr->GetFont()->GetTextDimensions(lang.second.c_str(), langSelectScale);
 
-            hover.x = (rr->GetWindowParams().width / 2) - (hover.w / 2) - textDimensions.w / 16;
+            hover.x = (rr->GetWidth() / 2) - (hover.w / 2) - textDimensions.w / 16;
             hover.y = y_offset + textDimensions.h * distanceScale * (int)i - (hover.h / 2) - textDimensions.h / 16;
             hover.w += textDimensions.w / 8;
             hover.h += textDimensions.h / 8;
@@ -153,13 +153,13 @@ void LangSelector::Render(Renderer* rr)
 {
     bool hover_blinker = LangSelector::fadeout == true && (int)(rr->GetFrames() / 10) % 2;
 
-    int langSelectScale = rr->GetWindowParams().height / 200;
+    int langSelectScale = rr->GetHeight() / 200;
     SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions("-", langSelectScale);
 
     float distanceScale = 1.2;
     
     int menu_h = (LangSelector::langs.size()) * textDimensions.h * distanceScale;
-    int y_offset = (rr->GetWindowParams().height / 2) - (menu_h / 2);
+    int y_offset = (rr->GetHeight() / 2) - (menu_h / 2);
 
     SDL_SetRenderDrawColor(rr->GetRenderer(), 0x10, 0x10, 0x10, 0);
     SDL_RenderClear(rr->GetRenderer());
@@ -171,7 +171,7 @@ void LangSelector::Render(Renderer* rr)
         {
             SDL_Rect hover_bg = rr->GetFont()->GetTextDimensions(lang.second.c_str(), langSelectScale);
 
-            hover_bg.x = (rr->GetWindowParams().width / 2) - (hover_bg.w / 2) - textDimensions.w / 16;
+            hover_bg.x = (rr->GetWidth() / 2) - (hover_bg.w / 2) - textDimensions.w / 16;
             hover_bg.y = y_offset + textDimensions.h * distanceScale * (int)i - (hover_bg.h / 2) - textDimensions.h / 16;
             hover_bg.w += textDimensions.w / 8;
             hover_bg.h += textDimensions.h / 8;
@@ -181,7 +181,7 @@ void LangSelector::Render(Renderer* rr)
 
             rr->RenderText(
                 lang.second.c_str(),
-                rr->GetWindowParams().width / 2,
+                rr->GetWidth() / 2,
                 y_offset + textDimensions.h * distanceScale * i,
                 langSelectScale,
                 true,
@@ -189,7 +189,7 @@ void LangSelector::Render(Renderer* rr)
             );
             rr->RenderText(
                 "▶",
-                rr->GetWindowParams().width / 2 - rr->GetFont()->GetTextDimensions(lang.second.c_str(), langSelectScale).w / 2 - textDimensions.w,
+                rr->GetWidth() / 2 - rr->GetFont()->GetTextDimensions(lang.second.c_str(), langSelectScale).w / 2 - textDimensions.w,
                 y_offset + textDimensions.h * distanceScale * i,
                 langSelectScale,
                 true,
@@ -199,7 +199,7 @@ void LangSelector::Render(Renderer* rr)
         else
             rr->RenderText(
                 lang.second.c_str(),
-                rr->GetWindowParams().width / 2,
+                rr->GetWidth() / 2,
                 y_offset + textDimensions.h * distanceScale * i,
                 langSelectScale,
                 true,
@@ -211,15 +211,15 @@ void LangSelector::Render(Renderer* rr)
 
     rr->RenderText(
         LangSelector::choose_title.c_str(),
-        rr->GetWindowParams().width / 2,
-        rr->GetWindowParams().height / 16,
+        rr->GetWidth() / 2,
+        rr->GetHeight() / 16,
         Translations::GetJp() ? langSelectScale : langSelectScale / 2,
         true, Translations::GetJp()
     );
     rr->RenderText(
         LangSelector::settings_reminder.c_str(),
-        rr->GetWindowParams().width / 2,
-        (rr->GetWindowParams().height / 16) * 15,
+        rr->GetWidth() / 2,
+        (rr->GetHeight() / 16) * 15,
         Translations::GetJp() ? langSelectScale : langSelectScale / 2,
         true, Translations::GetJp()
     );

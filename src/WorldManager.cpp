@@ -63,16 +63,16 @@ void WorldManager::LoadLevel(Level level, Renderer* rr)
     // CAMERA
     auto camera = WorldManager::level.GetCamera();
 
-    WorldManager::zoom = rr->GetWindowParams().height / camera.height;
+    WorldManager::zoom = rr->GetHeight() / camera.height;
 
     switch (camera.type)
     {
     case CAMERA_TYPE_STATIC:
         WorldManager::x_offset =    -(camera.x * WorldManager::zoom)
-                                    +(rr->GetWindowParams().width / 2);
+                                    +(rr->GetWidth() / 2);
 
         WorldManager::y_offset =    -(camera.y * WorldManager::zoom)
-                                    +(rr->GetWindowParams().height / 2);
+                                    +(rr->GetHeight() / 2);
         break;
     
     case CAMERA_TYPE_ATTACHED:
@@ -88,10 +88,10 @@ void WorldManager::LoadLevel(Level level, Renderer* rr)
             }
 
             WorldManager::x_offset =    -(pos.x * WorldManager::zoom)
-                                        +(rr->GetWindowParams().width / 2);
+                                        +(rr->GetWidth() / 2);
 
             WorldManager::y_offset =    -(pos.y * WorldManager::zoom)
-                                        +(rr->GetWindowParams().height / 2);
+                                        +(rr->GetHeight() / 2);
         }
         break;
     
@@ -273,7 +273,7 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
     previous_frame = std::chrono::high_resolution_clock::now();
 
     // 5. ZOOM WHEEL/PINCH
-    SDL_Point scr_center = {rr->GetWindowParams().width / 2, rr->GetWindowParams().height / 2};
+    SDL_Point scr_center = {rr->GetWidth() / 2, rr->GetHeight() / 2};
 
     if (camera.zoom)
     {
@@ -458,8 +458,8 @@ void WorldManager::Render(Renderer* rr, Controls ctrl)
                 WorldManager::x_offset, 
                 WorldManager::y_offset, 
                 WorldManager::zoom,
-                rr->GetWindowParams().width,
-                rr->GetWindowParams().height))
+                rr->GetWidth(),
+                rr->GetHeight()))
         {
             renderedItemsCount++;
         }        

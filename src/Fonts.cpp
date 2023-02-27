@@ -50,7 +50,6 @@ void Font::Render(SDL_Renderer* renderer, const char* text, int x, int y, float 
             textRect.x -= textRect.w / 2;
             textRect.y -= textRect.h / 2;
         }
-        
 
         SDL_Surface* textSurface = TTF_RenderUTF8_Solid(Font::font, text, {r, g, b});
         SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);

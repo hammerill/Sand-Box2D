@@ -21,7 +21,7 @@ class MainMenuPhysics
 private:
     b2World* world = nullptr;
 
-    std::vector<std::map<b2Body*, b2Body*>> constellation;
+    // std::vector<std::map<b2Body*, b2Body*>> constellation;
     b2Body* paddle = nullptr;
     b2Body* box_logo = nullptr;
 
@@ -29,21 +29,21 @@ private:
     bool paddle_inited;
     float paddle_width, paddle_height;
 
+    bool box_active;
+
     float RAD2DEG;
 
 public:
     MainMenuPhysics();
     ~MainMenuPhysics();
 
-    void Init(float paddle_width);
+    void Init();
+    void InitPaddle(float paddle_width);
     
     void Step();
     void RenderBG(Renderer* rr, int x_offset, int y_offset);
     void RenderBox(Renderer* rr, int x_offset, int y_offset);
-    void RenderPaddle(Renderer* rr, int x_offset, int y_offset);
-
-    // WARNING: it's YOUR responsibility to clean up returned texture after using it.
-    SDL_Texture* GetPaddleAlpha(Renderer* rr, int x_offset, int y_offset);
+    void RenderPaddle(Renderer* rr, int x_offset, int y_offset, float menu_scale);
 
     void SetPaddleDesiredPosition(b2Vec2 pos);
     void SetPaddlePositionPermanently(b2Vec2 pos);
@@ -62,6 +62,9 @@ private:
     std::vector<uint8_t> menu_items_colors;
 
     MainMenuPhysics physics;
+
+    SDL_Texture* temp = nullptr;
+    WindowParams old_wparams, now_wparams;
 
     /// Status that used after unloading MainMenu.
     /// 

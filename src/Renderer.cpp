@@ -45,6 +45,9 @@ SoundManager* Renderer::GetSounds()         { return sounds; }
 Font* Renderer::GetFont(bool jp)            { return jp ? Renderer::font_jp : Renderer::font; }
 WindowParams Renderer::GetWindowParams()    { return {window_mode, window_width, window_height}; }
 
+int Renderer::GetWidth()    { return window_width; }
+int Renderer::GetHeight()   { return window_height; }
+
 void Renderer::AddFrame()       { Renderer::frames++; }
 uint64_t Renderer::GetFrames()  { return Renderer::frames; }
 

@@ -110,11 +110,11 @@ void AnimationManager::RenderAnim(Anim anim, Renderer* rr)
     case ANIM_WORLD_MANAGER_INIT:
         if (AnimationManager::wmi.frames <= AnimationManager::wmi.frames_max)
         {
-            int pospx = rr->GetWindowParams().height * AnimationManager::wmi.pos;
+            int pospx = rr->GetHeight() * AnimationManager::wmi.pos;
 
             if (AnimationManager::wmi.pos < 1)
             {
-                SDL_Rect rect {0, pospx, rr->GetWindowParams().width, rr->GetWindowParams().height - pospx};
+                SDL_Rect rect {0, pospx, rr->GetWidth(), rr->GetHeight() - pospx};
 
                 SDL_SetRenderDrawBlendMode(rr->GetRenderer(), SDL_BLENDMODE_BLEND);
                 SDL_SetRenderDrawColor(rr->GetRenderer(), 0, 0, 0, AnimationManager::wmi.bg_opaque * 0xFF);
@@ -125,15 +125,15 @@ void AnimationManager::RenderAnim(Anim anim, Renderer* rr)
             uint8_t text_color = AnimationManager::wmi.text_opaque * 0xFF;
 
             rr->RenderText(
-                AnimationManager::wmi.level_name.c_str(), rr->GetWindowParams().width / 2,
-                (rr->GetWindowParams().height + pospx) / 2, AnimationManager::wmi.text_scale, true, Translations::GetJp(),
+                AnimationManager::wmi.level_name.c_str(), rr->GetWidth() / 2,
+                (rr->GetHeight() + pospx) / 2, AnimationManager::wmi.text_scale, true, Translations::GetJp(),
                 text_color, text_color, text_color);
         }
         break;
 
     case ANIM_FADE_IN: case ANIM_FADE_OUT: case ANIM_FADE:
         {
-            SDL_Rect rect {0, 0, rr->GetWindowParams().width, rr->GetWindowParams().height};
+            SDL_Rect rect {0, 0, rr->GetWidth(), rr->GetHeight()};
 
             SDL_SetRenderDrawBlendMode(rr->GetRenderer(), SDL_BLENDMODE_BLEND);
             SDL_SetRenderDrawColor(rr->GetRenderer(), 0, 0, 0, AnimationManager::fade.opaque * 0xFF);
@@ -149,7 +149,7 @@ void AnimationManager::RenderAnim(Anim anim, Renderer* rr)
 
             SDL_RenderCopyEx(rr->GetRenderer(), AnimationManager::vita.pic, NULL, NULL, 0, NULL, SDL_FLIP_NONE);
             
-            SDL_Rect rect {0, 0, rr->GetWindowParams().width, rr->GetWindowParams().height};
+            SDL_Rect rect {0, 0, rr->GetWidth(), rr->GetHeight()};
 
             SDL_SetRenderDrawBlendMode(rr->GetRenderer(), SDL_BLENDMODE_BLEND);
             SDL_SetRenderDrawColor(rr->GetRenderer(), 0, 0, 0, (1 - AnimationManager::vita.opaque) * 0xFF);

@@ -81,6 +81,9 @@ public:
     Font* GetFont(bool jp = false);
     WindowParams GetWindowParams();
 
+    int GetWidth();
+    int GetHeight();
+
     /// @brief Increment frames count rendered.
     void AddFrame();
     /// @brief Get frames count rendered.

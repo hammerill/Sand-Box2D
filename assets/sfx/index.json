@@ -1,4 +1,5 @@
 {
     "menu_enter": "menu/MenuEnter.wav",
-    "menu_switch": "menu/MenuSwitch.wav"
+    "menu_switch": "menu/MenuSwitch.wav",
+    "menu_hit": "menu/MenuHit.wav"
 }
