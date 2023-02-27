@@ -156,6 +156,7 @@ const float paddle_width = 6.5;
 void MainMenu::Init()
 {
     MainMenu::menu_items = std::vector<std::string>();
+    MainMenu::menu_items_colors = std::vector<uint8_t>();
     MainMenu::hovered_item = 0;
     MainMenu::status = "";
 
@@ -165,6 +166,10 @@ void MainMenu::Init()
     MainMenu::menu_items.push_back(Translations::Load("menu.json/item_settings"));
     MainMenu::menu_items.push_back(Translations::Load("menu.json/item_about"));
     MainMenu::menu_items.push_back(Translations::Load("menu.json/item_exit"));
+
+    MainMenu::menu_items_colors.push_back(0);
+    for (size_t i = 0; i < MainMenu::menu_items.size() - 1; i++)
+        MainMenu::menu_items_colors.push_back(0xFF);    
 
     AnimationManager::InitAnim(ANIM_FADE_IN);
 
@@ -275,7 +280,7 @@ bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
             {
             case 0:
                 MainMenu::status = "play";
-                MainMenu::level_name = "DEFAULT LEVEL";
+                MainMenu::level_name = Translations::Load("levels.json/default_level_name");
                 break;
             case 1:
                 MainMenu::status = "community";

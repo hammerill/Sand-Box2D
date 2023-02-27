@@ -26,7 +26,7 @@ private:
     b2Body* box_logo = nullptr;
 
     b2Vec2 paddle_desired_pos;
-
+    bool paddle_inited;
     float paddle_width, paddle_height;
 
     float RAD2DEG;
@@ -49,12 +49,14 @@ public:
 };
 
 
-/// @brief Class that manages main menu and can download levels.
+/// @brief Class that manages main menu.
 class MainMenu
 {
 private:
     std::vector<std::string> menu_items;
     size_t hovered_item = 0;
+
+    std::vector<uint8_t> menu_items_colors;
 
     MainMenuPhysics physics;
 
