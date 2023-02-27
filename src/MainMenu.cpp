@@ -17,6 +17,8 @@ float GetRandomFloat(float min, float max)
             (static_cast<float> (RAND_MAX / (max-min)));
 }
 
+const float paddle_slope = 0;
+
 void MainMenuPhysics::Init(float paddle_width)
 {
     MainMenuPhysics::FreeMemory();
@@ -35,7 +37,7 @@ void MainMenuPhysics::Init(float paddle_width)
     b2FixtureDef paddle_fixture_def = b2FixtureDef();
 
     paddle_def.type = b2_kinematicBody;
-    paddle_def.angle = 0.1;
+    paddle_def.angle = paddle_slope;
     paddle_def.position.Set(1, 3);
 
     paddle_shape.SetAsBox(paddle_width / 2.0, paddle_height / 2.0);
@@ -115,13 +117,44 @@ void MainMenuPhysics::RenderPaddle(Renderer* rr, int x_offset, int y_offset)
     SDL_RenderFillRect(rr->GetRenderer(), &paddle_rect);
 }
 
+SDL_Texture* MainMenuPhysics::GetPaddleAlpha(Renderer* rr, int x_offset, int y_offset)
+{
+    SDL_Texture* result = SDL_CreateTexture(rr->GetRenderer(), SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, rr->GetWindowParams().width, rr->GetWindowParams().height);
+    
+    SDL_SetTextureBlendMode(result, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderTarget(rr->GetRenderer(), result);
+
+    SDL_SetRenderDrawColor(rr->GetRenderer(), 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_RenderClear(rr->GetRenderer());
+
+    b2Vec2 paddle_pos = MainMenuPhysics::paddle->GetPosition();
+    SDL_Rect paddle_rect;
+    
+    paddle_rect.w = MainMenuPhysics::paddle_width * zoom;
+    paddle_rect.h = MainMenuPhysics::paddle_height * zoom;
+
+    paddle_rect.x = (paddle_pos.x * zoom) + x_offset - (paddle_rect.w / 2.0f);
+    paddle_rect.y = (paddle_pos.y * zoom) + y_offset - (paddle_rect.h / 2.0f);
+
+    SDL_SetTextureBlendMode(result, SDL_BLENDMODE_NONE);
+
+    SDL_SetRenderDrawColor(rr->GetRenderer(), 0, 0, 0, 0);
+    SDL_RenderFillRect(rr->GetRenderer(), &paddle_rect);
+
+    SDL_SetTextureBlendMode(result, SDL_BLENDMODE_BLEND);
+
+    SDL_SetRenderTarget(rr->GetRenderer(), NULL);
+    return result;
+}
+
+
 void MainMenuPhysics::SetPaddleDesiredPosition(b2Vec2 pos)
 {
     MainMenuPhysics::paddle_desired_pos = pos;
 }
 void MainMenuPhysics::SetPaddlePositionPermanently(b2Vec2 pos)
 {
-    MainMenuPhysics::paddle->SetTransform(pos, 0);
+    MainMenuPhysics::paddle->SetTransform(pos, paddle_slope);
     MainMenuPhysics::paddle_desired_pos = pos;
 }
 
@@ -435,8 +468,6 @@ void MainMenu::Render(Renderer* rr)
             );
     }
 
-    MainMenu::physics.RenderBox(rr, physics_center_offset.x, physics_center_offset.y);
-
     SDL_Rect title_rect = {
         rr->GetWindowParams().width / 2 - logo_length / 2 + (rr->GetWindowParams().height / 6) + (rr->GetWindowParams().height / 16),
         logo_height / 2 - (7 * menuScale * 3) / 2,
@@ -444,6 +475,8 @@ void MainMenu::Render(Renderer* rr)
         7 * menuScale * 3
     };
     SDL_RenderCopyEx(rr->GetRenderer(), title, NULL, &title_rect, 0, NULL, SDL_FLIP_NONE);
+
+    MainMenu::physics.RenderBox(rr, physics_center_offset.x, physics_center_offset.y);
 
     const char* version_string = "v1.0.0 DEMO";
     SDL_Rect version_dimensions = rr->GetFont()->GetTextDimensions(version_string, menuScale / 2);
@@ -455,7 +488,13 @@ void MainMenu::Render(Renderer* rr)
         false, false,
         0x40, 0x40, 0x40
     );
-    
+
+    // SDL_Texture* test = MainMenu::physics.GetPaddleAlpha(rr, physics_center_offset.x, physics_center_offset.y);
+    // // SDL_SetTextureAlphaMod(test, 0x80);
+    // SDL_SetRenderDrawBlendMode(rr->GetRenderer(), SDL_BLENDMODE_MOD);
+    // SDL_RenderCopy(rr->GetRenderer(), test, NULL, NULL);
+    // SDL_DestroyTexture(test);
+
     AnimationManager::RenderAnim(ANIM_FADE, rr);
 }
 

@@ -42,6 +42,9 @@ public:
     void RenderBox(Renderer* rr, int x_offset, int y_offset);
     void RenderPaddle(Renderer* rr, int x_offset, int y_offset);
 
+    // WARNING: it's YOUR responsibility to clean up returned texture after using it.
+    SDL_Texture* GetPaddleAlpha(Renderer* rr, int x_offset, int y_offset);
+
     void SetPaddleDesiredPosition(b2Vec2 pos);
     void SetPaddlePositionPermanently(b2Vec2 pos);
 
