@@ -108,6 +108,7 @@ void MainMenuPhysics::Step()
     {
         MainMenuPhysics::box_logo->SetGravityScale(0);
         MainMenuPhysics::box_logo->SetAngularVelocity(0);
+        MainMenuPhysics::box_logo->SetLinearVelocity({0, 0});
         MainMenuPhysics::box_logo->SetTransform({0.5, 0.5}, 0);
     }
 
@@ -433,10 +434,8 @@ bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
         for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
             menuWidths.push_back(rr->GetFont()->GetTextDimensions(MainMenu::menu_items[i].c_str(), menuScale).w);
 
-        int menu_w = *std::max_element(menuWidths.begin(), menuWidths.end());
         int menu_h = (MainMenu::menu_items.size()) * textDimensions.h * distanceScale;
 
-        int x_offset = (rr->GetWidth() / 2.75) - (menu_w / 2);
         int y_offset = (rr->GetHeight() / 1.5) - (menu_h / 2.25);
 
         int logo_length = 
@@ -453,11 +452,14 @@ bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
             logo_height / 2 - rr->GetHeight() / 12
         };
 
-        // if (ctrl.MousePress() && !old_ctrl.MousePress())
+        SDL_Point point = ctrl.GetMouse();
+        SDL_Rect box = MainMenu::physics.GetBoxRect(rr, physics_center_offset.x, physics_center_offset.y);
+
+        if (ctrl.MousePress() && !old_ctrl.MousePress() && SDL_PointInRect(&point, &box))
+            MainMenu::physics.ActivateBox(rr);
 
         for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
         {
-            SDL_Point point = ctrl.GetMouse();
             SDL_Rect rect = GetItemRect(rr, MainMenu::menu_items, i);
 
             if (SDL_PointInRect(&point, &rect))
