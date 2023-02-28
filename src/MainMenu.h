@@ -31,6 +31,8 @@ private:
 
     bool box_active;
 
+    uint8_t title_factual_alpha, title_desired_alpha;
+
     float RAD2DEG;
 
 public:
@@ -41,7 +43,7 @@ public:
     void InitPaddle(float paddle_width);
     
     void Step();
-    void RenderBG(Renderer* rr, int x_offset, int y_offset);
+    void RenderTitle(Renderer* rr, SDL_Rect& title_rect);
     void RenderBox(Renderer* rr, int x_offset, int y_offset);
     void RenderPaddle(Renderer* rr, int x_offset, int y_offset, float menu_scale);
 
@@ -50,6 +52,9 @@ public:
 
     void SetPaddleDesiredPosition(b2Vec2 pos);
     void SetPaddlePositionPermanently(b2Vec2 pos);
+
+    void SetTitleDesiredAlpha(uint8_t alpha);
+    void SetTitleAlphaPermanently(uint8_t alpha);
 
     void FreeMemory();
 };

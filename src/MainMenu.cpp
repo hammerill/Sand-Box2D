@@ -28,6 +28,8 @@ void MainMenuPhysics::Init()
 
     MainMenuPhysics::paddle_inited = false;
 
+    MainMenuPhysics::SetTitleAlphaPermanently(0xFF);
+
     // BOX LOGO
     MainMenuPhysics::box_active = false;
 
@@ -84,8 +86,12 @@ void MainMenuPhysics::InitPaddle(float paddle_width)
 }
 
 const float paddle_speed = 7.5;
+const float title_speed = 0.75;
+
 void MainMenuPhysics::Step()
 {
+    MainMenuPhysics::title_factual_alpha += (MainMenuPhysics::title_desired_alpha - MainMenuPhysics::title_factual_alpha) * title_speed;
+
     if (MainMenuPhysics::paddle_inited)
     {
         b2Vec2 paddle_pos = MainMenuPhysics::paddle->GetPosition();
@@ -114,9 +120,11 @@ void MainMenuPhysics::Step()
 
     MainMenuPhysics::world->Step(1.0 / 60.0, 3, 3);
 }
-void MainMenuPhysics::RenderBG(Renderer* rr, int x_offset, int y_offset)
+void MainMenuPhysics::RenderTitle(Renderer* rr, SDL_Rect& title_rect)
 {
-    
+    SDL_SetTextureAlphaMod(title, MainMenuPhysics::title_factual_alpha);
+    SDL_SetRenderDrawBlendMode(rr->GetRenderer(), SDL_BLENDMODE_BLEND);
+    SDL_RenderCopy(rr->GetRenderer(), title, NULL, &title_rect);
 }
 void MainMenuPhysics::RenderBox(Renderer* rr, int x_offset, int y_offset)
 {
@@ -201,6 +209,16 @@ void MainMenuPhysics::SetPaddlePositionPermanently(b2Vec2 pos)
     
     MainMenuPhysics::paddle->SetTransform(pos, paddle_slope);
     MainMenuPhysics::paddle_desired_pos = pos;
+}
+
+void MainMenuPhysics::SetTitleDesiredAlpha(uint8_t alpha)
+{
+    MainMenuPhysics::title_desired_alpha = alpha;
+}
+void MainMenuPhysics::SetTitleAlphaPermanently(uint8_t alpha)
+{
+    MainMenuPhysics::title_factual_alpha = alpha;
+    MainMenuPhysics::title_desired_alpha = alpha;
 }
 
 void MainMenuPhysics::FreeMemory()
@@ -631,7 +649,7 @@ void MainMenu::Render(Renderer* rr)
         78 * menuScale * 3,
         7 * menuScale * 3
     };
-    SDL_RenderCopyEx(rr->GetRenderer(), title, NULL, &title_rect, 0, NULL, SDL_FLIP_NONE);
+    MainMenu::physics.RenderTitle(rr, title_rect);
 
     const char* version_string = "v1.0.0 DEMO";
     SDL_Rect version_dimensions = rr->GetFont()->GetTextDimensions(version_string, menuScale / 2);
