@@ -129,7 +129,15 @@ void MainMenuPhysics::RenderBox(Renderer* rr, int x_offset, int y_offset)
     box_logo_rect.x = (box_logo_pos.x * zoom) + x_offset - (box_logo_rect.w / 2.0f);
     box_logo_rect.y = (box_logo_pos.y * zoom) + y_offset - (box_logo_rect.h / 2.0f);
 
-    SDL_RenderCopyEx(rr->GetRenderer(), logo, NULL, &box_logo_rect, MainMenuPhysics::box_logo->GetAngle() * MainMenuPhysics::RAD2DEG, NULL, SDL_FLIP_NONE);
+    SDL_RenderCopyEx(
+        rr->GetRenderer(),
+        logo,
+        NULL,
+        &box_logo_rect,
+        MainMenuPhysics::box_logo->GetAngle() * MainMenuPhysics::RAD2DEG,
+        NULL,
+        SDL_FLIP_NONE
+    );
 }
 void MainMenuPhysics::RenderPaddle(Renderer* rr, int x_offset, int y_offset, float menu_scale)
 {
