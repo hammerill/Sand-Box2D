@@ -96,13 +96,20 @@ void MainMenuPhysics::Step()
         MainMenuPhysics::paddle->SetLinearVelocity(paddle_vec);
     }
 
-    if (!MainMenuPhysics::box_active)
+    if (MainMenuPhysics::box_active)
     {
-        MainMenuPhysics::box_logo->SetGravityScale(0);
-        MainMenuPhysics::box_logo->SetTransform({0.5, 0.5}, 0);
+        MainMenuPhysics::box_logo->SetGravityScale(1);
+
+        auto pos = MainMenuPhysics::box_logo->GetPosition();
+        if (abs(pos.x) > 10 || abs(pos.y) > 10)
+            MainMenuPhysics::box_active = false;
     }
     else
-        MainMenuPhysics::box_logo->SetGravityScale(1);
+    {
+        MainMenuPhysics::box_logo->SetGravityScale(0);
+        MainMenuPhysics::box_logo->SetAngularVelocity(0);
+        MainMenuPhysics::box_logo->SetTransform({0.5, 0.5}, 0);
+    }
 
     MainMenuPhysics::world->Step(1.0 / 60.0, 3, 3);
 }
@@ -149,6 +156,29 @@ void MainMenuPhysics::RenderPaddle(Renderer* rr, int x_offset, int y_offset, flo
         true, true,
         0xFF, 0xFF, 0xFF
     );
+}
+
+void MainMenuPhysics::ActivateBox(Renderer* rr)
+{
+    if (MainMenuPhysics::box_active)
+        return;
+    
+    rr->GetSounds()->PlaySfx("menu_hit");
+    MainMenuPhysics::box_logo->SetAngularVelocity(GetRandomFloat(-0.5, 0.5));
+    MainMenuPhysics::box_active = true;
+}
+SDL_Rect MainMenuPhysics::GetBoxRect(Renderer* rr, int x_offset, int y_offset)
+{
+    b2Vec2 box_logo_pos = MainMenuPhysics::box_logo->GetPosition();
+    SDL_Rect box_logo_rect;
+    
+    box_logo_rect.w = zoom;
+    box_logo_rect.h = zoom;
+
+    box_logo_rect.x = (box_logo_pos.x * zoom) + x_offset - (box_logo_rect.w / 2.0f);
+    box_logo_rect.y = (box_logo_pos.y * zoom) + y_offset - (box_logo_rect.h / 2.0f);
+
+    return box_logo_rect;
 }
 
 void MainMenuPhysics::SetPaddleDesiredPosition(b2Vec2 pos)
@@ -236,7 +266,7 @@ SDL_Rect GetItemRect(Renderer* rr, std::vector<std::string> menu_items, size_t i
     int menu_w = *std::max_element(menuWidths.begin(), menuWidths.end());
     int menu_h = (menu_items.size()) * textDimensions.h * distanceScale;
 
-    int x_offset = (rr->GetWidth() / 2.5) - (menu_w / 2);
+    int x_offset = (rr->GetWidth() / 2.75) - (menu_w / 2);
     int y_offset = (rr->GetHeight() / 1.5) - (menu_h / 2.25);
 
     SDL_Rect rect = rr->GetFont()->GetTextDimensions(menu_items[item_index].c_str(), menuScale);
@@ -263,7 +293,7 @@ SDL_Point GetPaddleCenterInPx(Renderer* rr, std::vector<std::string> menu_items,
     int menu_w = *std::max_element(menuWidths.begin(), menuWidths.end());
     int menu_h = (menu_items.size()) * textDimensions.h * distanceScale;
 
-    int x_offset = (rr->GetWidth() / 2.5) - (menu_w / 2);
+    int x_offset = (rr->GetWidth() / 2.75) - (menu_w / 2);
     int y_offset = (rr->GetHeight() / 1.5) - (menu_h / 2.25);
 
     SDL_Point result = {
@@ -394,6 +424,37 @@ bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
 
     if (rr->GetCursor(old_ctrl))
     {
+        int menuScale = rr->GetHeight() / 250;
+        SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions("-", menuScale);
+
+        float distanceScale = 1.2;
+
+        std::vector<int> menuWidths;
+        for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
+            menuWidths.push_back(rr->GetFont()->GetTextDimensions(MainMenu::menu_items[i].c_str(), menuScale).w);
+
+        int menu_w = *std::max_element(menuWidths.begin(), menuWidths.end());
+        int menu_h = (MainMenu::menu_items.size()) * textDimensions.h * distanceScale;
+
+        int x_offset = (rr->GetWidth() / 2.75) - (menu_w / 2);
+        int y_offset = (rr->GetHeight() / 1.5) - (menu_h / 2.25);
+
+        int logo_length = 
+            (rr->GetHeight() / 6) 
+            +
+            (rr->GetHeight() / 16)
+            +
+            (78 * menuScale * 3);
+        
+        int logo_height = y_offset - textDimensions.h / 16;
+
+        SDL_Point physics_center_offset = {
+            rr->GetWidth() / 2 - logo_length / 2,
+            logo_height / 2 - rr->GetHeight() / 12
+        };
+
+        // if (ctrl.MousePress() && !old_ctrl.MousePress())
+
         for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
         {
             SDL_Point point = ctrl.GetMouse();
@@ -454,7 +515,7 @@ void RenderBlackTextWhiteBg(Renderer* rr, std::vector<std::string> menu_items, b
     int menu_w = *std::max_element(menuWidths.begin(), menuWidths.end());
     int menu_h = (menu_items.size()) * textDimensions.h * distanceScale;
 
-    int x_offset = (rr->GetWidth() / 2.5) - (menu_w / 2);
+    int x_offset = (rr->GetWidth() / 2.75) - (menu_w / 2);
     int y_offset = (rr->GetHeight() / 1.5) - (menu_h / 2.25);
 
     if (!hover_blinker)
@@ -497,7 +558,7 @@ void MainMenu::Render(Renderer* rr)
     int menu_w = *std::max_element(menuWidths.begin(), menuWidths.end());
     int menu_h = (MainMenu::menu_items.size()) * textDimensions.h * distanceScale;
 
-    int x_offset = (rr->GetWidth() / 2.5) - (menu_w / 2);
+    int x_offset = (rr->GetWidth() / 2.75) - (menu_w / 2);
     int y_offset = (rr->GetHeight() / 1.5) - (menu_h / 2.25);
 
     int logo_length = 
@@ -516,7 +577,7 @@ void MainMenu::Render(Renderer* rr)
 
     // That's stupid. It's a logical call in the render function. Should be reformatted.
     // (Also ignore that I do a lot of graphical stuff at step (logical) function)
-    MainMenu::physics.InitPaddle((menu_w / zoom) * 1.25);
+    MainMenu::physics.InitPaddle(((menu_w + textDimensions.w * 3) / zoom));
 
     for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
     {
@@ -578,6 +639,5 @@ void MainMenu::Render(Renderer* rr)
     AnimationManager::RenderAnim(ANIM_FADE, rr);
 }
 
-std::string MainMenu::GetStatus()   { return MainMenu::status; }
-
+std::string MainMenu::GetStatus()       { return MainMenu::status; }
 std::string MainMenu::GetLevelName()    { return MainMenu::level_name; }

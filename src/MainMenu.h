@@ -45,6 +45,9 @@ public:
     void RenderBox(Renderer* rr, int x_offset, int y_offset);
     void RenderPaddle(Renderer* rr, int x_offset, int y_offset, float menu_scale);
 
+    void ActivateBox(Renderer* rr);
+    SDL_Rect GetBoxRect(Renderer* rr, int x_offset, int y_offset);
+
     void SetPaddleDesiredPosition(b2Vec2 pos);
     void SetPaddlePositionPermanently(b2Vec2 pos);
 
@@ -94,7 +97,6 @@ public:
     /// @brief Get "status" variable. It contains what item player decided to select in menu.
     /// For more info refer to MainMenu::status.
     std::string GetStatus();
-    
     std::string GetLevelName();
 };
 
