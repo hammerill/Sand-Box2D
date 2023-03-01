@@ -12,6 +12,8 @@ But then, I've realized it could be more than just some rewritten code: a game.
 So, I took [this project](https://github.com/eder13/Box2D-SDL2-Demo) as the base,
 have rewritten it from zero using OOP, and now you're free to play this game and use its code at way as you want.
 
+
+
 <h2 align="center">
   Get it for your platform
 </h2>
@@ -87,7 +89,7 @@ Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/discus
     * `PLAY` - will load list of default levels that always shipped with game.
     * `COMMUNITY` - will load list of [community published levels](https://github.com/Hammerill/Sand-Box2D-levels).
     * `LEVEL EDITOR` - will load menu that shows: "Look, they're working on it! They're working hard! You think they do not work fast enough? Join them then! More info in 'ABOUT'!" and picture of some facility construction with the name of "SAND-BOX2D LEVEL EDITOR", where we also can see builders, which are in fact contributors with their names above them, and we can guess what type of work they do by looking at picture.
-    * `SETTINGS` - will fade out MainMenu and load OptionsMenu (how?!1).
+    * `SETTINGS` - will fade out MainMenu and load OptionsMenu.
     * `ABOUT` - will load About menu, where player can see list of contributors, credits, and QR code with link to this repo, in order if they will want to contribute.
     * `EXIT` - yes.
   - what's My name? My name is Corner. Upper-Right Corner.
