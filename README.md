@@ -12,7 +12,7 @@ But then, I've realized it could be more than just some rewritten code: a game.
 So, I took [this project](https://github.com/eder13/Box2D-SDL2-Demo) as the base,
 have rewritten it from zero using OOP, and now you're free to play this game and use its code at way as you want.
 
-
+![Gameplay Video](./pics/videosample.gif)
 
 <h2 align="center">
   Get it for your platform
