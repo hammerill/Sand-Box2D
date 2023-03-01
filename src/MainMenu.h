@@ -67,8 +67,6 @@ private:
     std::vector<std::string> menu_items;
     size_t hovered_item = 0;
 
-    std::vector<uint8_t> menu_items_colors;
-
     MainMenuPhysics physics;
 
     SDL_Texture* temp = nullptr;

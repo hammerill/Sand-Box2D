@@ -86,7 +86,7 @@ void MainMenuPhysics::InitPaddle(float paddle_width)
 }
 
 const float paddle_speed = 7.5;
-const float title_speed = 0.75;
+const float title_speed = 0.1;
 
 void MainMenuPhysics::Step()
 {
@@ -108,7 +108,10 @@ void MainMenuPhysics::Step()
 
         auto pos = MainMenuPhysics::box_logo->GetPosition();
         if (abs(pos.x) > 10 || abs(pos.y) > 10)
+        {
             MainMenuPhysics::box_active = false;
+            MainMenuPhysics::SetTitleDesiredAlpha(0xFF);
+        }
     }
     else
     {
@@ -128,6 +131,8 @@ void MainMenuPhysics::RenderTitle(Renderer* rr, SDL_Rect& title_rect)
 }
 void MainMenuPhysics::RenderBox(Renderer* rr, int x_offset, int y_offset)
 {
+    uint8_t box_alpha = MainMenuPhysics::box_active ? 0xFF : MainMenuPhysics::title_factual_alpha;
+
     b2Vec2 box_logo_pos = MainMenuPhysics::box_logo->GetPosition();
     SDL_Rect box_logo_rect;
     
@@ -136,6 +141,10 @@ void MainMenuPhysics::RenderBox(Renderer* rr, int x_offset, int y_offset)
 
     box_logo_rect.x = (box_logo_pos.x * zoom) + x_offset - (box_logo_rect.w / 2.0f);
     box_logo_rect.y = (box_logo_pos.y * zoom) + y_offset - (box_logo_rect.h / 2.0f);
+
+    SDL_SetTextureAlphaMod(logo, box_alpha);
+    SDL_SetTextureBlendMode(logo, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawBlendMode(rr->GetRenderer(), SDL_BLENDMODE_BLEND);
 
     SDL_RenderCopyEx(
         rr->GetRenderer(),
@@ -183,6 +192,8 @@ void MainMenuPhysics::ActivateBox(Renderer* rr)
     rr->GetSounds()->PlaySfx("menu_hit");
     MainMenuPhysics::box_logo->SetAngularVelocity(GetRandomFloat(-0.5, 0.5));
     MainMenuPhysics::box_active = true;
+
+    MainMenuPhysics::SetTitleDesiredAlpha(0);
 }
 SDL_Rect MainMenuPhysics::GetBoxRect(Renderer* rr, int x_offset, int y_offset)
 {
@@ -254,7 +265,6 @@ const float paddle_width = 6.5;
 void MainMenu::Init()
 {
     MainMenu::menu_items = std::vector<std::string>();
-    MainMenu::menu_items_colors = std::vector<uint8_t>();
     MainMenu::hovered_item = 0;
     MainMenu::status = "";
 
@@ -263,11 +273,7 @@ void MainMenu::Init()
     MainMenu::menu_items.push_back(Translations::Load("menu.json/item_level_editor"));
     MainMenu::menu_items.push_back(Translations::Load("menu.json/item_settings"));
     MainMenu::menu_items.push_back(Translations::Load("menu.json/item_about"));
-    MainMenu::menu_items.push_back(Translations::Load("menu.json/item_exit"));
-
-    MainMenu::menu_items_colors.push_back(0);
-    for (size_t i = 0; i < MainMenu::menu_items.size() - 1; i++)
-        MainMenu::menu_items_colors.push_back(0xFF);    
+    MainMenu::menu_items.push_back(Translations::Load("menu.json/item_exit"));  
 
     AnimationManager::InitAnim(ANIM_FADE_IN);
 
