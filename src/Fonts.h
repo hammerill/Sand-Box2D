@@ -41,6 +41,7 @@ public:
 
     /// @brief Did FontManager load font and is it able to render text?
     bool GetLoaded();
+    TTF_Font* GetFont();
 
     /// @brief Will return SDL_Rect which will show how much pixels this text takes.
     /// You can leave no parameters to get factual font width and height (of one symbol).

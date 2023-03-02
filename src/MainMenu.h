@@ -47,6 +47,8 @@ public:
     void RenderBox(Renderer* rr, int x_offset, int y_offset);
     void RenderPaddle(Renderer* rr, int x_offset, int y_offset, float menu_scale);
 
+    SDL_Rect GetPaddleRect(Renderer* rr, int x_offset, int y_offset, float menu_scale);
+
     void ActivateBox(Renderer* rr);
     SDL_Rect GetBoxRect(Renderer* rr, int x_offset, int y_offset);
 

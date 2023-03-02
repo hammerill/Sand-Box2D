@@ -170,8 +170,7 @@ void MainMenuPhysics::RenderPaddle(Renderer* rr, int x_offset, int y_offset, flo
     paddle_rect.x = (paddle_pos.x * zoom) + x_offset - (paddle_rect.w / 2.0f);
     paddle_rect.y = (paddle_pos.y * zoom) + y_offset - (paddle_rect.h / 2.0f);
 
-    SDL_SetRenderDrawBlendMode(rr->GetRenderer(), SDL_BLENDMODE_NONE);
-    SDL_SetRenderDrawColor(rr->GetRenderer(), 0, 0, 0, 0);
+    SDL_SetRenderDrawColor(rr->GetRenderer(), 0xFF, 0xFF, 0xFF, 0xFF);
     SDL_RenderFillRect(rr->GetRenderer(), &paddle_rect);
 
     rr->RenderText(
@@ -179,9 +178,25 @@ void MainMenuPhysics::RenderPaddle(Renderer* rr, int x_offset, int y_offset, flo
         paddle_rect.x - (paddle_rect.h / 2),
         paddle_rect.y + (paddle_rect.h / 2),
         menu_scale,
-        true, true,
-        0xFF, 0xFF, 0xFF
+        true, true
     );
+}
+
+SDL_Rect MainMenuPhysics::GetPaddleRect(Renderer* rr, int x_offset, int y_offset, float menu_scale)
+{
+    if (!MainMenuPhysics::paddle_inited)
+        return {};
+
+    b2Vec2 paddle_pos = MainMenuPhysics::paddle->GetPosition();
+    SDL_Rect paddle_rect;
+    
+    paddle_rect.w = MainMenuPhysics::paddle_width * zoom;
+    paddle_rect.h = MainMenuPhysics::paddle_height * zoom;
+
+    paddle_rect.x = (paddle_pos.x * zoom) + x_offset - (paddle_rect.w / 2.0f);
+    paddle_rect.y = (paddle_pos.y * zoom) + y_offset - (paddle_rect.h / 2.0f);
+
+    return paddle_rect;
 }
 
 void MainMenuPhysics::ActivateBox(Renderer* rr)
@@ -354,43 +369,6 @@ SDL_Point GetPaddleCenterInPx(Renderer* rr, std::vector<std::string> menu_items,
     return result;
 }
 
-SDL_Texture* TakeCareOfTexture(SDL_Texture* texture, Renderer* rr, WindowParams& old, WindowParams& now)
-{
-    old = now;
-    now = rr->GetWindowParams();
-
-    if (texture == nullptr)
-    {
-        SDL_Texture* result = SDL_CreateTexture(
-            rr->GetRenderer(),
-            SDL_PIXELFORMAT_RGBA8888,
-            SDL_TEXTUREACCESS_TARGET,
-            rr->GetWidth(),
-            rr->GetHeight()
-        );
-        SDL_SetTextureBlendMode(result, SDL_BLENDMODE_BLEND);
-
-        return result;
-    }
-    else if ((old.width != 0 && old.height != 0) && (old.width != now.width || old.height != now.height))
-    {
-        SDL_DestroyTexture(texture);
-        
-        SDL_Texture* result = SDL_CreateTexture(
-            rr->GetRenderer(),
-            SDL_PIXELFORMAT_RGBA8888,
-            SDL_TEXTUREACCESS_TARGET,
-            rr->GetWidth(),
-            rr->GetHeight()
-        );
-        SDL_SetTextureBlendMode(result, SDL_BLENDMODE_BLEND);
-
-        return result;
-    }
-
-    return texture;
-}
-
 bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
 {
     if (logo == nullptr)
@@ -530,55 +508,31 @@ bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
     return true;
 }
 
-void RenderBlackTextWhiteBg(Renderer* rr, std::vector<std::string> menu_items, bool hover_blinker)
+void RenderBlackText(Renderer* rr, const char *text, int x, int y, float scale, SDL_Rect paddle_rect, Font* font)
 {
-    SDL_SetRenderDrawBlendMode(rr->GetRenderer(), SDL_BLENDMODE_NONE);
-    
-    SDL_SetRenderDrawColor(rr->GetRenderer(), 0xFF, 0xFF, 0xFF, 0xFF);
-    SDL_RenderClear(rr->GetRenderer());
+    SDL_Rect textRect = font->GetTextDimensions(text, scale);
 
-    int menuScale = rr->GetHeight() / 250;
-    SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions("-", menuScale);
+    textRect.x = x;
+    textRect.y = y;
 
-    float distanceScale = 1.2;
+    SDL_Surface* textSurface = TTF_RenderUTF8_Solid(font->GetFont(), text, {0, 0, 0});
+    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(rr->GetRenderer(), textSurface);
 
-    std::vector<int> menuWidths;
-    for (size_t i = 0; i < menu_items.size(); i++)
-        menuWidths.push_back(rr->GetFont()->GetTextDimensions(menu_items[i].c_str(), menuScale).w);
+    SDL_Rect srcRect = {
+        paddle_rect.x - textRect.x,
+        paddle_rect.y - textRect.y,
+        textRect.w, textRect.h
+    };
 
-    int menu_w = *std::max_element(menuWidths.begin(), menuWidths.end());
-    int menu_h = (menu_items.size()) * textDimensions.h * distanceScale;
+    SDL_RenderCopy(rr->GetRenderer(), textTexture, &srcRect, &textRect);
 
-    int x_offset = (rr->GetWidth() / 2.75) - (menu_w / 2);
-    int y_offset = (rr->GetHeight() / 1.5) - (menu_h / 2.25);
-
-    if (!hover_blinker)
-    {
-        for (size_t i = 0; i < menu_items.size(); i++)
-        {
-            rr->RenderText(
-                menu_items[i].c_str(),
-                x_offset,
-                y_offset + textDimensions.h * distanceScale * i,
-                menuScale,
-                false,
-                Translations::GetJp(), 0, 0, 0
-            );
-        }
-    }
+    SDL_FreeSurface(textSurface);
+    SDL_DestroyTexture(textTexture);
 }
 
 void MainMenu::Render(Renderer* rr)
 {
     bool hover_blinker = MainMenu::status == "fadeout" && (int)(rr->GetFrames() / 10) % 2;
-
-    RenderBlackTextWhiteBg(rr, MainMenu::menu_items, hover_blinker);
-
-    MainMenu::temp = TakeCareOfTexture(MainMenu::temp, rr, old_wparams, now_wparams);
-    SDL_SetRenderTarget(rr->GetRenderer(), MainMenu::temp);
-
-    SDL_SetRenderDrawColor(rr->GetRenderer(), 0x10, 0x10, 0x10, 0xFF);
-    SDL_RenderClear(rr->GetRenderer());
 
     int menuScale = rr->GetHeight() / 250;
     SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions("-", menuScale);
@@ -613,6 +567,9 @@ void MainMenu::Render(Renderer* rr)
     // (Also ignore that I do a lot of graphical stuff at step (logical) function)
     MainMenu::physics.InitPaddle(((menu_w + textDimensions.w * 3) / zoom));
 
+    SDL_SetRenderDrawColor(rr->GetRenderer(), 0x10, 0x10, 0x10, 0xFF);
+    SDL_RenderClear(rr->GetRenderer());
+    
     for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
     {
         rr->RenderText(
@@ -623,31 +580,24 @@ void MainMenu::Render(Renderer* rr)
             false,
             Translations::GetJp()
         );
-            // SDL_Rect hover_bg = rr->GetFont()->GetTextDimensions(MainMenu::menu_items[i].c_str(), menuScale);
-
-            // hover_bg.x = x_offset - textDimensions.w / 16;
-            // hover_bg.y = y_offset + textDimensions.h * distanceScale * (int)i - textDimensions.h / 16;
-            // hover_bg.w += textDimensions.w / 8;
-            // hover_bg.h += textDimensions.h / 8;
-
-            // SDL_SetRenderDrawColor(rr->GetRenderer(), 0xFF, 0xFF, 0xFF, 0xFF);
-            // SDL_RenderFillRect(rr->GetRenderer(), &hover_bg);
-
-            // rr->RenderText(
-            //     MainMenu::menu_items[i].c_str(),
-            //     x_offset,
-            //     y_offset + textDimensions.h * distanceScale * i,
-            //     menuScale,
-            //     false,
-            //     Translations::GetJp(), 0, 0, 0
-            // );
     }
 
     MainMenu::physics.RenderPaddle(rr, physics_center_offset.x, physics_center_offset.y, menuScale);
 
-    SDL_SetRenderTarget(rr->GetRenderer(), NULL);
-    SDL_SetRenderDrawBlendMode(rr->GetRenderer(), SDL_BLENDMODE_BLEND);
-    SDL_RenderCopy(rr->GetRenderer(), MainMenu::temp, NULL, NULL);
+    if (!hover_blinker)
+        for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
+        {
+            RenderBlackText(
+                rr,
+                MainMenu::menu_items[i].c_str(),
+                x_offset,
+                y_offset + textDimensions.h * distanceScale * i,
+                menuScale,
+                MainMenu::physics.GetPaddleRect(rr, physics_center_offset.x, physics_center_offset.y, menuScale),
+                rr->GetFont(Translations::GetJp())
+            );
+        }
+
 
     SDL_Rect title_rect = {
         rr->GetWidth() / 2 - logo_length / 2 + (rr->GetHeight() / 6) + (rr->GetHeight() / 16),

@@ -61,7 +61,8 @@ void Font::Render(SDL_Renderer* renderer, const char* text, int x, int y, float 
     }
 }
 
-bool Font::GetLoaded()  { return Font::loaded; }
+bool Font::GetLoaded()      { return Font::loaded; }
+TTF_Font* Font::GetFont()   { return Font::font; }
 
 SDL_Rect Font::GetTextDimensions(const char* text, float scale)
 {
