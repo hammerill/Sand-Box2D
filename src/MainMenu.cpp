@@ -433,7 +433,7 @@ bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
         return true;
     }
 
-    if (rr->GetCursor(old_ctrl))
+    if (rr->GetCursor(ctrl) || rr->GetCursor(old_ctrl))
     {
         int menuScale = rr->GetHeight() / 250;
         SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions("-", menuScale);
@@ -462,24 +462,24 @@ bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
             logo_height / 2 - rr->GetHeight() / 12
         };
 
-        SDL_Point point = ctrl.GetMouse();
+        SDL_Point mouse = ctrl.GetMouse();
         SDL_Rect box = MainMenu::physics.GetBoxRect(rr, physics_center_offset.x, physics_center_offset.y);
 
-        if (ctrl.MousePress() && !old_ctrl.MousePress() && SDL_PointInRect(&point, &box))
+        if (ctrl.MenuMouse() && !old_ctrl.MenuMouse() && SDL_PointInRect(&mouse, &box))
             MainMenu::physics.ActivateBox(rr);
 
         for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
         {
             SDL_Rect rect = GetItemRect(rr, MainMenu::menu_items, i);
 
-            if (SDL_PointInRect(&point, &rect))
+            if (SDL_PointInRect(&mouse, &rect))
             {
                 if (i != MainMenu::hovered_item)
                 {
                     rr->GetSounds()->PlaySfx("menu_switch");
                     MainMenu::hovered_item = i;
                 }
-                if (old_ctrl.MousePress() && !ctrl.MousePress())
+                if (old_ctrl.MenuMouse() && !ctrl.MenuMouse())
                 {
                     rr->GetSounds()->PlaySfx("menu_enter");
                     MainMenu::status = "fadeout";

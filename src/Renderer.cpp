@@ -105,7 +105,7 @@ void Renderer::SetCursor(bool enable)
 bool Renderer::GetCursor(Controls ctrl)
 {
 #ifdef Vita
-    return ctrl.MousePress();
+    return ctrl.MenuMouse();
 #else
     return cursor;
 #endif

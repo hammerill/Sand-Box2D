@@ -64,7 +64,7 @@ bool GameManager::Step()
     }
 
 #ifndef Vita
-    if ((ctrl.GetMouse().x != old_ctrl.GetMouse().x) || (ctrl.GetMouse().y != old_ctrl.GetMouse().y) || (ctrl.MousePress()))
+    if ((ctrl.GetMouse().x != old_ctrl.GetMouse().x) || (ctrl.GetMouse().y != old_ctrl.GetMouse().y) || (ctrl.MenuMouse()))
         GameManager::mouse_last_frame_move = GameManager::rr->GetFrames();
     
     GameManager::rr->SetCursor(!(GameManager::rr->GetFrames() > GameManager::mouse_last_frame_move + mouse_frames_duration));

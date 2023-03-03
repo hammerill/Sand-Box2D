@@ -59,15 +59,16 @@ void Controls::Check()
     if (touchxy[0].reportNum == 1)
     {
         Controls::mouse = SDL_Point {touchxy[0].report[0].x / 2, touchxy[0].report[0].y / 2};
+        Controls::menuMouse = true;
 
         if (old == now)
         {
-            Controls::mousePress = true;
+            Controls::isMoving = true;
             Controls::isPinching = false;
         }
         else
         {
-            Controls::mousePress = false;
+            Controls::isMoving = false;
             Controls::isPinching = false;
         }
     }
@@ -78,6 +79,7 @@ void Controls::Check()
             ((touchxy[0].report[0].x / 2) + (touchxy[0].report[1].x / 2)) / 2,
             ((touchxy[0].report[0].y / 2) + (touchxy[0].report[1].y / 2)) / 2
         };
+        Controls::menuMouse = true;
 
         // Formula to calculate distance between two points
         Controls::pinch =  sqrt(
@@ -88,18 +90,19 @@ void Controls::Check()
         
         if (old == now)
         {
-            Controls::mousePress = true;
+            Controls::isMoving = true;
             Controls::isPinching = true;
         }
         else
         {
-            Controls::mousePress = false;
+            Controls::isMoving = false;
             Controls::isPinching = false;
         }
     }
     else
     {
-        Controls::mousePress = false;
+        Controls::isMoving = false;
+        Controls::menuMouse = false;
         Controls::isPinching = false;
     }
     
@@ -162,7 +165,8 @@ void Controls::Check()
         case SDL_MOUSEBUTTONDOWN:
             if (e.button.button == SDL_BUTTON_LEFT)
             {
-                Controls::mousePress = true;
+                Controls::isMoving = true;
+                Controls::menuMouse = true;
                 
                 if (e.button.clicks == 2)
                     Controls::fullscreen = true;
@@ -170,7 +174,8 @@ void Controls::Check()
             
             break;
         case SDL_MOUSEBUTTONUP:
-            Controls::mousePress = false;
+            Controls::isMoving = false;
+            Controls::menuMouse = false;
             Controls::fullscreen = false;
             break;
         case SDL_MOUSEMOTION:
@@ -289,7 +294,8 @@ double Controls::MoveLeft()     { return Controls::moveLeft; }
 double Controls::ZoomIn()       { return Controls::zoomIn; }
 double Controls::ZoomOut()      { return Controls::zoomOut; }
 
-bool Controls::MousePress()       { return Controls::mousePress; }
+bool Controls::IsMoving()       { return Controls::isMoving; }
+bool Controls::MenuMouse()      { return Controls::menuMouse; }
 SDL_Point Controls::GetMouse()  { return Controls::mouse; }
 
 bool Controls::IsPinching()     { return Controls::isPinching; }

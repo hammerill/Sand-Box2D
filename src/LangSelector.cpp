@@ -102,7 +102,7 @@ bool LangSelector::Step(Settings* settings, Renderer* rr, Controls ctrl, Control
                         GetLangCodeByIndex(LangSelector::langs, LangSelector::hovered_lang)
                     );
                 }
-                if (old_ctrl.MousePress() && !ctrl.MousePress()) // Maybe I should set another name for this ctrl.
+                if (old_ctrl.MenuMouse() && !ctrl.MenuMouse())
                 {
                     rr->GetSounds()->PlaySfx("menu_enter");
                     LangSelector::fadeout = true;
