@@ -513,19 +513,21 @@ void RenderBlackText(Renderer* rr, const char *text, int x, int y, float scale, 
     textRect.x = x;
     textRect.y = y;
 
-    SDL_Rect dstRect;
-    if (SDL_IntersectRect(&paddleRect, &textRect, &dstRect) == SDL_FALSE)
+    SDL_Rect intersectRect;
+    if (SDL_IntersectRect(&paddleRect, &textRect, &intersectRect) == SDL_FALSE)
         return;
 
     SDL_Rect srcRect = {
-        textRect.x - x, textRect.y - y,
-        dstRect.w, dstRect.h
+        (int)((float)(intersectRect.x - x) / scale),
+        (int)((float)(intersectRect.y - y) / scale),
+        (int)((float)intersectRect.w / scale),
+        (int)((float)intersectRect.h / scale)
     };
 
     SDL_Surface* textSurface = TTF_RenderUTF8_Solid(font->GetFont(), text, {0, 0, 0});
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(rr->GetRenderer(), textSurface);
 
-    SDL_RenderCopy(rr->GetRenderer(), textTexture, &srcRect, &dstRect);
+    SDL_RenderCopy(rr->GetRenderer(), textTexture, &srcRect, &intersectRect);
 
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
