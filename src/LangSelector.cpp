@@ -167,7 +167,7 @@ void LangSelector::Render(Renderer* rr)
     size_t i = 0;
     for (auto const& lang : LangSelector::langs)
     {
-        if (i == LangSelector::hovered_lang && !hover_blinker)
+        if (i == LangSelector::hovered_lang)
         {
             SDL_Rect hover_bg = rr->GetFont()->GetTextDimensions(lang.second.c_str(), langSelectScale);
 
@@ -178,15 +178,7 @@ void LangSelector::Render(Renderer* rr)
 
             SDL_SetRenderDrawColor(rr->GetRenderer(), 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderFillRect(rr->GetRenderer(), &hover_bg);
-
-            rr->RenderText(
-                lang.second.c_str(),
-                rr->GetWidth() / 2,
-                y_offset + textDimensions.h * distanceScale * i,
-                langSelectScale,
-                true,
-                Translations::GetJp(), 0, 0, 0
-            );
+            
             rr->RenderText(
                 "▶",
                 rr->GetWidth() / 2 - rr->GetFont()->GetTextDimensions(lang.second.c_str(), langSelectScale).w / 2 - textDimensions.w,
@@ -195,6 +187,16 @@ void LangSelector::Render(Renderer* rr)
                 true,
                 true
             );
+
+            if (!hover_blinker)
+                rr->RenderText(
+                    lang.second.c_str(),
+                    rr->GetWidth() / 2,
+                    y_offset + textDimensions.h * distanceScale * i,
+                    langSelectScale,
+                    true,
+                    Translations::GetJp(), 0, 0, 0
+                );
         }
         else
             rr->RenderText(

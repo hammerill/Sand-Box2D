@@ -121,7 +121,7 @@ void MainMenuPhysics::Step()
         MainMenuPhysics::box_logo->SetTransform({0.5, 0.5}, 0);
     }
 
-    MainMenuPhysics::world->Step(1.0 / 60.0, 3, 3);
+    MainMenuPhysics::world->Step(1.0 / 60.0, 2, 1);
 }
 void MainMenuPhysics::RenderTitle(Renderer* rr, SDL_Rect& title_rect)
 {
@@ -314,7 +314,7 @@ SDL_Rect GetItemRect(Renderer* rr, std::vector<std::string> menu_items, size_t i
     int menu_w = *std::max_element(menuWidths.begin(), menuWidths.end());
     int menu_h = (menu_items.size()) * textDimensions.h * distanceScale;
 
-    int x_offset = (rr->GetWidth() / 2.75) - (menu_w / 2);
+    int x_offset = (rr->GetWidth() / 2.9) - (menu_w / 2);
     int y_offset = (rr->GetHeight() / 1.5) - (menu_h / 2.25);
 
     SDL_Rect rect = rr->GetFont()->GetTextDimensions(menu_items[item_index].c_str(), menuScale);
@@ -341,7 +341,7 @@ SDL_Point GetPaddleCenterInPx(Renderer* rr, std::vector<std::string> menu_items,
     int menu_w = *std::max_element(menuWidths.begin(), menuWidths.end());
     int menu_h = (menu_items.size()) * textDimensions.h * distanceScale;
 
-    int x_offset = (rr->GetWidth() / 2.75) - (menu_w / 2);
+    int x_offset = (rr->GetWidth() / 2.9) - (menu_w / 2);
     int y_offset = (rr->GetHeight() / 1.5) - (menu_h / 2.25);
 
     SDL_Point result = {
@@ -384,8 +384,7 @@ bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
         paddle_center_px.y / (float)zoom
     };
 
-    MainMenu::physics.Step(); // delete line below when realized
-        // MainMenu::physics.SetPaddlePositionPermanently(paddle_desired_pos);
+    MainMenu::physics.Step();
     
     if (AnimationManager::StepAnim(ANIM_FADE))
     {
@@ -508,23 +507,25 @@ bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
     return true;
 }
 
-void RenderBlackText(Renderer* rr, const char *text, int x, int y, float scale, SDL_Rect paddle_rect, Font* font)
+void RenderBlackText(Renderer* rr, const char *text, int x, int y, float scale, SDL_Rect paddleRect, Font* font)
 {
     SDL_Rect textRect = font->GetTextDimensions(text, scale);
-
     textRect.x = x;
     textRect.y = y;
+
+    SDL_Rect dstRect;
+    if (SDL_IntersectRect(&paddleRect, &textRect, &dstRect) == SDL_FALSE)
+        return;
+
+    SDL_Rect srcRect = {
+        textRect.x - x, textRect.y - y,
+        dstRect.w, dstRect.h
+    };
 
     SDL_Surface* textSurface = TTF_RenderUTF8_Solid(font->GetFont(), text, {0, 0, 0});
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(rr->GetRenderer(), textSurface);
 
-    SDL_Rect srcRect = {
-        paddle_rect.x - textRect.x,
-        paddle_rect.y - textRect.y,
-        textRect.w, textRect.h
-    };
-
-    SDL_RenderCopy(rr->GetRenderer(), textTexture, &srcRect, &textRect);
+    SDL_RenderCopy(rr->GetRenderer(), textTexture, &srcRect, &dstRect);
 
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
@@ -546,7 +547,7 @@ void MainMenu::Render(Renderer* rr)
     int menu_w = *std::max_element(menuWidths.begin(), menuWidths.end());
     int menu_h = (MainMenu::menu_items.size()) * textDimensions.h * distanceScale;
 
-    int x_offset = (rr->GetWidth() / 2.75) - (menu_w / 2);
+    int x_offset = (rr->GetWidth() / 2.9) - (menu_w / 2);
     int y_offset = (rr->GetHeight() / 1.5) - (menu_h / 2.25);
 
     int logo_length = 
@@ -565,7 +566,7 @@ void MainMenu::Render(Renderer* rr)
 
     // That's stupid. It's a logical call in the render function. Should be reformatted.
     // (Also ignore that I do a lot of graphical stuff at step (logical) function)
-    MainMenu::physics.InitPaddle(((menu_w + textDimensions.w * 3) / zoom));
+    MainMenu::physics.InitPaddle(((float)(menu_w + textDimensions.w) / (float)zoom));
 
     SDL_SetRenderDrawColor(rr->GetRenderer(), 0x10, 0x10, 0x10, 0xFF);
     SDL_RenderClear(rr->GetRenderer());
