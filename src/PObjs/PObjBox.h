@@ -42,17 +42,15 @@ public:
     /// @param world link to the world where box should be registered.
     /// @param renderer the rendering context.
     /// @param textures textures vector to work with.
-    void Register(b2World* world, SDL_Renderer* renderer, std::map<std::string, SDL_Texture*>& textures);
+    void Register(b2World* world, Renderer* rr, std::map<std::string, SDL_Texture*>& textures);
 
     /// @brief Render this box.
-    /// @param renderer the rendering context.
+    /// @param rr link to renderer object (not link to SDL_Renderer) where to render.
     /// @param x_offset camera X offset in pixels.
     /// @param y_offset camera Y offset in pixels.
     /// @param zoom camera zoom coefficient.
-    /// @param width screen width in pixels.
-    /// @param height screen height in pixels.
     /// @return true if box rendered. False if didn't render because it's out of screen bounds. 
-    bool Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height);
+    bool Render(Renderer* rr, float x_offset, float y_offset, float zoom);
 
     float GetX();
     float GetY();

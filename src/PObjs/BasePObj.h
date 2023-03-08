@@ -5,6 +5,8 @@
 #include <box2d/box2d.h>
 #include <jsoncpp/json/value.h>
 
+#include "../Renderer.h"
+
 #ifndef M_PI
 #define M_PI           3.14159265358979323846264338327950288  /* pi */
 #endif
@@ -72,17 +74,15 @@ public:
     /// @param world link to the world where PObj should be registered.
     /// @param renderer the rendering context.
     /// @param textures textures vector to work with.
-    virtual void Register(b2World* world, SDL_Renderer* renderer, std::map<std::string, SDL_Texture*>& textures) = 0;
+    virtual void Register(b2World* world, Renderer* rr, std::map<std::string, SDL_Texture*>& textures) = 0;
     
     /// @brief Render this PObj.
-    /// @param renderer the rendering context.
+    /// @param rr link to renderer object (not link to SDL_Renderer) where to render.
     /// @param x_offset camera X offset in pixels.
     /// @param y_offset camera Y offset in pixels.
     /// @param zoom camera zoom coefficient.
-    /// @param width screen width in pixels.
-    /// @param height screen height in pixels.
     /// @return true if object rendered. False if didn't render because it's out of screen bounds. 
-    virtual bool Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width = 0, int height = 0) = 0;
+    virtual bool Render(Renderer* rr, float x_offset, float y_offset, float zoom) = 0;
 
     virtual float GetX() = 0;
     virtual float GetY() = 0;

@@ -50,7 +50,7 @@ Json::Value PObjPlatform::GetParam(std::string name)
     return 0;
 }
 
-void PObjPlatform::Register(b2World* world, SDL_Renderer* renderer, std::map<std::string, SDL_Texture*>& textures)
+void PObjPlatform::Register(b2World* world, Renderer* rr, std::map<std::string, SDL_Texture*>& textures)
 {
     PObjPlatform::body = world->CreateBody(&(PObjPlatform::bodyDef));
     PObjPlatform::body->CreateFixture(&(PObjPlatform::fixtureDef));
@@ -58,41 +58,33 @@ void PObjPlatform::Register(b2World* world, SDL_Renderer* renderer, std::map<std
     PObjPlatform::isRegistered = true;
 }
 
-bool PObjPlatform::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)
+bool PObjPlatform::Render(Renderer* rr, float x_offset, float y_offset, float zoom)
 {
-    b2Vec2 begin =  {(PObjPlatform::platformDesc.x1 * zoom) + x_offset, (PObjPlatform::platformDesc.y1 * zoom) + y_offset};
-    b2Vec2 end =    {(PObjPlatform::platformDesc.x2 * zoom) + x_offset, (PObjPlatform::platformDesc.y2 * zoom) + y_offset};
+    float x1 = (PObjPlatform::platformDesc.x1 * zoom) + x_offset;
+    float y1 = (PObjPlatform::platformDesc.y1 * zoom) + y_offset;
+    float x2 = (PObjPlatform::platformDesc.x2 * zoom) + x_offset;
+    float y2 = (PObjPlatform::platformDesc.y2 * zoom) + y_offset;
 
-    // Formula to calculate distance between two points
-    float halfDistance =    sqrt(
-                                pow(end.x - begin.x, 2)
-                                +
-                                pow(end.y - begin.y, 2)
-                            )
-                            /2;
+    SDL_FRect screen = {
+        0, 0,
+        (float)(rr->GetWidth()),
+        (float)(rr->GetHeight())
+    };
 
-    /// Yes, in order to determine is the platform in the screen bounds, 
-    /// I just used the same formula as for circle, i.e. look at this center,
-    /// and check its bounding with screen taking care of radius, 
-    /// but platform does not have a radius, 
-    /// but we can calculate half distance between begin at end instead.
-    if ((begin.x + end.x) / 2 > -halfDistance && (begin.x + end.x) / 2 < width + halfDistance 
-    &&  (begin.y + end.y) / 2 > -halfDistance && (begin.y + end.y) / 2 < height + halfDistance)
-    {
-        SDL_SetRenderDrawColor(renderer, PObjPlatform::r, PObjPlatform::g, PObjPlatform::b, 0);
-        SDL_RenderDrawLine(renderer, begin.x, begin.y, end.x, end.y);
-
-        return true;
-    }
-    else
+    if (!SDL_IntersectFRectAndLine(&screen, &x1, &y1, &x2, &y2))
         return false;
+
+    SDL_SetRenderDrawColor(rr->GetRenderer(), PObjPlatform::r, PObjPlatform::g, PObjPlatform::b, 0xFF);
+    SDL_RenderDrawLine(rr->GetRenderer(), x1, y1, x2, y2);
+
+    return true;
 }
 
 float PObjPlatform::GetX() 
 {
-    return PObjPlatform::platformDesc.x1;
+    return (PObjPlatform::platformDesc.x1 + PObjPlatform::platformDesc.x2) / 2;
 }
 float PObjPlatform::GetY() 
 {
-    return PObjPlatform::platformDesc.y1;
+    return (PObjPlatform::platformDesc.y1 + PObjPlatform::platformDesc.y2) / 2;
 }

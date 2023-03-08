@@ -116,19 +116,19 @@ Json::Value PObjBox::GetParam(std::string name)
     return 0;
 }
 
-void PObjBox::Register(b2World* world, SDL_Renderer* renderer, std::map<std::string, SDL_Texture*>& textures)
+void PObjBox::Register(b2World* world, Renderer* rr, std::map<std::string, SDL_Texture*>& textures)
 {
     PObjBox::body = world->CreateBody(&(PObjBox::bodyDef));
     PObjBox::body->SetLinearVelocity(b2Vec2(PObjBox::boxDesc.vel_x, PObjBox::boxDesc.vel_y));
     PObjBox::body->SetAngularVelocity(PObjBox::boxDesc.vel_ang);
     PObjBox::body->CreateFixture(&(PObjBox::fixtureDef));
 
-    PObjBox::texture = PObjBox::LoadTexture(textures, PObjBox::GetParam("texture_path").asString(), renderer);
+    PObjBox::texture = PObjBox::LoadTexture(textures, PObjBox::GetParam("texture_path").asString(), rr->GetRenderer());
 
     PObjBox::isRegistered = true;
 }
 
-bool PObjBox::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)
+bool PObjBox::Render(Renderer* rr, float x_offset, float y_offset, float zoom)
 {
     b2Vec2 pos = PObjBox::body->GetPosition();
     SDL_Rect box;
@@ -141,10 +141,10 @@ bool PObjBox::Render(SDL_Renderer* renderer, float x_offset, float y_offset, flo
 
     float maxima = std::max(box.w * 1.5, box.h * 1.5);
 
-    if (box.x > -maxima && box.x < width + maxima
-    &&  box.y > -maxima && box.y < height + maxima)
+    if (box.x > -maxima && box.x < rr->GetWidth() + maxima
+    &&  box.y > -maxima && box.y < rr->GetHeight() + maxima)
     {
-        SDL_RenderCopyEx(renderer, PObjBox::texture, NULL, &box, PObjBox::body->GetAngle() * PObjBox::RAD2DEG, NULL, SDL_FLIP_NONE);
+        SDL_RenderCopyEx(rr->GetRenderer(), PObjBox::texture, NULL, &box, PObjBox::body->GetAngle() * PObjBox::RAD2DEG, NULL, SDL_FLIP_NONE);
         return true;
     }
     else

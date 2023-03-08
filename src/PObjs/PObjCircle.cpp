@@ -142,7 +142,7 @@ Json::Value PObjCircle::GetParam(std::string name)
     return 0;
 }
 
-void PObjCircle::Register(b2World* world, SDL_Renderer* renderer, std::map<std::string, SDL_Texture*>& textures)
+void PObjCircle::Register(b2World* world, Renderer* rr, std::map<std::string, SDL_Texture*>& textures)
 {
     PObjCircle::body = world->CreateBody(&(PObjCircle::bodyDef));
     PObjCircle::body->SetLinearVelocity(b2Vec2(PObjCircle::circleDesc.vel_x, PObjCircle::circleDesc.vel_y));
@@ -150,12 +150,12 @@ void PObjCircle::Register(b2World* world, SDL_Renderer* renderer, std::map<std::
     PObjCircle::body->CreateFixture(&(PObjCircle::fixtureDef));
 
     if (PObjCircle::is_texture)
-        PObjCircle::texture = PObjCircle::LoadTexture(textures, PObjCircle::GetParam("texture_path").asString(), renderer);
+        PObjCircle::texture = PObjCircle::LoadTexture(textures, PObjCircle::GetParam("texture_path").asString(), rr->GetRenderer());
 
     PObjCircle::isRegistered = true;
 }
 
-bool PObjCircle::Render(SDL_Renderer* renderer, float x_offset, float y_offset, float zoom, int width, int height)
+bool PObjCircle::Render(Renderer* rr, float x_offset, float y_offset, float zoom)
 {
     b2Vec2 pos = PObjCircle::body->GetPosition();
 
@@ -165,8 +165,8 @@ bool PObjCircle::Render(SDL_Renderer* renderer, float x_offset, float y_offset, 
     };
     float radiusZoomed = PObjCircle::circleDesc.radius * zoom;
 
-    if (circle.x > -radiusZoomed && circle.x < width + radiusZoomed
-    &&  circle.y > -radiusZoomed && circle.y < height + radiusZoomed)
+    if (circle.x > -radiusZoomed && circle.x < rr->GetWidth() + radiusZoomed
+    &&  circle.y > -radiusZoomed && circle.y < rr->GetHeight() + radiusZoomed)
     {
         if (PObjCircle::is_texture)
         {
@@ -178,14 +178,14 @@ bool PObjCircle::Render(SDL_Renderer* renderer, float x_offset, float y_offset, 
             box.x = circle.x - (box.w / 2.0f);
             box.y = circle.y - (box.h / 2.0f);
 
-            SDL_RenderCopyEx(renderer, PObjCircle::texture, NULL, &box, PObjCircle::body->GetAngle() * PObjCircle::RAD2DEG, NULL, SDL_FLIP_NONE);
+            SDL_RenderCopyEx(rr->GetRenderer(), PObjCircle::texture, NULL, &box, PObjCircle::body->GetAngle() * PObjCircle::RAD2DEG, NULL, SDL_FLIP_NONE);
         }
         else
         {
-            filledCircleRGBA(renderer, circle.x, circle.y, radiusZoomed, PObjCircle::r, PObjCircle::g, PObjCircle::b, 0xFF);
+            filledCircleRGBA(rr->GetRenderer(), circle.x, circle.y, radiusZoomed, PObjCircle::r, PObjCircle::g, PObjCircle::b, 0xFF);
 
-            SDL_SetRenderDrawColor(renderer, PObjCircle::r_angle, PObjCircle::g_angle, PObjCircle::b_angle, 0);
-            SDL_RenderDrawLine(renderer, 
+            SDL_SetRenderDrawColor(rr->GetRenderer(), PObjCircle::r_angle, PObjCircle::g_angle, PObjCircle::b_angle, 0xFF);
+            SDL_RenderDrawLine(rr->GetRenderer(), 
             circle.x, 
             circle.y, 
             (circle.x) + (cos(PObjCircle::body->GetAngle()) * radiusZoomed), 

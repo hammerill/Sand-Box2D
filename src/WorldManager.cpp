@@ -383,7 +383,7 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
 
         auto pobj = WorldManager::objects[WorldManager::objects.size() - 1];
 
-        pobj->Register(WorldManager::world, rr->GetRenderer(), WorldManager::textures);
+        pobj->Register(WorldManager::world, rr, WorldManager::textures);
         
         WorldManager::order.pop_back();        
     }
@@ -454,12 +454,10 @@ void WorldManager::Render(Renderer* rr, Controls ctrl)
     for (size_t i = 0; i < WorldManager::objects.size(); i++)   
     {
         if (WorldManager::objects[i]->Render(
-                rr->GetRenderer(), 
+                rr, 
                 WorldManager::x_offset, 
                 WorldManager::y_offset, 
-                WorldManager::zoom,
-                rr->GetWidth(),
-                rr->GetHeight()))
+                WorldManager::zoom))
         {
             renderedItemsCount++;
         }        
