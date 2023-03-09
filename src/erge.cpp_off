@@ -1,3 +1,38 @@
+    uint8_t* pixels = (uint8_t*)(malloc(GameManager::rr->GetWidth() * GameManager::rr->GetHeight() * 4));
+    SDL_RenderReadPixels(
+        GameManager::rr->GetRenderer(),
+        NULL,
+        SDL_PIXELFORMAT_ABGR8888,
+        pixels,
+        GameManager::rr->GetWidth() * 4
+    );
+    SDL_Surface* win_surface = SDL_CreateRGBSurfaceFrom(
+        pixels,
+        GameManager::rr->GetWidth(),
+        GameManager::rr->GetHeight(),
+        32,
+        GameManager::rr->GetWidth() * 4,
+        0x000000FF,
+        0x0000FF00,
+        0x00FF0000,
+        0xFF000000
+    );
+    SDL_Texture* win_texture = SDL_CreateTextureFromSurface(GameManager::rr->GetRenderer(), win_surface);
+    SDL_SetTextureAlphaMod(win_texture, 0xFF);
+    SDL_Rect win_rect = {
+        GameManager::rr->GetWidth() / 5 * 4,
+        GameManager::rr->GetHeight() / 5 * 4,
+        GameManager::rr->GetWidth() / 5,
+        GameManager::rr->GetHeight() / 5,
+    };
+    SDL_RenderCopy(GameManager::rr->GetRenderer(), win_texture, NULL, &win_rect);
+
+    SDL_FreeSurface(win_surface);
+    SDL_DestroyTexture(win_texture);
+    free(pixels);
+
+////////////////////////////
+
 void blur() //This manipulates with SDL_Surface and gives it box blur effect
 {
     for (int y = 0; y < imageSurface->h; y++)
