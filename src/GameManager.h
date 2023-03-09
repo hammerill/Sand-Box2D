@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Renderer.h"
-#include "Controls.h"
-#include "Settings.h"
+#include "System/Renderer.h"
+#include "System/Controls.h"
+#include "System/Settings.h"
 
-#include "MainMenu.h"
-#include "WorldManager.h"
-#include "LangSelector.h"
+#include "Screens/MainMenu.h"
+#include "Screens/WorldManager.h"
+#include "Screens/LangSelector.h"
 
 /// @brief Which single class is responsible for the entire screen?
 enum CurrentVisual 

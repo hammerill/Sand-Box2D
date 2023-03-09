@@ -6,10 +6,10 @@
 #include <fstream>
 #include <vector>
 
-#include "PObjs/BasePObj.h"
-#include "PObjs/PObjPlatform.h"
-#include "PObjs/PObjBox.h"
-#include "PObjs/PObjCircle.h"
+#include "../PObjs/BasePObj.h"
+#include "../PObjs/PObjPlatform.h"
+#include "../PObjs/PObjBox.h"
+#include "../PObjs/PObjCircle.h"
 
 struct JsonOptions
 {

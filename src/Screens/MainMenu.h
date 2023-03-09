@@ -7,10 +7,10 @@
 #include <algorithm>
 #include <map>
 
-#include "Renderer.h"
-#include "Controls.h"
-#include "Translations.h"
-#include "Animations.h"
+#include "../System/Renderer.h"
+#include "../System/Controls.h"
+#include "../System/Translations.h"
+#include "../System/Animations.h"
 
 #ifndef M_PI
 #define M_PI           3.14159265358979323846264338327950288  /* pi */

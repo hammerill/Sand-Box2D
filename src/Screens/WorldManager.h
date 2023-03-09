@@ -1,12 +1,12 @@
 #pragma once
 
-#include "PObjs/BasePObj.h"
+#include "../PObjs/BasePObj.h"
 
-#include "Controls.h"
-#include "Level.h"
-#include "Network.h"
-#include "Renderer.h"
-#include "Animations.h"
+#include "../System/Controls.h"
+#include "../System/Level.h"
+#include "../System/Network.h"
+#include "../System/Renderer.h"
+#include "../System/Animations.h"
 
 #include <box2d/box2d.h>
 #include <vector>
