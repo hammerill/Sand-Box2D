@@ -21,6 +21,9 @@ private:
 
     std::string translations_base = "";
 
+    std::string GetLangCodeByIndex(size_t index);
+    void ReloadLang(std::string lang_code);
+
     bool fadeout = false;
 public:
     LangSelector();

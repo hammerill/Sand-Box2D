@@ -52,7 +52,7 @@ public:
             value = this->start_value;
             return;
         }
-        if (frames > this->frames_start + this->frames_length)
+        if (frames >= this->frames_start + this->frames_length)
         {
             value = this->end_value;
             return;
@@ -61,8 +61,7 @@ public:
         value = this->start_value
                 +
                 (
-                    transition
-                    (
+                    transition (
                         (frames - this->frames_start)
                         /
                         (float)this->frames_length

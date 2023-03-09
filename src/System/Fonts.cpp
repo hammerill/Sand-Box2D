@@ -38,27 +38,39 @@ void Font::LoadFont(const char* path_to_font, int font_width)
 
 void Font::Render(SDL_Renderer* renderer, const char* text, int x, int y, float scale, bool center, Uint8 r, Uint8 g, Uint8 b)
 {
-    if (Font::loaded)
+    if (!Font::loaded)
+        return;
+    
+    SDL_Rect textRect = Font::GetTextDimensions(text, scale);
+
+    textRect.x = x;
+    textRect.y = y;
+
+    if (center)
     {
-        SDL_Rect textRect = Font::GetTextDimensions(text, scale);
-
-        textRect.x = x;
-        textRect.y = y;
-
-        if (center)
-        {
-            textRect.x -= textRect.w / 2;
-            textRect.y -= textRect.h / 2;
-        }
-
-        SDL_Surface* textSurface = TTF_RenderUTF8_Solid(Font::font, text, {r, g, b});
-        SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-
-        SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
-
-        SDL_FreeSurface(textSurface);
-        SDL_DestroyTexture(textTexture);
+        textRect.x -= textRect.w / 2;
+        textRect.y -= textRect.h / 2;
     }
+
+    SDL_Surface* textSurface = TTF_RenderUTF8_Solid(Font::font, text, {r, g, b});
+    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+
+    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+
+    SDL_FreeSurface(textSurface);
+    SDL_DestroyTexture(textTexture);
+}
+
+SDL_Texture* Font::GetTextTexture(SDL_Renderer* renderer, const char* text, Uint8 r, Uint8 g, Uint8 b)
+{
+    if (!Font::loaded)
+        return nullptr;
+    
+    SDL_Surface* textSurface = TTF_RenderUTF8_Solid(Font::font, text, {r, g, b});
+    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+
+    SDL_FreeSurface(textSurface);
+    return textTexture;
 }
 
 bool Font::GetLoaded()      { return Font::loaded; }

@@ -38,7 +38,7 @@ GameManager::GameManager(const char* path_to_settings, const char* path_to_def_s
     );
 
     GameManager::main_menu = MainMenu();
-    GameManager::main_menu.Init();
+    GameManager::main_menu.Init(GameManager::rr);
 
     GameManager::lang_selector = LangSelector();
     GameManager::lang_selector.Init(GameManager::settings.Get("path_to_translations").asString());
@@ -120,7 +120,7 @@ bool GameManager::Step()
             if (!GameManager::world_manager->Step(GameManager::rr, GameManager::ctrl, GameManager::old_ctrl))
             {
                 GameManager::world_manager->FreeMemory();
-                GameManager::main_menu.Init();
+                GameManager::main_menu.Init(GameManager::rr);
 
                 key = true;
                 current_visual = MAIN_MENU_VISUAL;
@@ -130,7 +130,7 @@ bool GameManager::Step()
         case LANG_SELECTOR_VISUAL:
             if (!GameManager::lang_selector.Step(&(GameManager::settings), GameManager::rr, GameManager::ctrl, GameManager::old_ctrl))
             {
-                GameManager::main_menu.Init();
+                GameManager::main_menu.Init(GameManager::rr);
 
                 key = true;
                 current_visual = MAIN_MENU_VISUAL;

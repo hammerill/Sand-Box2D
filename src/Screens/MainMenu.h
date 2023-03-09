@@ -21,7 +21,6 @@ class MainMenuPhysics
 private:
     b2World* world = nullptr;
 
-    // std::vector<std::map<b2Body*, b2Body*>> constellation;
     b2Body* paddle = nullptr;
     b2Body* box_logo = nullptr;
 
@@ -34,6 +33,8 @@ private:
     uint8_t title_factual_alpha, title_desired_alpha;
 
     float RAD2DEG;
+
+    float GetRandomFloat(float min, float max);
 
 public:
     MainMenuPhysics();
@@ -67,11 +68,12 @@ class MainMenu
 {
 private:
     std::vector<std::string> menu_items;
+    std::vector<SDL_Texture*> menu_items_textures;
+    std::vector<SDL_Texture*> menu_black_items_textures;
     size_t hovered_item = 0;
 
     MainMenuPhysics physics;
 
-    SDL_Texture* temp = nullptr;
     WindowParams old_wparams, now_wparams;
 
     /// Status that used after unloading MainMenu.
@@ -80,12 +82,17 @@ private:
     /// If it's empty, it means that game needs to be closed (player pressed EXIT).
     std::string status = "";
     std::string level_name = "";
+
+    void RenderWhiteText(Renderer* rr, size_t index, int x, int y, float scale);
+    void RenderBlackText(Renderer* rr, size_t index, int x, int y, float scale, SDL_Rect paddleRect);
 public:
     MainMenu();
     ~MainMenu();
 
     /// @brief Init menu.
-    void Init();
+    void Init(Renderer* rr);
+    /// @brief Destroy menu.
+    void FreeMemory();
 
     /// @brief Make MainMenu logical step.
     /// @param rr link to renderer object (not link to SDL_Renderer) where to render.

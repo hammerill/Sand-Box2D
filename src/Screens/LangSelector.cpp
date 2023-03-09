@@ -3,18 +3,29 @@
 LangSelector::LangSelector() {}
 LangSelector::~LangSelector() {}
 
-void ReloadLangs(std::map<std::string, std::string>& langs, std::string& choose_title, std::string& settings_reminder, std::string translations_base, std::string lang_code)
+std::string LangSelector::GetLangCodeByIndex(size_t index)
 {
-    Translations::LoadTranslation(translations_base, lang_code);
+    size_t i = 0;
+    for (auto const& lang : LangSelector::langs)
+    {
+        if (i++ == index)
+            return lang.first;
+    }
+    return "";
+}
 
-    langs["en"] = Translations::Load("lang_selector.json/lang_en");
-    langs["fr"] = Translations::Load("lang_selector.json/lang_fr");
-    langs["jp"] = Translations::Load("lang_selector.json/lang_jp");
-    langs["ru"] = Translations::Load("lang_selector.json/lang_ru");
-    langs["ua"] = Translations::Load("lang_selector.json/lang_ua");
+void LangSelector::ReloadLang(std::string lang_code)
+{
+    Translations::LoadTranslation(LangSelector::translations_base, lang_code);
 
-    choose_title = Translations::Load("lang_selector.json/choose_title");
-    settings_reminder = Translations::Load("lang_selector.json/settings_reminder");
+    LangSelector::langs["en"] = Translations::Load("lang_selector.json/lang_en");
+    LangSelector::langs["fr"] = Translations::Load("lang_selector.json/lang_fr");
+    LangSelector::langs["jp"] = Translations::Load("lang_selector.json/lang_jp");
+    LangSelector::langs["ru"] = Translations::Load("lang_selector.json/lang_ru");
+    LangSelector::langs["ua"] = Translations::Load("lang_selector.json/lang_ua");
+
+    LangSelector::choose_title = Translations::Load("lang_selector.json/choose_title");
+    LangSelector::settings_reminder = Translations::Load("lang_selector.json/settings_reminder");
 }
 
 void LangSelector::Init(std::string translations_base)
@@ -24,23 +35,10 @@ void LangSelector::Init(std::string translations_base)
     LangSelector::langs = std::map<std::string, std::string>();
     LangSelector::hovered_lang = 0;
 
-    ReloadLangs(LangSelector::langs, LangSelector::choose_title, LangSelector::settings_reminder, LangSelector::translations_base, "en");
+    LangSelector::ReloadLang("en");
 
     AnimationManager::InitAnim(ANIM_FADE_IN);
     LangSelector::fadeout = false;
-}
-
-std::string GetLangCodeByIndex(std::map<std::string, std::string> langs, size_t index)
-{
-    size_t i = 0;
-    for (auto const& lang : langs)
-    {
-        if (i == index)
-            return lang.first;
-        
-        i++;
-    }
-    return "";
 }
 
 bool LangSelector::Step(Settings* settings, Renderer* rr, Controls ctrl, Controls old_ctrl)
@@ -62,7 +60,7 @@ bool LangSelector::Step(Settings* settings, Renderer* rr, Controls ctrl, Control
         LangSelector::fadeout = true;
         AnimationManager::InitAnim(ANIM_FADE_OUT);
         
-        settings->Set("language", Json::Value(GetLangCodeByIndex(LangSelector::langs, LangSelector::hovered_lang)));
+        settings->Set("language", Json::Value(GetLangCodeByIndex(LangSelector::hovered_lang)));
 
         return true;
     }
@@ -95,12 +93,7 @@ bool LangSelector::Step(Settings* settings, Renderer* rr, Controls ctrl, Control
                     rr->GetSounds()->PlaySfx("menu_switch");
                     LangSelector::hovered_lang = i;
 
-                    ReloadLangs(
-                        LangSelector::langs,
-                        LangSelector::choose_title, LangSelector::settings_reminder,
-                        LangSelector::translations_base,
-                        GetLangCodeByIndex(LangSelector::langs, LangSelector::hovered_lang)
-                    );
+                    LangSelector::ReloadLang(LangSelector::GetLangCodeByIndex(LangSelector::hovered_lang));
                 }
                 if (old_ctrl.MenuMouse() && !ctrl.MenuMouse())
                 {
@@ -108,7 +101,7 @@ bool LangSelector::Step(Settings* settings, Renderer* rr, Controls ctrl, Control
                     LangSelector::fadeout = true;
                     AnimationManager::InitAnim(ANIM_FADE_OUT);
                     
-                    settings->Set("language", Json::Value(GetLangCodeByIndex(LangSelector::langs, LangSelector::hovered_lang)));
+                    settings->Set("language", Json::Value(GetLangCodeByIndex(LangSelector::hovered_lang)));
                 }
                 return true;
             }
@@ -124,12 +117,7 @@ bool LangSelector::Step(Settings* settings, Renderer* rr, Controls ctrl, Control
                                     ? LangSelector::langs.size() - 1
                                     : LangSelector::hovered_lang - 1;
         
-        ReloadLangs(
-            LangSelector::langs,
-            LangSelector::choose_title, LangSelector::settings_reminder,
-            LangSelector::translations_base,
-            GetLangCodeByIndex(LangSelector::langs, LangSelector::hovered_lang)
-        );
+        LangSelector::ReloadLang(LangSelector::GetLangCodeByIndex(LangSelector::hovered_lang));
     }
     if (ctrl.MenuDown() && !old_ctrl.MenuDown())
     {
@@ -138,12 +126,7 @@ bool LangSelector::Step(Settings* settings, Renderer* rr, Controls ctrl, Control
                                     ? 0
                                     : LangSelector::hovered_lang + 1;
         
-        ReloadLangs(
-            LangSelector::langs,
-            LangSelector::choose_title, LangSelector::settings_reminder,
-            LangSelector::translations_base,
-            GetLangCodeByIndex(LangSelector::langs, LangSelector::hovered_lang)
-        );
+        LangSelector::ReloadLang(LangSelector::GetLangCodeByIndex(LangSelector::hovered_lang));
     }
         
     return true;

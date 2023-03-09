@@ -8,7 +8,7 @@ int zoom;
 MainMenuPhysics::MainMenuPhysics() {}
 MainMenuPhysics::~MainMenuPhysics() { MainMenuPhysics::FreeMemory(); }
 
-float GetRandomFloat(float min, float max)
+float MainMenuPhysics::GetRandomFloat(float min, float max)
 {
     return  min
             +
@@ -49,7 +49,7 @@ void MainMenuPhysics::Init()
     box_logo_fixture_def.restitution = 0.5f;
 
     MainMenuPhysics::box_logo = world->CreateBody(&(box_logo_def));
-    MainMenuPhysics::box_logo->SetAngularVelocity(GetRandomFloat(-0.5, 0.5));
+    MainMenuPhysics::box_logo->SetAngularVelocity(MainMenuPhysics::GetRandomFloat(-0.5, 0.5));
     MainMenuPhysics::box_logo->CreateFixture(&(box_logo_fixture_def));
     ///////////
 }
@@ -205,7 +205,7 @@ void MainMenuPhysics::ActivateBox(Renderer* rr)
         return;
     
     rr->GetSounds()->PlaySfx("menu_hit");
-    MainMenuPhysics::box_logo->SetAngularVelocity(GetRandomFloat(-0.5, 0.5));
+    MainMenuPhysics::box_logo->SetAngularVelocity(MainMenuPhysics::GetRandomFloat(-0.5, 0.5));
     MainMenuPhysics::box_active = true;
 
     MainMenuPhysics::SetTitleDesiredAlpha(0);
@@ -270,15 +270,19 @@ void MainMenuPhysics::FreeMemory()
 MainMenu::MainMenu() {}
 MainMenu::~MainMenu()
 {
-    SDL_DestroyTexture(logo);
-    SDL_DestroyTexture(title);
-
-    SDL_DestroyTexture(temp);
+    MainMenu::FreeMemory();
 }
 
 const float paddle_width = 6.5; 
-void MainMenu::Init()
+void MainMenu::Init(Renderer* rr)
 {
+    MainMenu::FreeMemory();
+    
+    logo = nullptr;  
+    title = nullptr;
+    MainMenu::menu_items_textures = std::vector<SDL_Texture*>();
+    MainMenu::menu_black_items_textures = std::vector<SDL_Texture*>();
+
     MainMenu::menu_items = std::vector<std::string>();
     MainMenu::hovered_item = 0;
     MainMenu::status = "";
@@ -290,14 +294,37 @@ void MainMenu::Init()
     MainMenu::menu_items.push_back(Translations::Load("menu.json/item_about"));
     MainMenu::menu_items.push_back(Translations::Load("menu.json/item_exit"));  
 
+    Font* font = rr->GetFont(Translations::GetJp());
+    for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
+    {
+        MainMenu::menu_items_textures.push_back(font->GetTextTexture(
+            rr->GetRenderer(),
+            MainMenu::menu_items[i].c_str(),
+            0xFF, 0xFF, 0xFF
+        ));
+        MainMenu::menu_black_items_textures.push_back(font->GetTextTexture(
+            rr->GetRenderer(),
+            MainMenu::menu_items[i].c_str(),
+            0, 0, 0
+        ));
+    }
+    
     AnimationManager::InitAnim(ANIM_FADE_IN);
 
     MainMenu::physics.Init();
+}
+void MainMenu::FreeMemory()
+{
+    SDL_DestroyTexture(logo);
+    SDL_DestroyTexture(title);
 
-    MainMenu::temp = nullptr;
-    
-    logo = nullptr;  
-    title = nullptr;    
+    for (int i = MainMenu::menu_items_textures.size() - 1; i >= 0; i--)
+    {
+        SDL_DestroyTexture(MainMenu::menu_items_textures[i]);
+        SDL_DestroyTexture(MainMenu::menu_black_items_textures[i]);
+    }
+    MainMenu::menu_items_textures.clear();
+    MainMenu::menu_black_items_textures.clear();
 }
 
 SDL_Rect GetItemRect(Renderer* rr, std::vector<std::string> menu_items, size_t item_index)
@@ -507,9 +534,17 @@ bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
     return true;
 }
 
-void RenderBlackText(Renderer* rr, const char *text, int x, int y, float scale, SDL_Rect paddleRect, Font* font)
+void MainMenu::RenderWhiteText(Renderer* rr, size_t index, int x, int y, float scale)
 {
-    SDL_Rect textRect = font->GetTextDimensions(text, scale);
+    SDL_Rect textRect = rr->GetFont()->GetTextDimensions(MainMenu::menu_items[index].c_str(), scale);
+    textRect.x = x;
+    textRect.y = y;
+
+    SDL_RenderCopy(rr->GetRenderer(), MainMenu::menu_items_textures[index], NULL, &textRect);
+}
+void MainMenu::RenderBlackText(Renderer* rr, size_t index, int x, int y, float scale, SDL_Rect paddleRect)
+{
+    SDL_Rect textRect = rr->GetFont()->GetTextDimensions(MainMenu::menu_items[index].c_str(), scale);
     textRect.x = x;
     textRect.y = y;
 
@@ -524,13 +559,7 @@ void RenderBlackText(Renderer* rr, const char *text, int x, int y, float scale, 
         (int)((float)intersectRect.h / scale)
     };
 
-    SDL_Surface* textSurface = TTF_RenderUTF8_Solid(font->GetFont(), text, {0, 0, 0});
-    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(rr->GetRenderer(), textSurface);
-
-    SDL_RenderCopy(rr->GetRenderer(), textTexture, &srcRect, &intersectRect);
-
-    SDL_FreeSurface(textSurface);
-    SDL_DestroyTexture(textTexture);
+    SDL_RenderCopy(rr->GetRenderer(), MainMenu::menu_black_items_textures[index], &srcRect, &intersectRect);
 }
 
 void MainMenu::Render(Renderer* rr)
@@ -575,13 +604,8 @@ void MainMenu::Render(Renderer* rr)
     
     for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
     {
-        rr->RenderText(
-            MainMenu::menu_items[i].c_str(),
-            x_offset,
-            y_offset + textDimensions.h * distanceScale * i,
-            menuScale,
-            false,
-            Translations::GetJp()
+        MainMenu::RenderWhiteText(
+            rr, i, x_offset, y_offset + textDimensions.h * distanceScale * i, menuScale
         );
     }
 
@@ -590,14 +614,9 @@ void MainMenu::Render(Renderer* rr)
     if (!hover_blinker)
         for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
         {
-            RenderBlackText(
-                rr,
-                MainMenu::menu_items[i].c_str(),
-                x_offset,
-                y_offset + textDimensions.h * distanceScale * i,
-                menuScale,
-                MainMenu::physics.GetPaddleRect(rr, physics_center_offset.x, physics_center_offset.y, menuScale),
-                rr->GetFont(Translations::GetJp())
+            MainMenu::RenderBlackText(
+                rr, i, x_offset, y_offset + textDimensions.h * distanceScale * i, menuScale, 
+                MainMenu::physics.GetPaddleRect(rr, physics_center_offset.x, physics_center_offset.y, menuScale)
             );
         }
 

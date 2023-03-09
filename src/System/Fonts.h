@@ -39,6 +39,16 @@ public:
     /// @param b Color.
     void Render(SDL_Renderer* renderer, const char* text, int x = 0, int y = 0, float scale = 1, bool center = false, Uint8 r = 0xFF, Uint8 g = 0xFF, Uint8 b = 0xFF);
 
+    /// @brief Get just SDL_Texture* of the text. You have to destroy it after.
+    /// @param renderer the rendering context.
+    /// @param text text to be returned.
+    /// @param r Color.
+    /// @param g Color.
+    /// @param b Color.
+    /// @return SDL_Texture* of the text. You have to destroy it after.
+    /// nullptr if font is not loaded.
+    SDL_Texture* GetTextTexture(SDL_Renderer* renderer, const char* text, Uint8 r = 0xFF, Uint8 g = 0xFF, Uint8 b = 0xFF);
+
     /// @brief Did FontManager load font and is it able to render text?
     bool GetLoaded();
     TTF_Font* GetFont();
