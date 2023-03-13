@@ -7,6 +7,11 @@ option(BUILD_WINDOWS "Build Windows .exe" ON) # Default
 option(BUILD_LINUX "Build Linux executable" OFF)
 option(BUILD_VITA "Build Vita .vpk" OFF)
 
+option(HEADER_WITH_JSONCPP ON)
+if(HEADER_WITH_JSONCPP)
+	add_definitions(-DHeader_Jsoncpp)
+endif()
+
 if(BUILD_WINDOWS)
 	message(STATUS "Building for Windows")
 	add_definitions(-DWindows)

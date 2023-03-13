@@ -132,6 +132,12 @@ or copy its contents (*.dll) to the same directory where .exe file should be (bu
   Sand-Box2D.exe
   ```
 
+If you experience errors with Jsoncpp library while building try to disable `HEADER_WITH_JSONCPP` flag via this:
+  ```
+  cmake .. -DHEADER_WITH_JSONCPP=OFF
+  make
+  ```
+
 ### On Linux
 1. Install following libraries somehow with your package manager:
 - SDL2;
@@ -156,6 +162,12 @@ or copy its contents (*.dll) to the same directory where .exe file should be (bu
 4. Executable should appear, you can now launch this game:
   ```bash
   ./Sand-Box2D
+  ```
+
+If you experience errors with Jsoncpp library while building try to disable `HEADER_WITH_JSONCPP` flag via this:
+  ```
+  cmake .. -DHEADER_WITH_JSONCPP=OFF
+  make -j4
   ```
 
 ### For PS Vita

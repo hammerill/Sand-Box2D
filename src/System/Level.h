@@ -1,7 +1,5 @@
 #pragma once
 
-#include <jsoncpp/json/json.h>
-
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -10,6 +8,8 @@
 #include "../PObjs/PObjPlatform.h"
 #include "../PObjs/PObjBox.h"
 #include "../PObjs/PObjCircle.h"
+
+#include "Json.h"
 
 struct JsonOptions
 {

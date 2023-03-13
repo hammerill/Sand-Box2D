@@ -1,11 +1,11 @@
 #pragma once
 
-#include <jsoncpp/json/json.h>
-
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
+
+#include "Json.h"
 
 /// @brief Static class for loading translated strings.
 class Translations

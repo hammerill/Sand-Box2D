@@ -1,11 +1,12 @@
 #pragma once
 
 #include <SDL2/SDL_mixer.h>
-#include <jsoncpp/json/json.h>
 
 #include <map>
 #include <string>
 #include <fstream>
+
+#include "Json.h"
 
 /// @brief Class for managing sound effects (and maybe music in future).
 class SoundManager
