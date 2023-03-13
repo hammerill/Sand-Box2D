@@ -7,7 +7,7 @@ option(BUILD_WINDOWS "Build Windows .exe" ON) # Default
 option(BUILD_LINUX "Build Linux executable" OFF)
 option(BUILD_VITA "Build Vita .vpk" OFF)
 
-option(HEADER_WITH_JSONCPP ON)
+set(HEADER_WITH_JSONCPP ON CACHE BOOL "If on, include path for Jsoncpp will be 'jsoncpp/json/json.cpp', otherwise 'json/json.cpp'")
 if(HEADER_WITH_JSONCPP)
 	add_definitions(-DHeader_Jsoncpp)
 endif()
