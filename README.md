@@ -51,7 +51,6 @@ have rewritten it from zero using OOP, and now you're free to play this game and
 - <kbd>Q</kbd>/<kbd>E</kbd> - adjust zoom.
 - <kbd>Tab</kbd> - on/off debug screen.
 - <kbd>F</kbd> - go/exit fullscreen (gonna be moved to options menu soon).
-- <kbd>X</kbd> - reload current level (gonna be moved to options menu soon).
 - Also, you can consider using mouse for camera controls and to go/exit fullscreen mode.
 
 ### For PS Vita
@@ -59,7 +58,6 @@ have rewritten it from zero using OOP, and now you're free to play this game and
 - <kbd>Left Stick</kbd> - move camera.
 - <kbd>Right Stick</kbd> or <kbd>L</kbd>/<kbd>R</kbd> - adjust zoom.
 - <kbd>Triangle</kbd> - on/off debug screen.
-- <kbd>Circle</kbd> - reload current level (gonna be moved to options menu soon).
 - Also, you can consider using touchscreen for camera controls.
 
 ## Future plans
@@ -80,7 +78,7 @@ Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/discus
 4. ~~When WorldManager just initialized, show some effect, like lighten everything from the darkness and show level's title. Based on how other games show level starting animation, Sonic for example~~ ✅ Done!
 5. ~~Realize simple MainMenu for beginning, buttons list like "PLAY", "ABOUT", "EXIT". When PLAY clicked everything dims and after that (when everything became black) tell GameManager somehow that MainMenu is no longer used and it needs to init WorldManager which will load desired level (and it will load animation from step 4)~~ ✅ Done!
 6. ~~Hide mouse when user doesn't use it~~ ✅ Done!
-7. In game (when no fade anims are running) you can call PauseMenu. When you do that, physics stop and you can access these buttons: "RESUME" (close PauseMenu and return to game), "SETTINGS" (open OptionsMenu and keep game state) and "EXIT" (starts fadeout effect, during which we can see physics temporary resume. At the end returns us to MainMenu). `START` button with which we opened PauseMenu should also close it. Blur background when entering PauseMenu.
+7. In game (when no fade anims are running) you can call PauseMenu. When you do that, physics stop and you can access these buttons: "RESUME" (close PauseMenu and return to game), "SETTINGS" (open OptionsMenu and keep game state), "RESTART" (start fadeout effect, during which we can see physics temporary resume. At the end reload level) and "EXIT" (start fadeout effect same as "RESTART" and at the end return us to MainMenu). `START` button with which we opened PauseMenu should also close it. Blur background when entering PauseMenu.
 8. MainMenu for release state at future:
   - ~~At first launch it asks to choose interface language (CHOOSE YOUR LANGUAGE (...) YOU CAN CHANGE IT LATER IN THE SETTINGS). When cycling through languages, interface language will automatically change to the hovered one~~ ✅ Done!
   - ~~If platform is PS Vita, when game just inited video it should fade out of the pics/sce_sys/pic0.png, because it's a picture that shown when game is loading on Vita~~ ✅ Done!
