@@ -35,7 +35,6 @@ have rewritten it from zero using OOP, and now you're free to play this game and
   * [For PS Vita](#for-ps-vita)
 - [Future plans](#future-plans)
   * [List of little tasks](#list-of-little-tasks)
-- [Future architecture](#future-architecture)
 - [Build](#build)
   * [On Windows](#on-windows)
   * [On Linux](#on-linux)
@@ -91,9 +90,6 @@ Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/discus
     * `ABOUT` - will load About menu, where player can see list of contributors, credits, and QR code with link to this repo, in order if they will want to contribute.
     * `EXIT` - yes.
   - what's My name? My name is Corner. Upper-Right Corner.
-
-## Future architecture
-![Arch](./pics/project-arch.drawio.svg)
 
 ## Build 
 If you don't want to build by yourself, you can consider auto build system provided by GitHub [actions](https://github.com/Hammerill/Sand-Box2D/actions).
