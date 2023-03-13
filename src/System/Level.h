@@ -38,8 +38,7 @@ struct JsonCycle
     std::vector<BasePObj*> objects = std::vector<BasePObj*>();
 };
 
-/// @brief Class that represents Sand-Box2D level loaded from JSON. 
-/// Its fields should be handled by some level loader.
+/// @brief Class that represents Sand-Box2D level loaded from JSON.
 /// For further info refer to the JSON level file documentation:
 /// https://github.com/Hammerill/Sand-Box2D-levels/tree/main/docs
 class Level

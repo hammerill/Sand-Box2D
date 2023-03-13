@@ -7,7 +7,7 @@
 #include <psp2/touch.h>
 #endif
 
-/// @brief Class for accessing pressed keys and/or buttons
+/// @brief Class for accessing pressed keys and/or buttons.
 class Controls
 {
 protected:

@@ -30,8 +30,8 @@ private:
 
     CurrentVisual current_visual;
 
-    WindowParams fullscreen = {};
-    WindowParams windowed = {WINDOWED, 960, 544};
+    WindowParams fullscreen = {FULLSCREEN_SIMPLE, 0, 0, 2};
+    WindowParams windowed = {WINDOWED, 960/2, 544/2, 2};
 
     uint64_t a, b = 0;
     double delta = 0;

@@ -90,6 +90,7 @@ Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/discus
     * `ABOUT` - will load About menu, where player can see list of contributors, credits, and QR code with link to this repo, in order if they will want to contribute.
     * `EXIT` - yes.
   - what's My name? My name is Corner. Upper-Right Corner.
+9. Realize "Journeys" or "Worlds" system, i.e. pack of levels. Player can "beat" any level, and some levels can be unlocked only after beating certain previous levels. When "PLAY" is clicked game will load default Journey or World, while at "COMMUNITY" people can upload their levels separately AND Journeys/Worlds.
 
 ## Build 
 If you don't want to build by yourself, you can consider auto build system provided by GitHub [actions](https://github.com/Hammerill/Sand-Box2D/actions).

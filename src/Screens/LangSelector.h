@@ -11,6 +11,7 @@
 #include "../System/Animations.h"
 #include "../System/Settings.h"
 
+// Class which manages menu where player can select language.
 class LangSelector
 {
 private:
