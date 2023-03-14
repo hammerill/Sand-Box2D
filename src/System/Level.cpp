@@ -10,7 +10,7 @@ float Level::GetRandomFloat(float min, float max)
 }
 
 float Level::LoadNumber(Json::Value input)
-{    
+{
     try
     {
         if (input.asString().find_last_of(":") != std::string::npos)
@@ -20,7 +20,7 @@ float Level::LoadNumber(Json::Value input)
 
             return Level::GetRandomFloat(min, max);
         }
-        else 
+        else
         {
             return input.asFloat();
         }
@@ -53,7 +53,7 @@ BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
             platform->SetParam("r", Level::LoadNumAsJson(jsonObj["r"]));
             platform->SetParam("g", Level::LoadNumAsJson(jsonObj["g"]));
             platform->SetParam("b", Level::LoadNumAsJson(jsonObj["b"]));
-            
+
             platform->SetParam("undeletable", Json::Value(jsonObj["undeletable"].asBool()));
 
             if (jsonObj.isMember("id"))
@@ -63,7 +63,7 @@ BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
         }
         else if (jsonObj["type"] == "box")
         {
-            BoxDesc boxDesc = 
+            BoxDesc boxDesc =
             {
                 Level::LoadNumber(jsonObj["x"]), Level::LoadNumber(jsonObj["y"]),
                 Level::LoadNumber(jsonObj["w"]), Level::LoadNumber(jsonObj["h"]),
@@ -83,7 +83,7 @@ BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
         }
         else if (jsonObj["type"] == "circle")
         {
-            CircleDesc circleDesc = 
+            CircleDesc circleDesc =
             {
                 Level::LoadNumber(jsonObj["x"]), Level::LoadNumber(jsonObj["y"]),
                 Level::LoadNumber(jsonObj["radius"]),
@@ -112,7 +112,7 @@ BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
 
             if (jsonObj.isMember("id"))
                 circle->SetParam("id", Level::LoadNumAsJson(jsonObj["id"]));
-            
+
             circle->SetParam("undeletable", Json::Value(jsonObj["undeletable"].asBool()));
 
             return circle;
@@ -123,7 +123,7 @@ BasePObj* Level::ParseJsonPObj(Json::Value jsonObj)
     catch(const std::exception& e)
     {
         return nullptr;
-    }    
+    }
 }
 
 Level::~Level() {}
@@ -212,7 +212,7 @@ std::vector<BasePObj*> Level::GetPObjects()
     {
         objects.push_back(Level::ParseJsonPObj(jsonObjects[i]));
     }
-    
+
     return objects;
 }
 
@@ -237,7 +237,7 @@ JsonCycle Level::GetCycle(int index)
     {
         return JsonCycle();
     }
-        
+
     return cycle;
 }
 

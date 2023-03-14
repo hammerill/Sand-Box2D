@@ -17,14 +17,14 @@ std::string Translations::Load(std::string to_load)
 {
     if (Translations::translations_base == "" || Translations::translation_code == "")
         return "";
-    
+
     std::string path_to_json;
     Json::Value loaded_json;
-    size_t slash_ptr = to_load.find_last_of("\\/");    
+    size_t slash_ptr = to_load.find_last_of("\\/");
 
     if (slash_ptr == std::string::npos)
         return "";
-    
+
     path_to_json =  Translations::translations_base
             + "/" + Translations::translation_code
             + "/" + to_load.substr(0, slash_ptr);

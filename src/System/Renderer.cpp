@@ -12,7 +12,7 @@ Renderer::~Renderer()
 void Renderer::InitVideo(WindowParams params, const char* path_to_sfx_base, const char* path_to_font, const char* path_to_font_jp, const char* path_to_icon)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
-    
+
     Renderer::window = SDL_CreateWindow("Sand-Box2D", 0, 0, 0, 0, SDL_WINDOW_SHOWN);
 
     if (path_to_sfx_base != nullptr)
@@ -85,12 +85,12 @@ void Renderer::ChangeRes(WindowParams params)
         SDL_SetWindowSize(Renderer::window, Renderer::window_width * params.scale, Renderer::window_height * params.scale);
 
         SDL_RenderSetLogicalSize(Renderer::renderer, Renderer::window_width, Renderer::window_height);
-        
+
         SDL_SetWindowFullscreen(Renderer::window,
                                 params.mode == FULLSCREEN_SIMPLE ?
                                 SDL_WINDOW_FULLSCREEN_DESKTOP :
                                 SDL_WINDOW_FULLSCREEN);
-        
+
         break;
     default:
         break;

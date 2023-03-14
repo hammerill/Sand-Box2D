@@ -68,20 +68,20 @@ public:
     /// @param name name of the parameter to be getted. For example, "x" or "y".
     /// @return Json::Value. Call its functions like AsFloat(), etc.
     virtual Json::Value GetParam(std::string name) = 0;
-    
-    /// Register this PObj in the world and set its parameters. Should be 
+
+    /// Register this PObj in the world and set its parameters. Should be
     /// called only when no world calculations are performing.
     /// @param world link to the world where PObj should be registered.
     /// @param renderer the rendering context.
     /// @param textures textures vector to work with.
     virtual void Register(b2World* world, Renderer* rr, std::map<std::string, SDL_Texture*>& textures) = 0;
-    
+
     /// @brief Render this PObj.
     /// @param rr link to renderer object (not link to SDL_Renderer) where to render.
     /// @param x_offset camera X offset in pixels.
     /// @param y_offset camera Y offset in pixels.
     /// @param zoom camera zoom coefficient.
-    /// @return true if object rendered. False if didn't render because it's out of screen bounds. 
+    /// @return true if object rendered. False if didn't render because it's out of screen bounds.
     virtual bool Render(Renderer* rr, float x_offset, float y_offset, float zoom) = 0;
 
     virtual float GetX() = 0;

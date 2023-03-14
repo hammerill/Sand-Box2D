@@ -9,7 +9,7 @@
 #define M_PI           3.14159265358979323846264338327950288  /* pi */
 #endif
 
-enum Anim 
+enum Anim
 {
     ANIM_WORLD_MANAGER_INIT = 0,    // Animation of WorldManager initialization (WMI). Will show levels name.
     ANIM_FADE_IN,                   // Animation of Fade-in, i.e. from black screen to scene.
@@ -57,7 +57,7 @@ public:
             value = this->end_value;
             return;
         }
-        
+
         value = this->start_value
                 +
                 (
@@ -66,7 +66,7 @@ public:
                         /
                         (float)this->frames_length
                     )
-                    * 
+                    *
                     (this->end_value - this->start_value)
                 );
     }

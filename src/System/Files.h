@@ -31,4 +31,3 @@ public:
     /// @return true if success.
     static bool MakeDirs(std::string path);
 };
-

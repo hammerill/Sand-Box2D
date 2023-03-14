@@ -11,7 +11,7 @@ struct BoxDesc
     float vel_ang = 0;
 };
 
-/// Child class of the BasePObj which represents either box or 
+/// Child class of the BasePObj which represents either box or
 /// rectangle in the WorldManager environment.
 class PObjBox: public BasePObj
 {
@@ -37,7 +37,7 @@ public:
     /// @return Json::Value. Call its functions like AsFloat(), etc.
     Json::Value GetParam(std::string name);
 
-    /// Register this box in the world and set its texture. Should be 
+    /// Register this box in the world and set its texture. Should be
     /// called only when no world calculations are performing.
     /// @param world link to the world where box should be registered.
     /// @param renderer the rendering context.
@@ -49,7 +49,7 @@ public:
     /// @param x_offset camera X offset in pixels.
     /// @param y_offset camera Y offset in pixels.
     /// @param zoom camera zoom coefficient.
-    /// @return true if box rendered. False if didn't render because it's out of screen bounds. 
+    /// @return true if box rendered. False if didn't render because it's out of screen bounds.
     bool Render(Renderer* rr, float x_offset, float y_offset, float zoom);
 
     float GetX();

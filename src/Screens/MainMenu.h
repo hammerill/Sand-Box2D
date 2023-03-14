@@ -43,7 +43,7 @@ public:
 
     void Init();
     void InitPaddle(float paddle_width);
-    
+
     void Step();
     void RenderTitle(Renderer* rr, SDL_Rect& title_rect);
     void RenderBox(Renderer* rr, int x_offset, int y_offset);
@@ -78,7 +78,7 @@ private:
     WindowParams old_wparams, now_wparams;
 
     /// Status that used after unloading MainMenu.
-    /// 
+    ///
     /// If it contains path to the level, this level has to be loaded (player pressed PLAY).
     /// If it's empty, it means that game needs to be closed (player pressed EXIT).
     std::string status = "";

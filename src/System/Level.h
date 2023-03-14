@@ -75,11 +75,11 @@ public:
     /// Will load this file.
     /// @return false if something went wrong, true if everything's ok.
     bool LoadFile(std::string base, std::string filepath);
- 
+
     JsonOptions GetOptions();
- 
+
     JsonCamera GetCamera();
- 
+
     /// @brief Get array of PObjects.
     /// @return array of pointers to objects representing childs of BasePObj
     /// (not the BasePObj itself because it's an abstract class).
@@ -91,7 +91,7 @@ public:
 
     size_t GetCyclesCount();
 
-    /// @brief Get JSON of the actions list. Its contents has to be 
+    /// @brief Get JSON of the actions list. Its contents has to be
     /// parsed outside and PerformAction() method called.
     /// @return actions list as Json value.
     Json::Value GetActions();

@@ -43,14 +43,14 @@ protected:
     bool menuRight = false;
     bool menuDown = false;
     bool menuLeft = false;
-    
+
     bool menuEnter = false;
     bool menuBack = false;
-    
+
     bool pause = false;
 
     SDL_Event e;
-    
+
 
 public:
     Controls();
@@ -83,7 +83,7 @@ public:
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).
     /// Otherwise analog value with minimum at 0 and maximum at 1.
     double MoveLeft();
-    
+
     /// @brief Is user does want to zoom in?
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).
     /// Otherwise analog value with minimum at 0 and unlimited maximum.
@@ -92,7 +92,7 @@ public:
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).
     /// Otherwise analog value with minimum at 0 and unlimited maximum.
     double ZoomOut();
-    
+
     /// @brief Is user pressing left mouse button or touchscreen right now in order to move camera?
     bool IsMoving();
     /// @brief Is user just pressing left mouse button or touchscreen right now?

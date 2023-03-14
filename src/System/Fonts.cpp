@@ -21,7 +21,7 @@ void Font::LoadFont(const char* path_to_font, int font_width)
 {
     if (Font::loaded)
         TTF_CloseFont(Font::font);
-    
+
     try
     {
         TTF_Init();
@@ -40,7 +40,7 @@ void Font::Render(SDL_Renderer* renderer, const char* text, int x, int y, float 
 {
     if (!Font::loaded)
         return;
-    
+
     SDL_Rect textRect = Font::GetTextDimensions(text, scale);
 
     textRect.x = x;
@@ -65,7 +65,7 @@ SDL_Texture* Font::GetTextTexture(SDL_Renderer* renderer, const char* text, Uint
 {
     if (!Font::loaded)
         return nullptr;
-    
+
     SDL_Surface* textSurface = TTF_RenderUTF8_Solid(Font::font, text, {r, g, b});
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
 

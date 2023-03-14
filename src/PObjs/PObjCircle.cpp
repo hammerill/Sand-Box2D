@@ -71,7 +71,7 @@ void PObjCircle::SetParam(std::string name, Json::Value value)
         PObjCircle::g_angle = value.asUInt();
     else if (name == "b_angle")
         PObjCircle::b_angle = value.asUInt();
-    
+
     else if (name == "is_texture")
         PObjCircle::is_texture = value.asBool();
     else if (name == "texture_path")
@@ -84,7 +84,7 @@ Json::Value PObjCircle::GetParam(std::string name)
 {
     if (name == "id")
         return Json::Value(PObjCircle::id);
-    
+
     if (PObjCircle::isRegistered)
     {
         if (name == "x")
@@ -115,10 +115,10 @@ Json::Value PObjCircle::GetParam(std::string name)
         else if (name == "vel_ang")
             return Json::Value(PObjCircle::circleDesc.vel_ang);
     }
-    
+
     if (name == "radius")
         return Json::Value(PObjCircle::circleDesc.radius);
-    
+
     else if (name == "r")
         return Json::Value(PObjCircle::r);
     else if (name == "g")
@@ -171,7 +171,7 @@ bool PObjCircle::Render(Renderer* rr, float x_offset, float y_offset, float zoom
         if (PObjCircle::is_texture)
         {
             SDL_Rect box;
-    
+
             box.w = radiusZoomed * 2;
             box.h = radiusZoomed * 2;
 
@@ -185,10 +185,10 @@ bool PObjCircle::Render(Renderer* rr, float x_offset, float y_offset, float zoom
             filledCircleRGBA(rr->GetRenderer(), circle.x, circle.y, radiusZoomed, PObjCircle::r, PObjCircle::g, PObjCircle::b, 0xFF);
 
             SDL_SetRenderDrawColor(rr->GetRenderer(), PObjCircle::r_angle, PObjCircle::g_angle, PObjCircle::b_angle, 0xFF);
-            SDL_RenderDrawLine(rr->GetRenderer(), 
-            circle.x, 
-            circle.y, 
-            (circle.x) + (cos(PObjCircle::body->GetAngle()) * radiusZoomed), 
+            SDL_RenderDrawLine(rr->GetRenderer(),
+            circle.x,
+            circle.y,
+            (circle.x) + (cos(PObjCircle::body->GetAngle()) * radiusZoomed),
             (circle.y) + (sin(PObjCircle::body->GetAngle()) * radiusZoomed));
         }
 
@@ -198,14 +198,14 @@ bool PObjCircle::Render(Renderer* rr, float x_offset, float y_offset, float zoom
         return false;
 }
 
-float PObjCircle::GetX() 
+float PObjCircle::GetX()
 {
     if (PObjCircle::isRegistered)
         return PObjCircle::body->GetPosition().x;
     else
         return PObjCircle::circleDesc.x;
 }
-float PObjCircle::GetY() 
+float PObjCircle::GetY()
 {
     if (PObjCircle::isRegistered)
         return PObjCircle::body->GetPosition().y;

@@ -13,7 +13,7 @@ SoundManager::~SoundManager()
         Mix_FreeChunk(itr->second);
     }
     SoundManager::sounds.clear();
-    
+
     Mix_CloseAudio();
     Mix_Quit();
 }
@@ -54,5 +54,5 @@ void SoundManager::LoadSfx(std::string path_to_sfx_base)
 void SoundManager::PlaySfx(std::string sound_name)
 {
     if (SoundManager::sounds.count(sound_name))
-        Mix_PlayChannel(-1, SoundManager::sounds[sound_name], 0);    
+        Mix_PlayChannel(-1, SoundManager::sounds[sound_name], 0);
 }

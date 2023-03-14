@@ -33,7 +33,7 @@ void AnimationManager::InitAnim(Anim anim)
         AnimationManager::vita = {};
         AnimationManager::vita.transition_opaque.SetTransition(1, 0, 0, AnimationManager::vita.frames_max);
         break;
-    
+
     default:
         break;
     }
@@ -51,7 +51,7 @@ bool AnimationManager::StepAnim(Anim anim)
             case 250:
                 AnimationManager::wmi.transition_pos.SetTransition(0.75, 2, AnimationManager::wmi.frames_max - 40, 40);
                 break;
-            
+
             default:
                 break;
             }
@@ -148,7 +148,7 @@ void AnimationManager::RenderAnim(Anim anim, Renderer* rr)
                 AnimationManager::vita.pic = SDL_CreateTextureFromSurface(rr->GetRenderer(), IMG_Load("sce_sys/pic0.png"));
 
             SDL_RenderCopyEx(rr->GetRenderer(), AnimationManager::vita.pic, NULL, NULL, 0, NULL, SDL_FLIP_NONE);
-            
+
             SDL_Rect rect {0, 0, rr->GetWidth(), rr->GetHeight()};
 
             SDL_SetRenderDrawBlendMode(rr->GetRenderer(), SDL_BLENDMODE_BLEND);

@@ -8,7 +8,7 @@ struct PlatformDesc
     float x2 = 0, y2 = 0;
 };
 
-/// Child class of the BasePObj which represents static yellow stick. 
+/// Child class of the BasePObj which represents static yellow stick.
 /// Or main platform.
 class PObjPlatform: public BasePObj
 {
@@ -36,8 +36,8 @@ public:
     /// @param name name of the parameter to be getted. For example, "x" or "y".
     /// @return Json::Value. Call its functions like AsFloat(), etc.
     Json::Value GetParam(std::string name);
-    
-    /// Register this Platform in the world. Should be 
+
+    /// Register this Platform in the world. Should be
     /// called only when no world calculations are performing.
     /// @param world link to the world where Platform should be registered.
     /// @param renderer the rendering context.
@@ -49,7 +49,7 @@ public:
     /// @param x_offset camera X offset in pixels.
     /// @param y_offset camera Y offset in pixels.
     /// @param zoom camera zoom coefficient.
-    /// @return true if Platform rendered. False if didn't render because it's out of screen bounds. 
+    /// @return true if Platform rendered. False if didn't render because it's out of screen bounds.
     bool Render(Renderer* rr, float x_offset, float y_offset, float zoom);
 
     float GetX();

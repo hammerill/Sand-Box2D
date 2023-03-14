@@ -36,21 +36,21 @@ void Controls::Check()
     old = now; // It looks so artistically.
     now = { touchxy[0].reportNum == 1 || touchxy[0].reportNum == 2,
             touchxy[0].reportNum == 2};
-    
+
     Controls::debug = vita_ctrl.buttons & SCE_CTRL_TRIANGLE;
 
     Controls::actionUp = vita_ctrl.buttons & SCE_CTRL_UP;
     Controls::actionRight = vita_ctrl.buttons & SCE_CTRL_RIGHT;
     Controls::actionDown = vita_ctrl.buttons & SCE_CTRL_DOWN;
     Controls::actionLeft = vita_ctrl.buttons & SCE_CTRL_LEFT;
-    
+
     Controls::actionEnter = vita_ctrl.buttons & SCE_CTRL_CROSS;
 
     Controls::menuUp = vita_ctrl.buttons & SCE_CTRL_UP;
     Controls::menuRight = vita_ctrl.buttons & SCE_CTRL_RIGHT;
     Controls::menuDown = vita_ctrl.buttons & SCE_CTRL_DOWN;
     Controls::menuLeft = vita_ctrl.buttons & SCE_CTRL_LEFT;
-    
+
     Controls::menuEnter = vita_ctrl.buttons & SCE_CTRL_CROSS;
     Controls::menuBack = vita_ctrl.buttons & SCE_CTRL_CIRCLE;
 
@@ -87,7 +87,7 @@ void Controls::Check()
                                     +
                                     pow((touchxy[0].report[1].y / 2) - (touchxy[0].report[0].y / 2), 2)
                                 );
-        
+
         if (old == now)
         {
             Controls::isMoving = true;
@@ -105,13 +105,13 @@ void Controls::Check()
         Controls::menuMouse = false;
         Controls::isPinching = false;
     }
-    
+
 
     if (vita_ctrl.ly < stickCenter - stickDeadZone) /////////////////////////////////// MOVEUP
         Controls::moveUp = (stickCenter - vita_ctrl.ly) / stickCenter;
     else
         Controls::moveUp = 0;
-    
+
     if (vita_ctrl.lx > stickCenter + stickDeadZone) /////////////////////////////////// MOVERIGHT
         Controls::moveRight = (vita_ctrl.lx - stickCenter) / stickCenter;
     else
@@ -121,7 +121,7 @@ void Controls::Check()
         Controls::moveDown = (vita_ctrl.ly - stickCenter) / stickCenter;
     else
         Controls::moveDown = 0;
-    
+
     if (vita_ctrl.lx < stickCenter - stickDeadZone) /////////////////////////////////// MOVELEFT
         Controls::moveLeft = (stickCenter - vita_ctrl.lx) / stickCenter;
     else
@@ -150,7 +150,7 @@ void Controls::Check()
 {
     if (Controls::isWheel)
     {
-        Controls::zoomIn = 0; 
+        Controls::zoomIn = 0;
         Controls::zoomOut = 0;
     }
 
@@ -167,11 +167,11 @@ void Controls::Check()
             {
                 Controls::isMoving = true;
                 Controls::menuMouse = true;
-                
+
                 if (e.button.clicks == 2)
                     Controls::fullscreen = true;
             }
-            
+
             break;
         case SDL_MOUSEBUTTONUP:
             Controls::isMoving = false;
@@ -197,7 +197,7 @@ void Controls::Check()
                 else
                     Controls::zoomIn = abs(e.wheel.preciseY);
             }
-            
+
             Controls::isWheel = true;
             break;
 
@@ -205,13 +205,13 @@ void Controls::Check()
             switch (e.key.keysym.sym)
             {
             case SDLK_f:
-                Controls::fullscreen = e.type == SDL_KEYDOWN; 
+                Controls::fullscreen = e.type == SDL_KEYDOWN;
                 break;
             case SDLK_TAB:
-                Controls::debug = e.type == SDL_KEYDOWN; 
+                Controls::debug = e.type == SDL_KEYDOWN;
                 break;
             case SDLK_x: case SDLK_BACKSPACE:
-                Controls::menuBack = e.type == SDL_KEYDOWN; 
+                Controls::menuBack = e.type == SDL_KEYDOWN;
                 break;
 
             case SDLK_UP:
@@ -247,12 +247,12 @@ void Controls::Check()
                 Controls::actionLeft = e.type == SDL_KEYDOWN ? 1 : 0;
                 Controls::menuLeft = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
-                
+
             case SDLK_SPACE: case SDLK_r: case SDLK_RETURN:
                 Controls::actionEnter = e.type == SDL_KEYDOWN ? 1 : 0;
                 Controls::menuEnter = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
-                
+
             case SDLK_z:
                 Controls::menuEnter = e.type == SDL_KEYDOWN ? 1 : 0;
                 break;
@@ -274,7 +274,7 @@ void Controls::Check()
                 break;
             }
             break;
-            
+
         default:
             break; // COMBO: QUADRO BREAKS
         }

@@ -53,13 +53,13 @@ bool LangSelector::Step(Settings* settings, Renderer* rr, Controls ctrl, Control
         return true;
     else if (fadeout)
         return false;
-    
+
     if (ctrl.MenuEnter())
     {
         rr->GetSounds()->PlaySfx("menu_enter");
         LangSelector::fadeout = true;
         AnimationManager::InitAnim(ANIM_FADE_OUT);
-        
+
         settings->Set("language", Json::Value(GetLangCodeByIndex(LangSelector::hovered_lang)));
 
         return true;
@@ -71,7 +71,7 @@ bool LangSelector::Step(Settings* settings, Renderer* rr, Controls ctrl, Control
         SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions("-", langSelectScale);
 
         float distanceScale = 1.2;
-        
+
         int menu_h = (LangSelector::langs.size()) * textDimensions.h * distanceScale;
         int y_offset = (rr->GetHeight() / 2) - (menu_h / 2);
 
@@ -100,7 +100,7 @@ bool LangSelector::Step(Settings* settings, Renderer* rr, Controls ctrl, Control
                     rr->GetSounds()->PlaySfx("menu_enter");
                     LangSelector::fadeout = true;
                     AnimationManager::InitAnim(ANIM_FADE_OUT);
-                    
+
                     settings->Set("language", Json::Value(GetLangCodeByIndex(LangSelector::hovered_lang)));
                 }
                 return true;
@@ -116,7 +116,7 @@ bool LangSelector::Step(Settings* settings, Renderer* rr, Controls ctrl, Control
         LangSelector::hovered_lang = LangSelector::hovered_lang == 0
                                     ? LangSelector::langs.size() - 1
                                     : LangSelector::hovered_lang - 1;
-        
+
         LangSelector::ReloadLang(LangSelector::GetLangCodeByIndex(LangSelector::hovered_lang));
     }
     if (ctrl.MenuDown() && !old_ctrl.MenuDown())
@@ -125,10 +125,10 @@ bool LangSelector::Step(Settings* settings, Renderer* rr, Controls ctrl, Control
         LangSelector::hovered_lang = LangSelector::hovered_lang == LangSelector::langs.size() - 1
                                     ? 0
                                     : LangSelector::hovered_lang + 1;
-        
+
         LangSelector::ReloadLang(LangSelector::GetLangCodeByIndex(LangSelector::hovered_lang));
     }
-        
+
     return true;
 }
 
@@ -140,7 +140,7 @@ void LangSelector::Render(Renderer* rr)
     SDL_Rect textDimensions = rr->GetFont()->GetTextDimensions("-", langSelectScale);
 
     float distanceScale = 1.2;
-    
+
     int menu_h = (LangSelector::langs.size()) * textDimensions.h * distanceScale;
     int y_offset = (rr->GetHeight() / 2) - (menu_h / 2);
 
@@ -161,7 +161,7 @@ void LangSelector::Render(Renderer* rr)
 
             SDL_SetRenderDrawColor(rr->GetRenderer(), 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderFillRect(rr->GetRenderer(), &hover_bg);
-            
+
             rr->RenderText(
                 "▶",
                 rr->GetWidth() / 2 - rr->GetFont()->GetTextDimensions(lang.second.c_str(), langSelectScale).w / 2 - textDimensions.w,
@@ -190,7 +190,7 @@ void LangSelector::Render(Renderer* rr)
                 true,
                 Translations::GetJp()
             );
-        
+
         i++;
     }
 
@@ -208,6 +208,6 @@ void LangSelector::Render(Renderer* rr)
         Translations::GetJp() ? langSelectScale : langSelectScale / 2,
         true, Translations::GetJp()
     );
-    
+
     AnimationManager::RenderAnim(ANIM_FADE, rr);
 }

@@ -6,7 +6,7 @@ PObjPlatform::PObjPlatform(PlatformDesc platformDesc)
 
     b2Vec2 start_point = b2Vec2(PObjPlatform::platformDesc.x1, PObjPlatform::platformDesc.y1);
     b2Vec2 end_point = b2Vec2(PObjPlatform::platformDesc.x2, PObjPlatform::platformDesc.y2);
-    
+
     PObjPlatform::platformShape.SetTwoSided(start_point, end_point);
 
     PObjPlatform::fixtureDef.shape = &(PObjPlatform::platformShape);
@@ -27,7 +27,7 @@ void PObjPlatform::SetParam(std::string name, Json::Value value)
         PObjPlatform::g = value.asUInt();
     else if (name == "b")
         PObjPlatform::b = value.asUInt();
-        
+
     else if (name == "undeletable")
         PObjPlatform::undeletable = value.asBool();
 }
@@ -36,14 +36,14 @@ Json::Value PObjPlatform::GetParam(std::string name)
 {
     if (name == "id")
         return Json::Value(PObjPlatform::id);
-        
+
     else if (name == "r")
         return Json::Value(PObjPlatform::r);
     else if (name == "g")
         return Json::Value(PObjPlatform::g);
     else if (name == "b")
         return Json::Value(PObjPlatform::b);
-        
+
     else if (name == "undeletable")
         return Json::Value(PObjPlatform::undeletable);
 
@@ -80,11 +80,11 @@ bool PObjPlatform::Render(Renderer* rr, float x_offset, float y_offset, float zo
     return true;
 }
 
-float PObjPlatform::GetX() 
+float PObjPlatform::GetX()
 {
     return (PObjPlatform::platformDesc.x1 + PObjPlatform::platformDesc.x2) / 2;
 }
-float PObjPlatform::GetY() 
+float PObjPlatform::GetY()
 {
     return (PObjPlatform::platformDesc.y1 + PObjPlatform::platformDesc.y2) / 2;
 }

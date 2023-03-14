@@ -51,7 +51,7 @@ void WorldManager::LoadLevel(Level level, Renderer* rr)
     WorldManager::objects = std::vector<BasePObj*>();
 
     WorldManager::textures[""] = SDL_CreateTextureFromSurface(rr->GetRenderer(), IMG_Load(WorldManager::path_to_def_texture.c_str()));
-    
+
     // OBJECTS
     auto objects = WorldManager::level.GetPObjects();
     for (size_t i = 0; i < objects.size(); i++)
@@ -74,7 +74,7 @@ void WorldManager::LoadLevel(Level level, Renderer* rr)
         WorldManager::y_offset =    -(camera.y * WorldManager::zoom)
                                     +(rr->GetHeight() / 2);
         break;
-    
+
     case CAMERA_TYPE_ATTACHED:
         {
             b2Vec2 pos;
@@ -94,7 +94,7 @@ void WorldManager::LoadLevel(Level level, Renderer* rr)
                                         +(rr->GetHeight() / 2);
         }
         break;
-    
+
     default:
         break;
     }
@@ -106,7 +106,7 @@ void WorldManager::LoadLevel(Level level, Renderer* rr)
     for (size_t i = 0; i < WorldManager::level.GetCyclesCount(); i++)
     {
         WorldManager::cyclesDelays.push_back(1);
-    }    
+    }
     /////////
 
     // ACTIONS
@@ -133,7 +133,7 @@ double GetAverage(std::vector<T> const& v)
 {
     if (v.empty())
         return 0;
- 
+
     return std::reduce(v.begin(), v.end(), 0.0) / v.size();
 }
 
@@ -142,7 +142,7 @@ void HandleActionCtrl(bool old, bool now, Json::Value& key, int index, Level& le
 {
     if (!now && !old)
         return;
-    
+
     const char* key_button;
     switch (index)
     {
@@ -158,7 +158,7 @@ void HandleActionCtrl(bool old, bool now, Json::Value& key, int index, Level& le
     case 3:
         key_button = "left";
         break;
-    
+
     default:
         key_button = "enter";
         break;
@@ -203,7 +203,7 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
     {
         if (old_wparams.width != now_wparams.width)
             WorldManager::x_offset += (now_wparams.width - old_wparams.width) / 2;
-        
+
         if (old_wparams.height != now_wparams.height)
         {
             WorldManager::y_offset += (now_wparams.height - old_wparams.height) / 2;
@@ -319,7 +319,7 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
     duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
     frame_times.push_back(duration_measure.count());
     previous_frame = std::chrono::high_resolution_clock::now();
-    
+
     // 6. CAMERA TYPE PROCESSING
     if (camera.type == CAMERA_TYPE_ATTACHED)
     {
@@ -335,7 +335,7 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
                 pobj->GetY() * WorldManager::zoom + y_offset
             };
         }
-        
+
         WorldManager::x_offset += (scr_center.x - pos.x) * ((100 - camera.attached_remain) / 100.0);
         WorldManager::y_offset += (scr_center.y - pos.y) * ((100 - camera.attached_remain) / 100.0);
     }
@@ -349,7 +349,7 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
     HandleActionCtrl(old_ctrl.ActionRight(), ctrl.ActionRight(), WorldManager::actions, 1, WorldManager::level, WorldManager::objects);
     HandleActionCtrl(old_ctrl.ActionDown(), ctrl.ActionDown(), WorldManager::actions, 2, WorldManager::level, WorldManager::objects);
     HandleActionCtrl(old_ctrl.ActionLeft(), ctrl.ActionLeft(), WorldManager::actions, 3, WorldManager::level, WorldManager::objects);
-    
+
     HandleActionCtrl(old_ctrl.ActionEnter(), ctrl.ActionEnter(), WorldManager::actions, 4, WorldManager::level, WorldManager::objects);
     /////////////
     duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
@@ -370,7 +370,7 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
                 WorldManager::AddObject(cycle.objects[j]);
             }
         }
-    }    
+    }
     ////////////
     duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
     frame_times.push_back(duration_measure.count());
@@ -384,8 +384,8 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
         auto pobj = WorldManager::objects[WorldManager::objects.size() - 1];
 
         pobj->Register(WorldManager::world, rr, WorldManager::textures);
-        
-        WorldManager::order.pop_back();        
+
+        WorldManager::order.pop_back();
     }
     ///////////////////////////
     duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
@@ -451,16 +451,16 @@ void WorldManager::Render(Renderer* rr, Controls ctrl)
     SDL_RenderClear(rr->GetRenderer());
 
     renderedItemsCount = 0;
-    for (size_t i = 0; i < WorldManager::objects.size(); i++)   
+    for (size_t i = 0; i < WorldManager::objects.size(); i++)
     {
         if (WorldManager::objects[i]->Render(
-                rr, 
-                WorldManager::x_offset, 
-                WorldManager::y_offset, 
+                rr,
+                WorldManager::x_offset,
+                WorldManager::y_offset,
                 WorldManager::zoom))
         {
             renderedItemsCount++;
-        }        
+        }
     }
 
     if (WorldManager::isDebug && rr->GetFont(Translations::GetJp())->GetLoaded())
@@ -489,9 +489,9 @@ void WorldManager::Render(Renderer* rr, Controls ctrl)
         debugStrings.push_back("10. OOB check = " + std::to_string(frame_times[9]));
         debugStrings.push_back("11. Animations = " + std::to_string(frame_times[10]));
 
-        WorldManager::RenderDebugScreen(debugStrings, rr);        
+        WorldManager::RenderDebugScreen(debugStrings, rr);
     }
-    
+
     AnimationManager::RenderAnim(ANIM_WORLD_MANAGER_INIT, rr);
 
     if (fadeout)
@@ -529,7 +529,7 @@ void WorldManager::RenderDebugScreen(std::vector<std::string> debugStrings, Rend
         SDL_SetRenderDrawColor(rr->GetRenderer(), 0xC0, 0xC0, 0xC0, 0xA0);
         SDL_RenderFillRect(rr->GetRenderer(), &perf);
     }
-    
+
     for (size_t i = 0; i < debugStrings.size(); i++)
     {
         rr->RenderText(debugStrings[i].c_str(), textDimensions.w * debugScale, textDimensions.h * debugScale * (i+1), debugScale, false, Translations::GetJp());

@@ -5,18 +5,18 @@ PObjBox::PObjBox(BoxDesc boxDesc)
     PObjBox::boxDesc = boxDesc;
 
     PObjBox::bodyDef.type = b2_dynamicBody;
-    PObjBox::bodyDef.angle = PObjBox::boxDesc.angle / PObjBox::RAD2DEG; 
+    PObjBox::bodyDef.angle = PObjBox::boxDesc.angle / PObjBox::RAD2DEG;
     PObjBox::bodyDef.position.Set(PObjBox::boxDesc.x, PObjBox::boxDesc.y);
 
     PObjBox::boxShape.SetAsBox(PObjBox::boxDesc.w / 2.0f, PObjBox::boxDesc.h / 2.0f);
-    
+
     PObjBox::fixtureDef.shape = &(PObjBox::boxShape);
     PObjBox::fixtureDef.density = 1;
     PObjBox::fixtureDef.friction = 0.3f;
     PObjBox::fixtureDef.restitution = 0.5f;
 }
 PObjBox::~PObjBox()
-{   
+{
     PObjBox::body->GetWorld()->DestroyBody(PObjBox::body);
 }
 
@@ -24,7 +24,7 @@ void PObjBox::SetParam(std::string name, Json::Value value)
 {
     if (name == "id")
         PObjBox::id = value.asInt();
-    
+
     else if (name == "x")
     {
         b2Vec2 pos = PObjBox::body->GetPosition();
@@ -72,7 +72,7 @@ Json::Value PObjBox::GetParam(std::string name)
 {
     if (name == "id")
         return Json::Value(PObjBox::id);
-    
+
     if (PObjBox::isRegistered)
     {
         if (name == "x")
@@ -112,7 +112,7 @@ Json::Value PObjBox::GetParam(std::string name)
         return Json::Value(PObjBox::texture_path);
     else if (name == "undeletable")
         return Json::Value(PObjBox::undeletable);
-    
+
     return 0;
 }
 
@@ -132,7 +132,7 @@ bool PObjBox::Render(Renderer* rr, float x_offset, float y_offset, float zoom)
 {
     b2Vec2 pos = PObjBox::body->GetPosition();
     SDL_Rect box;
-    
+
     box.w = PObjBox::boxDesc.w * zoom;
     box.h = PObjBox::boxDesc.h * zoom;
 
@@ -151,14 +151,14 @@ bool PObjBox::Render(Renderer* rr, float x_offset, float y_offset, float zoom)
         return false;
 }
 
-float PObjBox::GetX() 
+float PObjBox::GetX()
 {
     if (PObjBox::isRegistered)
         return PObjBox::body->GetPosition().x;
     else
         return PObjBox::boxDesc.x;
 }
-float PObjBox::GetY() 
+float PObjBox::GetY()
 {
     if (PObjBox::isRegistered)
         return PObjBox::body->GetPosition().y;

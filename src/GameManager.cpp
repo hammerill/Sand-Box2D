@@ -18,19 +18,19 @@ GameManager::GameManager(const char* path_to_settings, const char* path_to_def_s
     GameManager::rr = new Renderer();
     GameManager::rr->InitVideo(
         GameManager::fullscreen,
-        GameManager::settings.Get("path_to_sfx_base").asString() == "" ? nullptr : 
+        GameManager::settings.Get("path_to_sfx_base").asString() == "" ? nullptr :
             GameManager::settings.Get("path_to_sfx_base").asString().c_str(),
 
-        GameManager::settings.Get("path_to_font").asString() == "" ? nullptr : 
+        GameManager::settings.Get("path_to_font").asString() == "" ? nullptr :
             GameManager::settings.Get("path_to_font").asString().c_str(),
 
-        GameManager::settings.Get("path_to_font_jp").asString() == "" ? nullptr : 
+        GameManager::settings.Get("path_to_font_jp").asString() == "" ? nullptr :
             GameManager::settings.Get("path_to_font_jp").asString().c_str(),
 
-        GameManager::settings.Get("path_to_icon").asString() == "" ? nullptr : 
+        GameManager::settings.Get("path_to_icon").asString() == "" ? nullptr :
             GameManager::settings.Get("path_to_icon").asString().c_str()
     );
-    
+
     GameManager::world_manager = new WorldManager(
         GameManager::settings.Get("path_to_def_texture").asString(),
         GameManager::settings.Get("physics_quality").asInt(),
@@ -66,7 +66,7 @@ bool GameManager::Step()
 #ifndef Vita
     if ((ctrl.GetMouse().x != old_ctrl.GetMouse().x) || (ctrl.GetMouse().y != old_ctrl.GetMouse().y) || (ctrl.MenuMouse()))
         GameManager::mouse_last_frame_move = GameManager::rr->GetFrames();
-    
+
     GameManager::rr->SetCursor(!(GameManager::rr->GetFrames() > GameManager::mouse_last_frame_move + mouse_frames_duration));
 #else
     if (!vita_inited_video)
@@ -98,14 +98,14 @@ bool GameManager::Step()
                     GameManager::world_manager->LoadLevel(level, GameManager::rr);
 
                     AnimationManager::SetLevelName(GameManager::main_menu.GetLevelName());
-                    
+
                     key = true;
                     current_visual = WORLD_MANAGER_VISUAL;
                 }
                 else if (GameManager::main_menu.GetStatus() == "settings")
                 {
                     GameManager::settings.Clear();
-                    
+
                     GameManager::lang_selector.Init(GameManager::settings.Get("path_to_translations").asString());
 
                     key = true;
@@ -115,7 +115,7 @@ bool GameManager::Step()
                     return false;
             }
             break;
-        
+
         case WORLD_MANAGER_VISUAL:
             if (!GameManager::world_manager->Step(GameManager::rr, GameManager::ctrl, GameManager::old_ctrl))
             {
@@ -126,7 +126,7 @@ bool GameManager::Step()
                 current_visual = MAIN_MENU_VISUAL;
             }
             break;
-        
+
         case LANG_SELECTOR_VISUAL:
             if (!GameManager::lang_selector.Step(&(GameManager::settings), GameManager::rr, GameManager::ctrl, GameManager::old_ctrl))
             {
@@ -136,7 +136,7 @@ bool GameManager::Step()
                 current_visual = MAIN_MENU_VISUAL;
             }
             break;
-        
+
         default:
             break;
         }
@@ -161,15 +161,15 @@ void GameManager::Render()
     case MAIN_MENU_VISUAL:
         GameManager::main_menu.Render(GameManager::rr);
         break;
-    
+
     case WORLD_MANAGER_VISUAL:
         GameManager::world_manager->Render(GameManager::rr, GameManager::ctrl);
         break;
-    
+
     case LANG_SELECTOR_VISUAL:
         GameManager::lang_selector.Render(GameManager::rr);
         break;
-    
+
     default:
         break;
     }

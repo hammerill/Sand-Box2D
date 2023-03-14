@@ -23,7 +23,7 @@ class WorldManager
 private:
     /// @brief Main Box2D world.
     b2World* world = nullptr;
-    
+
     /// @brief Array of physics objects of the world. BasePObj is an abstract class and this array
     /// should only contain realizations of it (for example, PObjBox).
     std::vector<BasePObj*> objects;
@@ -102,7 +102,7 @@ public:
     /// @param old_ctrl buttons pressed in previous frame.
     /// @return true if WM wants to render next frame. False if it's the end and we need to load MainMenu instead.
     bool Step(Renderer* rr, Controls ctrl, Controls old_ctrl);
-    
+
     /// @brief Render all the physics objects and show them.
     void Render(Renderer* rr, Controls ctrl);
 
