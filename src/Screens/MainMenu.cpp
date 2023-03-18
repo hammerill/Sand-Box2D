@@ -17,8 +17,6 @@ float MainMenuPhysics::GetRandomFloat(float min, float max)
             (static_cast<float> (RAND_MAX / (max-min)));
 }
 
-const float paddle_slope = 0;
-
 void MainMenuPhysics::Init()
 {
     MainMenuPhysics::FreeMemory();
@@ -38,7 +36,6 @@ void MainMenuPhysics::Init()
     b2FixtureDef box_logo_fixture_def = b2FixtureDef();
 
     box_logo_def.type = b2_dynamicBody;
-    box_logo_def.angle = 0;
     box_logo_def.position.Set(0.5, 0.5);
 
     box_logo_shape.SetAsBox(0.5, 0.5);
@@ -69,7 +66,7 @@ void MainMenuPhysics::InitPaddle(float paddle_width)
     b2FixtureDef paddle_fixture_def = b2FixtureDef();
 
     paddle_def.type = b2_kinematicBody;
-    paddle_def.angle = paddle_slope;
+    paddle_def.angle = 0;
     paddle_def.position.Set(1, 3);
 
     paddle_shape.SetAsBox(paddle_width / 2.0, paddle_height / 2.0);
@@ -233,7 +230,7 @@ void MainMenuPhysics::SetPaddlePositionPermanently(b2Vec2 pos)
     if (!MainMenuPhysics::paddle_inited)
         return;
 
-    MainMenuPhysics::paddle->SetTransform(pos, paddle_slope);
+    MainMenuPhysics::paddle->SetTransform(pos, 0);
     MainMenuPhysics::paddle_desired_pos = pos;
 }
 
@@ -534,6 +531,10 @@ bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
     return true;
 }
 
+int MainMenu::Precise(int input, float precise_factor)
+{
+    return (int)(ceil(input / precise_factor) * precise_factor);
+}
 void MainMenu::RenderWhiteText(Renderer* rr, size_t index, int x, int y, float scale)
 {
     SDL_Rect textRect = rr->GetFont()->GetTextDimensions(MainMenu::menu_items[index].c_str(), scale);
@@ -548,9 +549,20 @@ void MainMenu::RenderBlackText(Renderer* rr, size_t index, int x, int y, float s
     textRect.x = x;
     textRect.y = y;
 
-    SDL_Rect intersectRect;
-    if (SDL_IntersectRect(&paddleRect, &textRect, &intersectRect) == SDL_FALSE)
+    int x1 = std::max(Precise(paddleRect.x, scale), Precise(textRect.x, scale));
+    int y1 = std::max(Precise(paddleRect.y, scale), Precise(textRect.y, scale));
+    int x2 = std::min(Precise(paddleRect.x, scale) + Precise(paddleRect.w, scale), Precise(textRect.x, scale) + Precise(textRect.w, scale));
+    int y2 = std::min(Precise(paddleRect.y, scale) + Precise(paddleRect.h, scale), Precise(textRect.y, scale) + Precise(textRect.h, scale));
+    
+    if (x1 > x2 || y1 > y2)
         return;
+    
+    SDL_Rect intersectRect = {
+        x1,
+        y1,
+        x2 - x1,
+        y2 - y1
+    };
 
     SDL_Rect srcRect = {
         (int)((float)(intersectRect.x - x) / scale),

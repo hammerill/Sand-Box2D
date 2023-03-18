@@ -84,6 +84,8 @@ private:
     std::string status = "";
     std::string level_name = "";
 
+    /// Idk how to explain it. Let's just consider it a badcode which does its job smoothly.
+    int Precise(int input, float precise_factor);
     void RenderWhiteText(Renderer* rr, size_t index, int x, int y, float scale);
     void RenderBlackText(Renderer* rr, size_t index, int x, int y, float scale, SDL_Rect paddleRect);
 public:

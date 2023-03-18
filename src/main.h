@@ -1,3 +1,5 @@
+#pragma once
+
 #include "GameManager.h"
 
 #if defined(Windows)
