@@ -127,6 +127,10 @@ elseif(BUILD_VITA)
 		z
 		freetype
 
+		python2.7
+		m
+		intl
+
 		SceAudio_stub
 		SceAudioIn_stub
 		SceCommonDialog_stub

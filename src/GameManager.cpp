@@ -56,7 +56,7 @@ bool GameManager::Step()
 
     if (ctrl.Exit())
         return false;
-    
+
     if (ctrl.Fullscreen() && !old_ctrl.Fullscreen())
     {
         auto cur_mode = GameManager::rr->GetWindowParams().mode;
@@ -92,7 +92,7 @@ bool GameManager::Step()
                 {
                     Level level;
                     level.LoadFile(
-                        GameManager::settings.Get("path_to_def_level_base").asString(), 
+                        GameManager::settings.Get("path_to_def_level_base").asString(),
                         GameManager::settings.Get("path_to_def_level").asString()
                     );
                     GameManager::world_manager->LoadLevel(level, GameManager::rr);
@@ -111,6 +111,22 @@ bool GameManager::Step()
                     key = true;
                     current_visual = LANG_SELECTOR_VISUAL;
                 }
+#if PYTHON_TEST
+                else if (GameManager::main_menu.GetStatus() == "level_editor")
+                {
+                    Py_NoSiteFlag = 1;
+                    Py_IgnoreEnvironmentFlag = 1;
+                    Py_NoUserSiteDirectory = 1;
+
+                    Py_SetProgramName("Sand-Box2D");
+                    Py_InitializeEx(1);
+                    PyRun_SimpleString("print('qqepta')");
+                    Py_Finalize();
+
+                    GameManager::main_menu.Init(GameManager::rr);
+                    key = true;
+                }
+#endif
                 else
                     return false;
             }

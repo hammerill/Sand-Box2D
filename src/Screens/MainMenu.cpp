@@ -289,7 +289,7 @@ void MainMenu::Init(Renderer* rr)
     MainMenu::menu_items.push_back(Translations::Load("menu.json/item_level_editor"));
     MainMenu::menu_items.push_back(Translations::Load("menu.json/item_settings"));
     MainMenu::menu_items.push_back(Translations::Load("menu.json/item_about"));
-    MainMenu::menu_items.push_back(Translations::Load("menu.json/item_exit"));  
+    MainMenu::menu_items.push_back(Translations::Load("menu.json/item_exit"));
 
     Font* font = rr->GetFont(Translations::GetJp());
     for (size_t i = 0; i < MainMenu::menu_items.size(); i++)
@@ -553,10 +553,10 @@ void MainMenu::RenderBlackText(Renderer* rr, size_t index, int x, int y, float s
     int y1 = std::max(Precise(paddleRect.y, scale), Precise(textRect.y, scale));
     int x2 = std::min(Precise(paddleRect.x, scale) + Precise(paddleRect.w, scale), Precise(textRect.x, scale) + Precise(textRect.w, scale));
     int y2 = std::min(Precise(paddleRect.y, scale) + Precise(paddleRect.h, scale), Precise(textRect.y, scale) + Precise(textRect.h, scale));
-    
+
     if (x1 > x2 || y1 > y2)
         return;
-    
+
     SDL_Rect intersectRect = {
         x1,
         y1,

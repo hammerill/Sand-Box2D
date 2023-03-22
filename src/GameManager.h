@@ -8,6 +8,13 @@
 #include "Screens/WorldManager.h"
 #include "Screens/LangSelector.h"
 
+#ifdef Vita
+#define PYTHON_TEST 0
+#if PYTHON_TEST
+#include <python2.7/Python.h>
+#endif
+#endif
+
 /// @brief Which single class is responsible for the entire screen?
 enum CurrentVisual
 {
