@@ -5,6 +5,15 @@ bool vita_inited_video = false;
 #else
 bool vita_inited_video = true;
 #endif
+    
+static PyObject* fun(PyObject* self, PyObject* args)
+{
+    std::cout << "I can't." << std::endl;
+    return NULL;
+}
+static PyMethodDef Box2DMethods[] = {
+    {"sound", fun, 0, "Play SFX."}
+};
 
 GameManager::GameManager(const char* path_to_settings, const char* path_to_def_settings)
 {
@@ -111,7 +120,7 @@ bool GameManager::Step()
                     key = true;
                     current_visual = LANG_SELECTOR_VISUAL;
                 }
-#if PYTHON_TEST
+#if Python_Test
                 else if (GameManager::main_menu.GetStatus() == "level_editor")
                 {
                     Py_NoSiteFlag = 1;
@@ -119,8 +128,10 @@ bool GameManager::Step()
                     Py_NoUserSiteDirectory = 1;
 
                     Py_SetProgramName("Sand-Box2D");
-                    Py_InitializeEx(1);
-                    PyRun_SimpleString("print('qqepta')");
+                    Py_InitializeEx(0);
+                    Py_InitModule3("box2d", Box2DMethods, NULL);
+                    PyObject* PyFileObject = PyFile_FromString("./assets/scripts/example.py", "r");
+                    PyRun_SimpleFile(PyFile_AsFile(PyFileObject), "example.py");
                     Py_Finalize();
 
                     GameManager::main_menu.Init(GameManager::rr);

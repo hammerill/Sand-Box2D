@@ -8,11 +8,8 @@
 #include "Screens/WorldManager.h"
 #include "Screens/LangSelector.h"
 
-#ifdef Vita
-#define PYTHON_TEST 0
-#if PYTHON_TEST
-#include <python2.7/Python.h>
-#endif
+#ifdef Python_Test
+#include "System/Python.h"
 #endif
 
 /// @brief Which single class is responsible for the entire screen?

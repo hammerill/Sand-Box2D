@@ -12,13 +12,23 @@ if(HEADER_WITH_JSONCPP)
 	add_definitions(-DHeader_Jsoncpp)
 endif()
 
+set(PYTHON_TEST OFF CACHE BOOL "If on, build will include early Python tests and some parts of the game will activate it")
+if(PYTHON_TEST)
+	add_definitions(-DPython_Test)
+	message(STATUS "Building with Python support")
+endif()
+
 if(BUILD_WINDOWS)
 	message(STATUS "Building for Windows")
 	add_definitions(-DWindows)
 
 	set(BUILD_WINDOWS_PKGS "C:/Users/Hamme/pkgs" CACHE STRING "Path to the packages, only for Windows")
 
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -pthread -std=c++17 -Wl,-subsystem,windows")
+	if(PYTHON_TEST)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -pthread -std=c++17 -DMS_WIN64")
+	else()
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -pthread -std=c++17 -Wl,-subsystem,windows")
+	endif()
 
 	project(Sand-Box2D)
 
@@ -49,6 +59,12 @@ if(BUILD_WINDOWS)
 		SDL2
 	)
 
+	if(PYTHON_TEST)
+		target_link_libraries(${CMAKE_PROJECT_NAME}
+			python27
+		)
+	endif()
+
 	file(COPY assets DESTINATION .)
 
 elseif(BUILD_LINUX)
@@ -72,6 +88,12 @@ elseif(BUILD_LINUX)
 		SDL2
 	)
 
+	if(PYTHON_TEST)
+		target_link_libraries(${CMAKE_PROJECT_NAME}
+			python27
+		)
+	endif()
+
 	file(COPY assets DESTINATION .)
 
 elseif(BUILD_VITA)
@@ -79,11 +101,11 @@ elseif(BUILD_VITA)
 	add_definitions(-DVita)
 
 	if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-	  if(DEFINED ENV{VITASDK})
-		set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cmake" CACHE PATH "toolchain file")
-	  else()
-		message(FATAL_ERROR "Please define VITASDK to point to your SDK path!")
-	  endif()
+		if(DEFINED ENV{VITASDK})
+			set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cmake" CACHE PATH "toolchain file")
+		else()
+			message(FATAL_ERROR "Please define VITASDK to point to your SDK path!")
+	  	endif()
 	endif()
 
 	project(Sand-Box2D C CXX)
@@ -127,10 +149,6 @@ elseif(BUILD_VITA)
 		z
 		freetype
 
-		python2.7
-		m
-		intl
-
 		SceAudio_stub
 		SceAudioIn_stub
 		SceCommonDialog_stub
@@ -142,6 +160,14 @@ elseif(BUILD_VITA)
 		SceTouch_stub
 		SceMotion_stub
 	)
+
+	if(PYTHON_TEST)
+		target_link_libraries(${CMAKE_PROJECT_NAME}
+			python2.7
+			m
+			intl
+		)
+	endif()
 
 	vita_create_self(${CMAKE_PROJECT_NAME}.self ${CMAKE_PROJECT_NAME})
 
