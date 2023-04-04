@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
-import box2d
+import sandbox2d
 
-box2d.sound()
+sandbox2d.sound()

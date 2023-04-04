@@ -5,15 +5,30 @@ bool vita_inited_video = false;
 #else
 bool vita_inited_video = true;
 #endif
-    
-static PyObject* fun(PyObject* self, PyObject* args)
+
+#if Python_Test
+Renderer* public_renderer;
+
+static PyObject*
+sound(PyObject* self, PyObject* args)
 {
-    std::cout << "I can't." << std::endl;
-    return NULL;
+    const int earrape_rate = 20;
+    for (size_t i = 0; i < earrape_rate; i++)
+    {
+        public_renderer->GetSounds()->PlaySfx("menu_switch");
+        public_renderer->GetSounds()->PlaySfx("menu_hit");
+        public_renderer->GetSounds()->PlaySfx("menu_enter");
+    }
+    
+    return Py_BuildValue("i", 0);
 }
-static PyMethodDef Box2DMethods[] = {
-    {"sound", fun, 0, "Play SFX."}
+
+static PyMethodDef SandBox2DMethods[] = 
+{
+    { "sound", sound, METH_VARARGS, "Play goofy sound." },
+    { NULL, NULL, 0, NULL }
 };
+#endif
 
 GameManager::GameManager(const char* path_to_settings, const char* path_to_def_settings)
 {
@@ -39,6 +54,10 @@ GameManager::GameManager(const char* path_to_settings, const char* path_to_def_s
         GameManager::settings.Get("path_to_icon").asString() == "" ? nullptr :
             GameManager::settings.Get("path_to_icon").asString().c_str()
     );
+    
+    #if Python_Test
+    public_renderer = GameManager::rr;
+    #endif
 
     GameManager::world_manager = new WorldManager(
         GameManager::settings.Get("path_to_def_texture").asString(),
@@ -127,10 +146,11 @@ bool GameManager::Step()
                     Py_IgnoreEnvironmentFlag = 1;
                     Py_NoUserSiteDirectory = 1;
 
-                    Py_SetProgramName("Sand-Box2D");
+                    Py_SetProgramName((char*)"Sand-Box2D");
                     Py_InitializeEx(0);
-                    Py_InitModule3("box2d", Box2DMethods, NULL);
-                    PyObject* PyFileObject = PyFile_FromString("./assets/scripts/example.py", "r");
+                    Py_InitModule("sandbox2d", SandBox2DMethods);
+                    PySys_SetPath((char*)"./pylibs");
+                    PyObject* PyFileObject = PyFile_FromString((char*)"./assets/scripts/example.py", (char*)"r");
                     PyRun_SimpleFile(PyFile_AsFile(PyFileObject), "example.py");
                     Py_Finalize();
 

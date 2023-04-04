@@ -63,6 +63,9 @@ if(BUILD_WINDOWS)
 		target_link_libraries(${CMAKE_PROJECT_NAME}
 			python27
 		)
+		# message(STATUS "Copying pylibs dir, this may take a while...")
+		# file(COPY "${BUILD_WINDOWS_PKGS}/pylibs" DESTINATION .)
+		# message(STATUS "Pylibs dir copied!")
 	endif()
 
 	file(COPY assets DESTINATION .)
