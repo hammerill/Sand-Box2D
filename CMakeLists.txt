@@ -93,7 +93,7 @@ elseif(BUILD_LINUX)
 
 	if(PYTHON_TEST)
 		target_link_libraries(${CMAKE_PROJECT_NAME}
-			python27
+			python2.7
 		)
 	endif()
 
