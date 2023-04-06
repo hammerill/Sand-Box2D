@@ -106,7 +106,8 @@ If you don't want to build by yourself, you can consider auto build system provi
   * [SDL2_gfx](https://www.ferzkopp.net/wordpress/2016/01/02/sdl_gfx-sdl2_gfx/);
   * [Box2D](https://github.com/erincatto/box2d);
   * [jsoncpp](https://github.com/open-source-parsers/jsoncpp);
-  * [libcurl](https://github.com/curl/curl).
+  * [cURL](https://github.com/curl/curl);
+  * And [Python 2.7](https://www.python.org/downloads/release/python-2716/) if you want to run early tests.
 - Or simply just unpack contents of [this](https://github.com/Hammerill/Sand-Box2D/releases/download/v1.0.0/win64-packages.zip) archive somewhere. 
 - Also, you have to add "bin" directory (located where the packages are installed) to your PATH variable,
 or copy its contents (*.dll) to the same directory where .exe file should be (build).
@@ -133,8 +134,14 @@ If you experience errors with Jsoncpp library while building try to disable `HEA
   make
   ```
 
+If you want to build with experimental Python 2.7 support run it:
+  ```
+  cmake .. -DPYTHON_TEST=ON
+  make
+  ```
+
 ### On Linux
-1. Install following libraries somehow with your package manager:
+1. Install following libraries somehow with your package manager (possible string `sdl2 sdl2_image sdl2_mixer sdl2_ttf sdl2_gfx box2d jsoncpp curl python2.7`):
 - SDL2;
 - SDL2_image;
 - SDL2_mixer;
@@ -142,7 +149,8 @@ If you experience errors with Jsoncpp library while building try to disable `HEA
 - SDL2_gfx;
 - Box2D;
 - jsoncpp;
-- libcurl.
+- cURL;
+- And Python 2.7 if you want to run early tests.
 2. Clone repo:
   ```bash
   git clone https://github.com/Hammerill/Sand-Box2D && cd Sand-Box2D
@@ -162,6 +170,12 @@ If you experience errors with Jsoncpp library while building try to disable `HEA
 If you experience errors with Jsoncpp library while building try to disable `HEADER_WITH_JSONCPP` flag via this:
   ```
   cmake .. -DHEADER_WITH_JSONCPP=OFF
+  make -j4
+  ```
+
+If you want to build with experimental Python 2.7 support run it:
+  ```
+  cmake .. -DPYTHON_TEST=ON
   make -j4
   ```
 
