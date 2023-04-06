@@ -9,16 +9,11 @@ bool vita_inited_video = true;
 #if Python_Test
 Renderer* public_renderer;
 
-static PyObject*
-sound(PyObject* self, PyObject* args)
+static PyObject* sound(PyObject* self, PyObject* args)
 {
-    const int earrape_rate = 20;
-    for (size_t i = 0; i < earrape_rate; i++)
-    {
-        public_renderer->GetSounds()->PlaySfx("menu_switch");
-        public_renderer->GetSounds()->PlaySfx("menu_hit");
-        public_renderer->GetSounds()->PlaySfx("menu_enter");
-    }
+    public_renderer->GetSounds()->PlaySfx("menu_switch");
+    public_renderer->GetSounds()->PlaySfx("menu_hit");
+    public_renderer->GetSounds()->PlaySfx("menu_enter");
     
     return Py_BuildValue("i", 0);
 }
