@@ -6,6 +6,30 @@ bool vita_inited_video = false;
 bool vita_inited_video = true;
 #endif
 
+#if Python_Test
+Renderer* public_renderer;
+
+static PyObject*
+sound(PyObject* self, PyObject* args)
+{
+    const int earrape_rate = 20;
+    for (size_t i = 0; i < earrape_rate; i++)
+    {
+        public_renderer->GetSounds()->PlaySfx("menu_switch");
+        public_renderer->GetSounds()->PlaySfx("menu_hit");
+        public_renderer->GetSounds()->PlaySfx("menu_enter");
+    }
+    
+    return Py_BuildValue("i", 0);
+}
+
+static PyMethodDef SandBox2DMethods[] = 
+{
+    { "sound", sound, METH_VARARGS, "Play goofy sound." },
+    { NULL, NULL, 0, NULL }
+};
+#endif
+
 GameManager::GameManager(const char* path_to_settings, const char* path_to_def_settings)
 {
     if (std::string(path_to_settings).find_last_of("\\/") != std::string::npos)
@@ -30,6 +54,10 @@ GameManager::GameManager(const char* path_to_settings, const char* path_to_def_s
         GameManager::settings.Get("path_to_icon").asString() == "" ? nullptr :
             GameManager::settings.Get("path_to_icon").asString().c_str()
     );
+    
+    #if Python_Test
+    public_renderer = GameManager::rr;
+    #endif
 
     GameManager::world_manager = new WorldManager(
         GameManager::settings.Get("path_to_def_texture").asString(),
@@ -111,16 +139,19 @@ bool GameManager::Step()
                     key = true;
                     current_visual = LANG_SELECTOR_VISUAL;
                 }
-#if PYTHON_TEST
+#if Python_Test
                 else if (GameManager::main_menu.GetStatus() == "level_editor")
                 {
                     Py_NoSiteFlag = 1;
                     Py_IgnoreEnvironmentFlag = 1;
                     Py_NoUserSiteDirectory = 1;
 
-                    Py_SetProgramName("Sand-Box2D");
-                    Py_InitializeEx(1);
-                    PyRun_SimpleString("print('qqepta')");
+                    Py_SetProgramName((char*)"Sand-Box2D");
+                    Py_InitializeEx(0);
+                    Py_InitModule("sandbox2d", SandBox2DMethods);
+                    PySys_SetPath((char*)"./pylibs");
+                    PyObject* PyFileObject = PyFile_FromString((char*)"./assets/scripts/example.py", (char*)"r");
+                    PyRun_SimpleFile(PyFile_AsFile(PyFileObject), "example.py");
                     Py_Finalize();
 
                     GameManager::main_menu.Init(GameManager::rr);

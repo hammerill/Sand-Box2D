@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef Python_Test
+#include "System/Python.h"
+#endif
+
 #include "System/Renderer.h"
 #include "System/Controls.h"
 #include "System/Settings.h"
@@ -7,13 +11,6 @@
 #include "Screens/MainMenu.h"
 #include "Screens/WorldManager.h"
 #include "Screens/LangSelector.h"
-
-#ifdef Vita
-#define PYTHON_TEST 0
-#if PYTHON_TEST
-#include <python2.7/Python.h>
-#endif
-#endif
 
 /// @brief Which single class is responsible for the entire screen?
 enum CurrentVisual
