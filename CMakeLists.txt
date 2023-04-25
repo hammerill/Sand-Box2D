@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 2.82)
 
 file(GLOB_RECURSE SOURCES "src/*[.cpp|.h]")
 
+option(LEGACY_INTERSECT "Use SDL_IntersectRectAndLine instead of SDL_IntersectFRectAndLine" OFF)
+if(LEGACY_INTERSECT)
+	add_definitions(-DLegacy_Intersect)
+endif()
+
 option(BUILD_WINDOWS "Build Windows .exe" ON) # Default
 option(BUILD_LINUX "Build Linux executable" OFF)
 option(BUILD_VITA "Build Vita .vpk" OFF)

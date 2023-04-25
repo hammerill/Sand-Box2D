@@ -65,7 +65,7 @@ jobs:
           git clone https://github.com/Hammerill/Sand-Box2D && cd Sand-Box2D
           mkdir build
           cd build
-          cmake .. -DBUILD_WINDOWS=OFF -DBUILD_LINUX=ON
+          cmake .. -DBUILD_WINDOWS=OFF -DBUILD_LINUX=ON -DLEGACY_INTERSECT=ON
           make -j4
 
       - name: Output build

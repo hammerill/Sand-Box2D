@@ -70,9 +70,13 @@ bool PObjPlatform::Render(Renderer* rr, float x_offset, float y_offset, float zo
         (float)(rr->GetWidth()),
         (float)(rr->GetHeight())
     };
-
+#ifdef Legacy_Intersect
+    if (!SDL_IntersectRectAndLine(&screen, &x1, &y1, &x2, &y2))
+        return false;
+#else
     if (!SDL_IntersectFRectAndLine(&screen, &x1, &y1, &x2, &y2))
         return false;
+#endif
 
     SDL_SetRenderDrawColor(rr->GetRenderer(), PObjPlatform::r, PObjPlatform::g, PObjPlatform::b, 0xFF);
     SDL_RenderDrawLine(rr->GetRenderer(), x1, y1, x2, y2);
