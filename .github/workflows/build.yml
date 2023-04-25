@@ -46,19 +46,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: suisei-cn/actions-download-file@v1.3.0
-        name: Download SDL
-        with:
-          url: "https://github.com/libsdl-org/SDL/releases/download/release-2.26.4/SDL2-2.26.4.tar.gz"
-          target: "."
-
       - name: Install dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libsdl2-gfx-dev libbox2d-dev libjsoncpp-dev libcurl4-openssl-dev
-          tar xzf SDL2-2.26.4.tar.gz
-          cd SDL2-2.26.4
-          ./configure && make && sudo make install
+          sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libsdl2-gfx-dev libbox2d-dev libjsoncpp-dev libcurl4-openssl-dev
 
       - name: Build project
         run: |
