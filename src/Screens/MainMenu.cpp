@@ -607,8 +607,6 @@ void MainMenu::Render(Renderer* rr)
         logo_height / 2 - rr->GetHeight() / 12
     };
 
-    // That's stupid. It's a logical call in the render function. Should be reformatted.
-    // (Also ignore that I do a lot of graphical stuff at step (logical) function)
     MainMenu::physics.InitPaddle(((float)(menu_w + textDimensions.w) / (float)zoom));
 
     SDL_SetRenderDrawColor(rr->GetRenderer(), 0x10, 0x10, 0x10, 0xFF);
