@@ -7,16 +7,18 @@
 class Font
 {
 private:
+    // Link to a SDL2 TTF font object.
     TTF_Font* font;
 
+    // Is this font ready to use?
     bool loaded;
 
 public:
     Font();
     ~Font();
 
-    /// @brief Load font to private field of this class, then you can render it later with Render().
-    /// If can't load font it will just leave "loaded" field "false", so it just won't render text.
+    /// @brief Load font to a private field of this class, then you can render it later with Render().
+    /// If can't load font it will leave "loaded" field as "false", so it just won't render text.
     /// @param path_to_font path to the font (*.ttf) file.
     Font(const char* path_to_font);
 

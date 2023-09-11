@@ -36,15 +36,29 @@ private:
     /// PObjs will manage it by themselves when Register() is called.
     std::map<std::string, SDL_Texture*> textures = std::map<std::string, SDL_Texture*>();
 
-    float x_offset = 0, y_offset = 0, zoom = 80;
-    float move_speed, zoom_speed;
+    // X offset of the camera in pixels (more - everything moves to left, less - to right).
+    float x_offset = 0;
+    // Y offset of the camera in pixels (more - everything moves down, less - up).
+    float y_offset = 0;
+    // Value that represents how to convert Box2D meters to screen pixels.
+    // If rectangle of 2;3 meters should be showed at the screen,
+    // with zoom 80 it will have a size of 2x80;3x80 = 160;240 pixels.
+    float zoom = 80;
+    // Maximum speed of camera movement by player.
+    float move_speed;
+    // Maximum speed of camera zoom by player.
+    float zoom_speed;
 
+    // How much frames Sand-Box2D remembers to calculate after-release camera inertia movement.
     int moving_inertia_frames;
 
+    // Special value that sets up Box2D physics quality parameter (more - heavier but more precise).
     int physics_quality;
 
+    // Path to the image used to represent "NO TEXTURE".
     std::string path_to_def_texture;
 
+    // Is debug menu shown now?
     bool isDebug = false;
 
     /// @brief Current loaded level.

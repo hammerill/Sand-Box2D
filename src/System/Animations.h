@@ -1,5 +1,7 @@
 #pragma once
 
+// TODO: Should support non-60fps (right now it literally counts time in frames).
+
 #include "Renderer.h"
 #include "Translations.h"
 
@@ -9,6 +11,7 @@
 #define M_PI           3.14159265358979323846264338327950288  /* pi */
 #endif
 
+// Enum of all the game animations.
 enum Anim
 {
     ANIM_WORLD_MANAGER_INIT = 0,    // Animation of WorldManager initialization (WMI). Will show levels name.
@@ -22,8 +25,14 @@ enum Anim
 class Transition
 {
 private:
-    float start_value, end_value;
-    int frames_start, frames_length;
+    // Value before applying transition.
+    float start_value;
+    // Value after applying transition.
+    float end_value;
+    // At which frame transition will start.
+    int frames_start;
+    // How much frames transition will last.
+    int frames_length;
 public:
     Transition() {}
 

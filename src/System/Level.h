@@ -11,6 +11,7 @@
 
 #include "Json.h"
 
+// Represents level options from JSON as struct.
 struct JsonOptions
 {
     uint8_t bg_r, bg_g, bg_b;
@@ -18,12 +19,14 @@ struct JsonOptions
     float border_width, border_height;
 };
 
+// Represents level camera type as enum.
 enum JsonCameraType
 {
-    CAMERA_TYPE_STATIC = 0,
-    CAMERA_TYPE_ATTACHED
+    CAMERA_TYPE_STATIC = 0,         // Camera will stay static, it can be moved and zoomed by user if autorised.
+    CAMERA_TYPE_ATTACHED            // Camera will spectate some object with a certain ID.
 };
 
+// Represents level camera options from JSON as struct.
 struct JsonCamera
 {
     JsonCameraType type;
@@ -32,6 +35,7 @@ struct JsonCamera
     int attached_id;
 };
 
+// Represents list of the levels to be generated continuosly as struct and vector within.
 struct JsonCycle
 {
     int delay;

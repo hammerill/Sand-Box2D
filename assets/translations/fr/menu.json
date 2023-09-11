@@ -1,8 +1,8 @@
 {
-    "item_play": "JOUER",
-    "item_community": "COMMUNAUTÉ",
-    "item_level_editor": "ÉDITEUR NIVEAU",
-    "item_settings": "PARAMÈTRES",
-    "item_about": "À PROPOS",
-    "item_exit": "SORTIR"
+    "item_play": "Jouer",
+    "item_community": "Communauté",
+    "item_level_editor": "Editeur niveau",
+    "item_settings": "Paramètres",
+    "item_about": "A propos",
+    "item_exit": "Sortir"
 }

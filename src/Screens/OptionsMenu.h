@@ -1,5 +1,7 @@
 #pragma once
 
+// TODO: It's just a copy of LangSelector now.
+
 #include <vector>
 #include <string>
 #include <algorithm>

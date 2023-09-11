@@ -143,6 +143,22 @@ void Controls::Check()
         Controls::zoomOut = 0;
 }
 #else
+SDL_GameController* gamepad;
+
+SDL_GameController* findController()
+{
+    for (int i = 0; i < SDL_NumJoysticks(); i++)
+    {
+        if (SDL_IsGameController(i))
+        {
+            return SDL_GameControllerOpen(i);
+            break;
+        }
+    }
+    return nullptr;
+}
+
+
 Controls::Controls() {}
 Controls::~Controls() {}
 
@@ -272,6 +288,46 @@ void Controls::Check()
 
             default:
                 break;
+            }
+            break;
+        
+        case SDL_CONTROLLERDEVICEADDED:
+            if (!gamepad)
+                gamepad = SDL_GameControllerOpen(e.cdevice.which);
+            
+            break;
+        case SDL_CONTROLLERDEVICEREMOVED:
+            if (gamepad)
+            {
+                SDL_GameControllerClose(gamepad);
+                gamepad = findController();
+            }
+            break;
+
+        case SDL_CONTROLLERBUTTONDOWN: case SDL_CONTROLLERBUTTONUP:
+            if (gamepad) {
+                switch (e.cbutton.button) {
+                case SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_UP:
+                    Controls::actionUp = e.type == SDL_CONTROLLERBUTTONDOWN ? 1 : 0;
+                    Controls::menuUp = e.type == SDL_CONTROLLERBUTTONDOWN ? 1 : 0;
+                    break;
+                case SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+                    Controls::actionDown = e.type == SDL_CONTROLLERBUTTONDOWN ? 1 : 0;
+                    Controls::menuDown = e.type == SDL_CONTROLLERBUTTONDOWN ? 1 : 0;
+                    break;
+                case SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+                    Controls::actionRight = e.type == SDL_CONTROLLERBUTTONDOWN ? 1 : 0;
+                    Controls::menuRight = e.type == SDL_CONTROLLERBUTTONDOWN ? 1 : 0;
+                    break;
+                case SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+                    Controls::actionLeft = e.type == SDL_CONTROLLERBUTTONDOWN ? 1 : 0;
+                    Controls::menuLeft = e.type == SDL_CONTROLLERBUTTONDOWN ? 1 : 0;
+                    break;
+                case SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_A:
+                    Controls::actionEnter = e.type == SDL_CONTROLLERBUTTONDOWN ? 1 : 0;
+                    Controls::menuEnter = e.type == SDL_CONTROLLERBUTTONDOWN ? 1 : 0;
+                    break;
+                }
             }
             break;
 

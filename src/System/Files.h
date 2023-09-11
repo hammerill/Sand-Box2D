@@ -1,5 +1,7 @@
 #pragma once
 
+// TODO: Maybe should be renamed to "Tools" and have more methods.
+
 #ifdef Vita
 #include <psp2/io/stat.h>
 #include <psp2/io/dirent.h>

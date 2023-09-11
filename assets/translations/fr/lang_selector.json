@@ -1,9 +1,9 @@
 {
     "choose_title": "CHOISISSEZ VOTRE LANGUE",
-    "lang_en": "ANGLAISE",
-    "lang_fr": "FRANÇAISE",
+    "lang_en": "ANGLAIS",
+    "lang_fr": "FRANÇAIS",
     "lang_ru": "RUSSE",
-    "lang_ua": "UKRAINIENNE",
-    "lang_jp": "JAPONAISE",
-    "settings_reminder": "Vous pouvez la changer dans les paramètres."
+    "lang_ua": "UKRAINIEN",
+    "lang_jp": "JAPONAIS",
+    "settings_reminder": "Vous pouvez le changer dans les paramètres."
 }

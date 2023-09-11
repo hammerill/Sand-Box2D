@@ -20,21 +20,30 @@
 class MainMenuPhysics
 {
 private:
+    // Link to the Box2D world of the easter egg.
     b2World* world = nullptr;
 
+    // Link to the Box2D object of paddle for the easter egg.
     b2Body* paddle = nullptr;
+    // Link to the Box2D object of box logo for the easter egg.
     b2Body* box_logo = nullptr;
 
+    // Y pos of where paddle aims to move.
     b2Vec2 paddle_desired_pos;
+    // Is paddle object already inited? Used for safety, we can't work with paddle when it's not inited.
     bool paddle_inited;
+    // Paddle size in Box2D meters.
     float paddle_width, paddle_height;
 
+    // Is box easter egg activated right now? True when it falls off.
     bool box_active;
 
+    // Used to make game title fadeout when easter egg is activated. 
     uint8_t title_factual_alpha, title_desired_alpha;
 
+    // TODO: I should move it to some tools module.
     float RAD2DEG;
-
+    // TODO: I should move it to some tools module.
     float GetRandomFloat(float min, float max);
 
 public:

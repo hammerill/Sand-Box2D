@@ -15,16 +15,23 @@
 class LangSelector
 {
 private:
+    // Set of langs, where key is lang code (i.e. "en") and value is lang display name (i.e. "English").
     std::map<std::string, std::string> langs;
+    // Index of current hovered lang.
     size_t hovered_lang = 0;
 
+    // LangSelector title.
     std::string choose_title = "", settings_reminder = "";
 
+    // Directory where all the translations are located.
     std::string translations_base = "";
 
     std::string GetLangCodeByIndex(size_t index);
+
+    // Change game interface to another language.
     void ReloadLang(std::string lang_code);
 
+    // Is LangSelector fading out now?
     bool fadeout = false;
 public:
     LangSelector();

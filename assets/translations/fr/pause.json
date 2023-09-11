@@ -1,6 +1,6 @@
 {
-    "item_resume": "REPRENDRE",
-    "item_restart": "RECOMMENCER",
-    "item_settings": "PARAMÈTRES",
-    "item_exit": "SORTIR"
+    "item_resume": "Continuer",
+    "item_restart": "Recommencer",
+    "item_settings": "Paramètres",
+    "item_exit": "Sortir"
 }
