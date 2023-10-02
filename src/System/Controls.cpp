@@ -143,8 +143,10 @@ void Controls::Check()
         Controls::zoomOut = 0;
 }
 #else
-SDL_GameController* gamepad;
+SDL_GameController* controller;
+const int controller_deadzone = 8000;
 
+// TODO: To be moved to imaginary tools module maybe
 SDL_GameController* findController()
 {
     for (int i = 0; i < SDL_NumJoysticks(); i++)
@@ -158,7 +160,6 @@ SDL_GameController* findController()
     return nullptr;
 }
 
-
 Controls::Controls() {}
 Controls::~Controls() {}
 
@@ -169,6 +170,8 @@ void Controls::Check()
         Controls::zoomIn = 0;
         Controls::zoomOut = 0;
     }
+
+    int rs; // I HAD to init it here. Compiler is NOT happy when I don't do that.
 
     while(SDL_PollEvent(&e))
     {
@@ -217,6 +220,7 @@ void Controls::Check()
             Controls::isWheel = true;
             break;
 
+        // Hint: ? 1 : 0 at the end is a conversion to analog value.
         case SDL_KEYDOWN: case SDL_KEYUP:
             switch (e.key.keysym.sym)
             {
@@ -232,45 +236,45 @@ void Controls::Check()
 
             case SDLK_UP:
                 Controls::moveUp = e.type == SDL_KEYDOWN ? 1 : 0;
-                Controls::menuUp = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::menuUp = e.type == SDL_KEYDOWN;
                 break;
             case SDLK_RIGHT:
                 Controls::moveRight = e.type == SDL_KEYDOWN ? 1 : 0;
-                Controls::menuRight = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::menuRight = e.type == SDL_KEYDOWN;
                 break;
             case SDLK_DOWN:
                 Controls::moveDown = e.type == SDL_KEYDOWN ? 1 : 0;
-                Controls::menuDown = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::menuDown = e.type == SDL_KEYDOWN;
                 break;
             case SDLK_LEFT:
                 Controls::moveLeft = e.type == SDL_KEYDOWN ? 1 : 0;
-                Controls::menuLeft = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::menuLeft = e.type == SDL_KEYDOWN;
                 break;
 
             case SDLK_w:
-                Controls::actionUp = e.type == SDL_KEYDOWN ? 1 : 0;
-                Controls::menuUp = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::actionUp = e.type == SDL_KEYDOWN;
+                Controls::menuUp = e.type == SDL_KEYDOWN;
                 break;
             case SDLK_d:
-                Controls::actionRight = e.type == SDL_KEYDOWN ? 1 : 0;
-                Controls::menuRight = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::actionRight = e.type == SDL_KEYDOWN;
+                Controls::menuRight = e.type == SDL_KEYDOWN;
                 break;
             case SDLK_s:
-                Controls::actionDown = e.type == SDL_KEYDOWN ? 1 : 0;
-                Controls::menuDown = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::actionDown = e.type == SDL_KEYDOWN;
+                Controls::menuDown = e.type == SDL_KEYDOWN;
                 break;
             case SDLK_a:
-                Controls::actionLeft = e.type == SDL_KEYDOWN ? 1 : 0;
-                Controls::menuLeft = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::actionLeft = e.type == SDL_KEYDOWN;
+                Controls::menuLeft = e.type == SDL_KEYDOWN;
                 break;
 
             case SDLK_SPACE: case SDLK_r: case SDLK_RETURN:
-                Controls::actionEnter = e.type == SDL_KEYDOWN ? 1 : 0;
-                Controls::menuEnter = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::actionEnter = e.type == SDL_KEYDOWN;
+                Controls::menuEnter = e.type == SDL_KEYDOWN;
                 break;
 
             case SDLK_z:
-                Controls::menuEnter = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::menuEnter = e.type == SDL_KEYDOWN;
                 break;
 
             case SDLK_e:
@@ -283,7 +287,7 @@ void Controls::Check()
                 break;
 
             case SDLK_ESCAPE:
-                Controls::pause = e.type == SDL_KEYDOWN ? 1 : 0;
+                Controls::pause = e.type == SDL_KEYDOWN;
                 break;
 
             default:
@@ -291,48 +295,87 @@ void Controls::Check()
             }
             break;
         
+        // PC CONTROLLER
+
         case SDL_CONTROLLERDEVICEADDED:
-            if (!gamepad)
-                gamepad = SDL_GameControllerOpen(e.cdevice.which);
+            if (!controller)
+                controller = SDL_GameControllerOpen(e.cdevice.which);
             
             break;
         case SDL_CONTROLLERDEVICEREMOVED:
-            if (gamepad)
+            if (controller)
             {
-                SDL_GameControllerClose(gamepad);
-                gamepad = findController();
+                SDL_GameControllerClose(controller);
+                controller = findController();
             }
             break;
 
         case SDL_CONTROLLERBUTTONDOWN: case SDL_CONTROLLERBUTTONUP:
-            if (gamepad) {
-                switch (e.cbutton.button) {
-                case SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_UP:
-                    Controls::actionUp = e.type == SDL_CONTROLLERBUTTONDOWN ? 1 : 0;
-                    Controls::menuUp = e.type == SDL_CONTROLLERBUTTONDOWN ? 1 : 0;
+            if (controller) {
+                SDL_EventType c_down = SDL_CONTROLLERBUTTONDOWN;
+
+                switch (e.cbutton.button)
+                {
+                case SDL_CONTROLLER_BUTTON_RIGHTSTICK:
+                    Controls::fullscreen = e.type == c_down;
                     break;
-                case SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-                    Controls::actionDown = e.type == SDL_CONTROLLERBUTTONDOWN ? 1 : 0;
-                    Controls::menuDown = e.type == SDL_CONTROLLERBUTTONDOWN ? 1 : 0;
+                case SDL_CONTROLLER_BUTTON_Y:
+                    Controls::debug = e.type == c_down;
                     break;
-                case SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-                    Controls::actionRight = e.type == SDL_CONTROLLERBUTTONDOWN ? 1 : 0;
-                    Controls::menuRight = e.type == SDL_CONTROLLERBUTTONDOWN ? 1 : 0;
+                case SDL_CONTROLLER_BUTTON_B:
+                    Controls::menuBack = e.type == c_down;
                     break;
-                case SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-                    Controls::actionLeft = e.type == SDL_CONTROLLERBUTTONDOWN ? 1 : 0;
-                    Controls::menuLeft = e.type == SDL_CONTROLLERBUTTONDOWN ? 1 : 0;
+                
+                case SDL_CONTROLLER_BUTTON_DPAD_UP:
+                    Controls::actionUp = e.type == c_down;
+                    Controls::menuUp = e.type == c_down;
                     break;
-                case SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_A:
-                    Controls::actionEnter = e.type == SDL_CONTROLLERBUTTONDOWN ? 1 : 0;
-                    Controls::menuEnter = e.type == SDL_CONTROLLERBUTTONDOWN ? 1 : 0;
+                case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+                    Controls::actionDown = e.type == c_down;
+                    Controls::menuDown = e.type == c_down;
+                    break;
+                case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+                    Controls::actionRight = e.type == c_down;
+                    Controls::menuRight = e.type == c_down;
+                    break;
+                case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+                    Controls::actionLeft = e.type == c_down;
+                    Controls::menuLeft = e.type == c_down;
+                    break;
+                case SDL_CONTROLLER_BUTTON_A:
+                    Controls::actionEnter = e.type == c_down;
+                    Controls::menuEnter = e.type == c_down;
+                    break;
+
+                case SDL_CONTROLLER_BUTTON_START:
+                    Controls::pause = e.type == c_down;
                     break;
                 }
             }
             break;
 
+        case SDL_CONTROLLERAXISMOTION:
+            rs = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_RIGHTY);
+
+            if (abs(rs) > SDL_JOYSTICK_AXIS_MAX / 5)
+            {
+                if (rs > 0)
+                    Controls::zoomIn = (float)rs / SDL_JOYSTICK_AXIS_MAX;
+                else
+                    Controls::zoomOut = (float)rs / -SDL_JOYSTICK_AXIS_MAX;
+            }
+            else
+            { 
+                Controls::zoomIn = (float)SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) / SDL_JOYSTICK_AXIS_MAX;
+                Controls::zoomOut = (float)SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT) / SDL_JOYSTICK_AXIS_MAX;
+            }
+
+            break;
+
+        ////////////////
+
         default:
-            break; // COMBO: QUADRO BREAKS
+            break;
         }
     }
 }
@@ -375,3 +418,5 @@ bool Controls::MenuEnter()      { return Controls::menuEnter; }
 bool Controls::MenuBack()       { return Controls::menuBack; }
 
 bool Controls::Pause()          { return Controls::pause; }
+
+int Controls::GetControlTest()  { return Controls::control_test; }

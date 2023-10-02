@@ -17,11 +17,11 @@ public:
     Network();
     ~Network();
 
-    /// @brief Set "repo".
+    /// @brief Set levels repo site.
     /// @param repo URL which targets us to rawgithub where levels are containing.
     static void SetRepo(std::string repo);
 
-    /// @brief Download file.
+    /// @brief Download a file.
     /// @param base where is base data directory located? Will download file there.
     /// @param filepath path to the file to be downloaded, relatively to the "repo" (see SetRepo()) on URL
     /// and to "base" on file in local platform.

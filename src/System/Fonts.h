@@ -41,7 +41,7 @@ public:
     /// @param b Color.
     void Render(SDL_Renderer* renderer, const char* text, int x = 0, int y = 0, float scale = 1, bool center = false, Uint8 r = 0xFF, Uint8 g = 0xFF, Uint8 b = 0xFF);
 
-    /// @brief Get just SDL_Texture* of the text. You have to destroy it after.
+    /// @brief Get a SDL_Texture* of the text. You have to destroy it after.
     /// @param renderer the rendering context.
     /// @param text text to be returned.
     /// @param r Color.
@@ -55,7 +55,7 @@ public:
     bool GetLoaded();
     TTF_Font* GetFont();
 
-    /// @brief Will return SDL_Rect which will show how much pixels this text takes.
+    /// @brief Return SDL_Rect which will show how much pixels this text takes.
     /// You can leave no parameters to get factual font width and height (of one symbol).
     SDL_Rect GetTextDimensions(const char* text = "-", float scale = 1);
 };

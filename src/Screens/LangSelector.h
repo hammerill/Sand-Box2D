@@ -26,6 +26,9 @@ private:
     // Directory where all the translations are located.
     std::string translations_base = "";
 
+    /// @brief Get a language code by specifying its index.
+    /// @param index index of the language in the order that game decided (for example, 0 for "en").
+    /// @return language code (for example, "en" for English).
     std::string GetLangCodeByIndex(size_t index);
 
     // Change game interface to another language.

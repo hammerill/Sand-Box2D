@@ -48,7 +48,7 @@ struct JsonCycle
 class Level
 {
 private:
-    float GetRandomFloat(float min, float max);
+    float GetRandomFloat(float min, float max); // TODO: Move to the tools module.
 
     /// @brief Load number (parse it), further info here:
     /// https://github.com/Hammerill/Sand-Box2D-levels/blob/main/docs/README-level-file.md#numbers-input
@@ -80,8 +80,9 @@ public:
     /// @return false if something went wrong, true if everything's ok.
     bool LoadFile(std::string base, std::string filepath);
 
+    // Get level options from JSON as struct.
     JsonOptions GetOptions();
-
+    // Get level camera options from JSON as struct.
     JsonCamera GetCamera();
 
     /// @brief Get array of PObjects.
@@ -93,6 +94,7 @@ public:
     /// @param index index of the desired cycle.
     JsonCycle GetCycle(int index);
 
+    // How much cycles (object spawners) does this level have?
     size_t GetCyclesCount();
 
     /// @brief Get JSON of the actions list. Its contents has to be

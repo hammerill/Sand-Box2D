@@ -51,6 +51,7 @@ protected:
 
     SDL_Event e;
 
+    int control_test;
 
 public:
     Controls();
@@ -60,35 +61,35 @@ public:
     /// variables which can be accessed through getters functions of this class.
     void Check();
 
-    /// @brief Is user does want to close the program? Should be handled.
+    /// @brief Does user want to close the program? Should be handled.
     bool Exit();
-    /// @brief Is user does want to go/exit fullscreen mode?
+    /// @brief Does user want to go/exit fullscreen mode?
     bool Fullscreen();
-    /// @brief Is user does want to activate/deactivate debug mode?
+    /// @brief Does user want to activate/deactivate debug mode?
     bool Debug();
 
-    /// @brief Is user does want to move camera up?
+    /// @brief Does user want to move camera up?
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).
     /// Otherwise analog value with minimum at 0 and maximum at 1.
     double MoveUp();
-    /// @brief Is user does want to move camera right?
+    /// @brief Does user want to move camera right?
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).
     /// Otherwise analog value with minimum at 0 and maximum at 1.
     double MoveRight();
-    /// @brief Is user does want to move camera down?
+    /// @brief Does user want to move camera down?
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).
     /// Otherwise analog value with minimum at 0 and maximum at 1.
     double MoveDown();
-    /// @brief Is user does want to move camera left?
+    /// @brief Does user want to move camera left?
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).
     /// Otherwise analog value with minimum at 0 and maximum at 1.
     double MoveLeft();
 
-    /// @brief Is user does want to zoom in?
+    /// @brief Does user want to zoom in?
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).
     /// Otherwise analog value with minimum at 0 and unlimited maximum.
     double ZoomIn();
-    /// @brief Is user does want to zoom out?
+    /// @brief Does user want to zoom out?
     /// @return 0 if user doesn't pressing this button. 1 if they clicked it like binary button (yes/no).
     /// Otherwise analog value with minimum at 0 and unlimited maximum.
     double ZoomOut();
@@ -130,4 +131,7 @@ public:
 
     bool Pause();
     ///////
+
+    // Useful for controller programmers!
+    int GetControlTest();
 };

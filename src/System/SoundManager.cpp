@@ -22,6 +22,7 @@ SoundManager::SoundManager(std::string path_to_sfx_base)
 {
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
     SoundManager::LoadSfx(path_to_sfx_base);
+    Mix_MasterVolume(MIX_MAX_VOLUME * 0.5);
 }
 
 void SoundManager::LoadSfx(std::string path_to_sfx_base)

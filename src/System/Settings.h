@@ -9,9 +9,11 @@
 class Settings
 {
 private:
+    // Game settings loaded as Json Value.
     Json::Value settings;
+    // Predefined game settings loaded as Json Value.
     Json::Value def_settings;
-
+    // Where game settings are located on the drive?
     const char* path_to_settings = nullptr;
 public:
     /// @brief Load settings file and create Settings instance.

@@ -178,7 +178,7 @@ std::vector<int> last_frames_speed_y = std::vector<int>();
 WindowParams old_wparams, now_wparams;
 float zoomChange, zoomChangeCoeff;
 
-std::vector<double> frame_times;
+// std::vector<double> frame_times;
 
 JsonOptions options;
 
@@ -186,16 +186,16 @@ JsonOptions options;
 
 bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
 {
-    auto previous_frame = std::chrono::high_resolution_clock::now();
-    auto duration_measure = std::chrono::duration<double, std::milli>();
-    frame_times = std::vector<double>();
+    // auto previous_frame = std::chrono::high_resolution_clock::now();
+    // auto duration_measure = std::chrono::duration<double, std::milli>();
+    // frame_times = std::vector<double>();
 
     // 1. BOX2D (physics) STEP
     WorldManager::world->Step(1.0f / 60.0f, WorldManager::physics_quality * 3, WorldManager::physics_quality);
     //////////////////////////
-    duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
-    frame_times.push_back(duration_measure.count());
-    previous_frame = std::chrono::high_resolution_clock::now();
+    // duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
+    // frame_times.push_back(duration_measure.count());
+    // previous_frame = std::chrono::high_resolution_clock::now();
 
     // 2. GAME WINDOW UPDATE ON RESOLUTION CHANGE
     old_wparams = now_wparams;
@@ -218,9 +218,9 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
         }
     }
     /////////////////////////////////////////////
-    duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
-    frame_times.push_back(duration_measure.count());
-    previous_frame = std::chrono::high_resolution_clock::now();
+    // duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
+    // frame_times.push_back(duration_measure.count());
+    // previous_frame = std::chrono::high_resolution_clock::now();
 
     // 3. FADEOUT HANDLING
     if (fadeout)
@@ -231,9 +231,9 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
         AnimationManager::InitAnim(ANIM_FADE_OUT);
     }
     //////////////////////
-    duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
-    frame_times.push_back(duration_measure.count());
-    previous_frame = std::chrono::high_resolution_clock::now();
+    // duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
+    // frame_times.push_back(duration_measure.count());
+    // previous_frame = std::chrono::high_resolution_clock::now();
 
     // 4. BUTTONS
     auto camera = WorldManager::level.GetCamera();
@@ -270,9 +270,9 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
         }
     }
     /////////////
-    duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
-    frame_times.push_back(duration_measure.count());
-    previous_frame = std::chrono::high_resolution_clock::now();
+    // duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
+    // frame_times.push_back(duration_measure.count());
+    // previous_frame = std::chrono::high_resolution_clock::now();
 
     // 5. ZOOM WHEEL/PINCH
     SDL_Point scr_center = {rr->GetWidth() / 2, rr->GetHeight() / 2};
@@ -287,40 +287,43 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
             WorldManager::zoom *= ((float)ctrl.GetPinch() / (float)old_ctrl.GetPinch());
         }
 
-        if (WorldManager::zoom <= 1)
+        if (ctrl.ZoomIn() != ctrl.ZoomOut())
         {
-            CorrectOffset(  ctrl.IsWheel() && camera.move
-                                ? ctrl.GetMouse() : scr_center,
-                            WorldManager::zoom - 1);
-            WorldManager::zoom = 1;
-        }
-        else
-        {
-            CorrectOffset(  ctrl.IsWheel() && camera.move
-                                ? ctrl.GetMouse() : scr_center,
-                            ctrl.ZoomOut() * WorldManager::zoom_speed * -1 * WorldManager::zoom);
-            WorldManager::zoom -= ctrl.ZoomOut() * WorldManager::zoom_speed * WorldManager::zoom;
-        }
+            if (WorldManager::zoom <= 1)
+            {
+                CorrectOffset(  ctrl.IsWheel() && camera.move
+                                    ? ctrl.GetMouse() : scr_center,
+                                WorldManager::zoom - 1);
+                WorldManager::zoom = 1;
+            }
+            else
+            {
+                CorrectOffset(  ctrl.IsWheel() && camera.move
+                                    ? ctrl.GetMouse() : scr_center,
+                                ctrl.ZoomOut() * WorldManager::zoom_speed * -1 * WorldManager::zoom);
+                WorldManager::zoom -= ctrl.ZoomOut() * WorldManager::zoom_speed * WorldManager::zoom;
+            }
 
-        if (WorldManager::zoom >= 1000)
-        {
-            CorrectOffset(  ctrl.IsWheel() && camera.move
-                                ? ctrl.GetMouse() : scr_center,
-                            1000 - WorldManager::zoom);
-            WorldManager::zoom = 1000;
-        }
-        else
-        {
-            CorrectOffset(  ctrl.IsWheel() && camera.move
-                                ? ctrl.GetMouse() : scr_center,
-                            ctrl.ZoomIn() * WorldManager::zoom_speed * WorldManager::zoom);
-            WorldManager::zoom += ctrl.ZoomIn() * WorldManager::zoom_speed * WorldManager::zoom;
+            if (WorldManager::zoom >= 1000)
+            {
+                CorrectOffset(  ctrl.IsWheel() && camera.move
+                                    ? ctrl.GetMouse() : scr_center,
+                                1000 - WorldManager::zoom);
+                WorldManager::zoom = 1000;
+            }
+            else
+            {
+                CorrectOffset(  ctrl.IsWheel() && camera.move
+                                    ? ctrl.GetMouse() : scr_center,
+                                ctrl.ZoomIn() * WorldManager::zoom_speed * WorldManager::zoom);
+                WorldManager::zoom += ctrl.ZoomIn() * WorldManager::zoom_speed * WorldManager::zoom;
+            }
         }
     }
     //////////////////////
-    duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
-    frame_times.push_back(duration_measure.count());
-    previous_frame = std::chrono::high_resolution_clock::now();
+    // duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
+    // frame_times.push_back(duration_measure.count());
+    // previous_frame = std::chrono::high_resolution_clock::now();
 
     // 6. CAMERA TYPE PROCESSING
     if (camera.type == CAMERA_TYPE_ATTACHED)
@@ -342,9 +345,9 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
         WorldManager::y_offset += (scr_center.y - pos.y) * ((100 - camera.attached_remain) / 100.0);
     }
     ////////////////////////////
-    duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
-    frame_times.push_back(duration_measure.count());
-    previous_frame = std::chrono::high_resolution_clock::now();
+    // duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
+    // frame_times.push_back(duration_measure.count());
+    // previous_frame = std::chrono::high_resolution_clock::now();
 
     // 7. ACTIONS
     HandleActionCtrl(old_ctrl.ActionUp(), ctrl.ActionUp(), WorldManager::actions, 0, WorldManager::level, WorldManager::objects);
@@ -354,9 +357,9 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
 
     HandleActionCtrl(old_ctrl.ActionEnter(), ctrl.ActionEnter(), WorldManager::actions, 4, WorldManager::level, WorldManager::objects);
     /////////////
-    duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
-    frame_times.push_back(duration_measure.count());
-    previous_frame = std::chrono::high_resolution_clock::now();
+    // duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
+    // frame_times.push_back(duration_measure.count());
+    // previous_frame = std::chrono::high_resolution_clock::now();
 
     // 8. CYCLES
     for (size_t i = 0; i < WorldManager::cyclesDelays.size(); i++)
@@ -374,9 +377,9 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
         }
     }
     ////////////
-    duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
-    frame_times.push_back(duration_measure.count());
-    previous_frame = std::chrono::high_resolution_clock::now();
+    // duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
+    // frame_times.push_back(duration_measure.count());
+    // previous_frame = std::chrono::high_resolution_clock::now();
 
     // 9. POBJECTS REGISTRATION
     for (int i = WorldManager::order.size() - 1; i >= 0; i--)
@@ -390,9 +393,9 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
         WorldManager::order.pop_back();
     }
     ///////////////////////////
-    duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
-    frame_times.push_back(duration_measure.count());
-    previous_frame = std::chrono::high_resolution_clock::now();
+    // duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
+    // frame_times.push_back(duration_measure.count());
+    // previous_frame = std::chrono::high_resolution_clock::now();
 
     // 10. OUT OF BORDERS CHECK
     options = WorldManager::level.GetOptions();
@@ -415,15 +418,15 @@ bool WorldManager::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
         }
     }
     ///////////////////////////
-    duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
-    frame_times.push_back(duration_measure.count());
-    previous_frame = std::chrono::high_resolution_clock::now();
+    // duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
+    // frame_times.push_back(duration_measure.count());
+    // previous_frame = std::chrono::high_resolution_clock::now();
 
     // 11. ANIMATIONS
     AnimationManager::StepAnim(ANIM_WORLD_MANAGER_INIT);
     /////////////////
-    duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
-    frame_times.push_back(duration_measure.count());
+    // duration_measure = std::chrono::high_resolution_clock::now() - previous_frame;
+    // frame_times.push_back(duration_measure.count());
 
     // NETWORK SAMPLE CODE (for me to not forget)
 //         Network::SetRepo("https://raw.githubusercontent.com/Hammerill/Sand-Box2D-levels/main/levels");
@@ -477,19 +480,21 @@ void WorldManager::Render(Renderer* rr, Controls ctrl)
         debugStrings.push_back("Objects count = " + std::to_string(WorldManager::world->GetBodyCount()));
         debugStrings.push_back("Objects rendered = " + std::to_string(renderedItemsCount));
         debugStrings.push_back("Loaded textures = " + std::to_string(WorldManager::textures.size()));
-        debugStrings.push_back("");
-        debugStrings.push_back("STEP TIMES");
-        debugStrings.push_back("01. Physics = " + std::to_string(frame_times[0]));
-        debugStrings.push_back("02. Window change = " + std::to_string(frame_times[1]));
-        debugStrings.push_back("03. Fadeout handling = " + std::to_string(frame_times[2]));
-        debugStrings.push_back("04. Buttons = " + std::to_string(frame_times[3]));
-        debugStrings.push_back("05. Zoom = " + std::to_string(frame_times[4]));
-        debugStrings.push_back("06. Camera type = " + std::to_string(frame_times[5]));
-        debugStrings.push_back("07. Actions = " + std::to_string(frame_times[6]));
-        debugStrings.push_back("08. Cycles = " + std::to_string(frame_times[7]));
-        debugStrings.push_back("09. PObj registration = " + std::to_string(frame_times[8]));
-        debugStrings.push_back("10. OOB check = " + std::to_string(frame_times[9]));
-        debugStrings.push_back("11. Animations = " + std::to_string(frame_times[10]));
+        // debugStrings.push_back("");
+        // debugStrings.push_back("Control test = " + std::to_string(ctrl.GetControlTest()));
+
+        // debugStrings.push_back("STEP TIMES");
+        // debugStrings.push_back("01. Physics = " + std::to_string(frame_times[0]));
+        // debugStrings.push_back("02. Window change = " + std::to_string(frame_times[1]));
+        // debugStrings.push_back("03. Fadeout handling = " + std::to_string(frame_times[2]));
+        // debugStrings.push_back("04. Buttons = " + std::to_string(frame_times[3]));
+        // debugStrings.push_back("05. Zoom = " + std::to_string(frame_times[4]));
+        // debugStrings.push_back("06. Camera type = " + std::to_string(frame_times[5]));
+        // debugStrings.push_back("07. Actions = " + std::to_string(frame_times[6]));
+        // debugStrings.push_back("08. Cycles = " + std::to_string(frame_times[7]));
+        // debugStrings.push_back("09. PObj registration = " + std::to_string(frame_times[8]));
+        // debugStrings.push_back("10. OOB check = " + std::to_string(frame_times[9]));
+        // debugStrings.push_back("11. Animations = " + std::to_string(frame_times[10]));
 
         WorldManager::RenderDebugScreen(debugStrings, rr);
     }
@@ -614,18 +619,18 @@ void WorldManager::RenderDebugScreen(std::vector<std::string> debugStrings, Rend
     SDL_SetRenderDrawColor(rr->GetRenderer(), 4, 4, 4, 0xA0);
     SDL_RenderFillRect(rr->GetRenderer(), &debugBg);
 
-    for (size_t i = 0; i < 11; i++)
-    {
-        SDL_Rect perf = {
-            (int)(textDimensions.w * 5 * debugScale),
-            (int)(textDimensions.h * debugScale * (i+1 + 10)),
-            (int)(frame_times[i] * 50),
-            textDimensions.h
-        };
+    // for (size_t i = 0; i < 11; i++)
+    // {
+    //     SDL_Rect perf = {
+    //         (int)(textDimensions.w * 5 * debugScale),
+    //         (int)(textDimensions.h * debugScale * (i+1 + 10)),
+    //         (int)(frame_times[i] * 50),
+    //         textDimensions.h
+    //     };
 
-        SDL_SetRenderDrawColor(rr->GetRenderer(), 0xC0, 0xC0, 0xC0, 0xA0);
-        SDL_RenderFillRect(rr->GetRenderer(), &perf);
-    }
+    //     SDL_SetRenderDrawColor(rr->GetRenderer(), 0xC0, 0xC0, 0xC0, 0xA0);
+    //     SDL_RenderFillRect(rr->GetRenderer(), &perf);
+    // }
 
     for (size_t i = 0; i < debugStrings.size(); i++)
     {

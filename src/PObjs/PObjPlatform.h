@@ -52,6 +52,8 @@ public:
     /// @return true if Platform rendered. False if didn't render because it's out of screen bounds.
     bool Render(Renderer* rr, float x_offset, float y_offset, float zoom);
 
+    // Quickly get X position of this Platform.
     float GetX();
+    // Quickly get Y position of this Platform.
     float GetY();
 };

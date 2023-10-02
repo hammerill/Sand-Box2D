@@ -36,22 +36,32 @@ struct WindowParams
 class Renderer
 {
 private:
+    // Main game SDL window.
     SDL_Window* window;
+    // Main game SDL renderer.
     SDL_Renderer* renderer;
 
+    // Game resolution.
     int window_width, window_height;
 
+    // Which window mode is used now? See enum WindowMode.
     WindowMode window_mode = FULLSCREEN_SIMPLE;
 
+    // Where is window icon located? Used only in Linux.
     const char* path_to_icon;
 
+    // Is cursor active now? If so, render it.
     bool cursor;
 
+    // How much frames passed already? (will this variable overlap some day?)
     uint64_t frames = 0;
 
+    // Link to to the main game font.
     Font* font = new Font();
+    // Link to to the main game Japanese font.
     Font* font_jp = new Font();
 
+    // Link to the SoundManager (my own class, go see it).
     SoundManager* sounds = new SoundManager();
 
 public:
@@ -75,18 +85,26 @@ public:
         const char* path_to_font_jp = nullptr,
         const char* path_to_icon = nullptr);
 
+    // Get main game SDL window.
     SDL_Renderer* GetRenderer();
+    // Get main game SDL renderer.
     SDL_Window* GetWindow();
+    // Get link to the SoundManager.
     SoundManager* GetSounds();
+    /// @brief Get link to the Font object.
+    /// @param jp do you want to load the Japanese font? If not, return the regular one.
     Font* GetFont(bool jp = false);
+    // Get current WindowParams (you can look up that struct).
     WindowParams GetWindowParams();
 
+    // Get game width.
     int GetWidth();
+    // Get game height.
     int GetHeight();
 
-    /// @brief Increment frames count rendered.
+    /// @brief Increment rendered frames count.
     void AddFrame();
-    /// @brief Get frames count rendered.
+    /// @brief Get rendered frames count.
     uint64_t GetFrames();
 
     /// @brief Change game resolution and go/exit fullscreen if need.
@@ -95,7 +113,7 @@ public:
 
     /// @brief Enable or disable cursor render.
     void SetCursor(bool enable = true);
-    /// @brief Is cursor is showed now? If platform is Vita it's true when touch screen.
+    /// @brief Is cursor showed now? If platform is Vita it's true when screen is being touched.
     bool GetCursor(Controls ctrl);
 
     /// @brief Render text. Will use internal Font object to do that

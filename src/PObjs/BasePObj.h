@@ -16,7 +16,7 @@ class BasePObj
 {
 protected:
     /// By multiplying this with value in radians you will get value in degrees.
-    ///
+    /// TODO: move to the tools module.
     /// RAD * RAD2DEG == DEG
     /// DEG / RAD2DEG == RAD
     const float RAD2DEG = 180 / M_PI;
@@ -84,6 +84,8 @@ public:
     /// @return true if object rendered. False if didn't render because it's out of screen bounds.
     virtual bool Render(Renderer* rr, float x_offset, float y_offset, float zoom) = 0;
 
+    // Quickly get X position of this PObj.
     virtual float GetX() = 0;
+    // Quickly get Y position of this PObj.
     virtual float GetY() = 0;
 };

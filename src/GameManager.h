@@ -12,7 +12,7 @@
 #include "Screens/WorldManager.h"
 #include "Screens/LangSelector.h"
 
-/// @brief Which single class is responsible for the entire screen?
+/// @brief Which single class is responsible for rendering the entire screen?
 enum CurrentVisual
 {
     MAIN_MENU_VISUAL = 0,           // MainMenu is used now.
@@ -24,22 +24,36 @@ enum CurrentVisual
 class GameManager
 {
 private:
+    // Main game renderer (not SDL object but my own class).
     Renderer* rr;
-    Controls ctrl, old_ctrl;
+    // Object that shows what buttons are pressed now.
+    Controls ctrl;
+    // Object that shows what buttons were pressed in the previous frame.
+    Controls old_ctrl;
+    // Object that interrogates the game settings file.
     Settings settings;
 
+    // MainMenu object. Look up CurrentVisual.
     MainMenu main_menu;
+    // Link to the WorldManager. Look up CurrentVisual (btw it's a link cuz it's more complicated).
     WorldManager* world_manager;
+    // LangSelector object. Look up CurrentVisual.
     LangSelector lang_selector;
 
+    // Which single class is responsible for rendering the entire screen?
     CurrentVisual current_visual;
 
-    WindowParams fullscreen = {FULLSCREEN_SIMPLE, 0, 0, 2};
-    WindowParams windowed = {WINDOWED, 960, 544};
+    // Default config for the fullscreen mode.
+    WindowParams fullscreen = { FULLSCREEN_SIMPLE, 0, 0, 2 };
+    // Default config for the windowed mode.
+    WindowParams windowed = { WINDOWED, 960, 544 };
 
+    // Used in order to use frame correcting.
     uint64_t a, b = 0;
+    // Used in order to use frame correcting.
     double delta = 0;
 
+    // At which frame mouse moved the last time? Used to hide it when inactive.
     uint64_t mouse_last_frame_move = 0;
 
 public:

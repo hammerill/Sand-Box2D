@@ -11,10 +11,14 @@
 class Translations
 {
 private:
-    static std::string translations_base, translation_code;
+    // Path to the directory where all the translations are stored.
+    static std::string translations_base;
+    // Code of the desired language. For example, "en" (English).
+    static std::string translation_code;
+    // Is loaded language Japanese? Used because we need to render Japanese text with another font.
     static bool isJp;
 public:
-    Translations(/* args */);
+    Translations();
     ~Translations();
 
     /// @brief Load translation to use it then.
@@ -30,6 +34,6 @@ public:
     /// @return localized string. Empty string if there was problem.
     static std::string Load(std::string to_load);
 
-    /// @brief Is loaded language is Japanese? Used because we need to render Japanese text with another font.
+    /// @brief Is loaded language Japanese? Used because we need to render Japanese text with another font.
     static bool GetJp();
 };

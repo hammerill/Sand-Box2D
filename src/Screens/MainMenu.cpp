@@ -456,6 +456,9 @@ bool MainMenu::Step(Renderer* rr, Controls ctrl, Controls old_ctrl)
         return true;
     }
 
+    if (ctrl.ZoomOut() > 0.1 && old_ctrl.ZoomOut() <= 0.1) // TODO: with analog zoom button we can set box rotation speed
+        MainMenu::physics.ActivateBox(rr);
+
     if (rr->GetCursor(ctrl) || rr->GetCursor(old_ctrl))
     {
         int menuScale = rr->GetHeight() / 250;

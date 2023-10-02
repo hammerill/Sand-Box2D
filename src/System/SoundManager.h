@@ -12,6 +12,7 @@
 class SoundManager
 {
 private:
+    // Map, where sound paths (std::string) correspond to their loaded SFX (Mix_Chunk*).
     std::map<std::string, Mix_Chunk*> sounds = std::map<std::string, Mix_Chunk*>();
 public:
     SoundManager();
