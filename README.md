@@ -95,7 +95,21 @@ Feel free to propose ideas [here](https://github.com/Hammerill/Sand-Box2D/discus
 ## Build 
 If you don't want to build by yourself, you can consider auto build system provided by GitHub [actions](https://github.com/Hammerill/Sand-Box2D/actions).
 ### On Windows
-1. Ensure you have all necessaire tools installed and wrote to your PATH variable (cmake, make, mingw (g++), git, etc.).
+1. Install Git and build tools:
+```bash
+winget install git.git kitware.cmake
+```
+Get [MSYS2](https://www.msys2.org/) without opening it. Open `MSYS2 MSYS` and type:
+```bash
+pacman -S --needed base-devel mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-toolchain
+
+cd /ucrt64/bin/
+ln -s mingw32-make.exe make.exe
+
+exit
+```
+Add `C:\msys64\ucrt64\bin` to PATH environment variable.
+
 2. Install packages:
 - You need to install all those packages and unpack them in the same directory:
   * [SDL2](https://github.com/libsdl-org/SDL/releases/tag/release-2.24.0)
@@ -112,11 +126,11 @@ If you don't want to build by yourself, you can consider auto build system provi
 - Also, you have to add "bin" directory (located where the packages are installed) to your PATH variable,
 or copy its contents (*.dll) to the same directory where .exe file should be (build).
 3. Clone repo:
-  ```cmd
-  git clone https://github.com/Hammerill/Sand-Box2D && cd Sand-Box2D
+  ```bash
+  git clone https://github.com/Hammerill/Sand-Box2D; cd Sand-Box2D
   ```
 4. Build (at the 4th line at the end change path to where you have installed packages or extracted an archive):
-  ```cmd
+  ```bash
   mkdir build
   cd build
   cmake .. -G "MinGW Makefiles"
@@ -124,7 +138,7 @@ or copy its contents (*.dll) to the same directory where .exe file should be (bu
   make
   ```
 5. EXE file should appear, you can now launch this game:
-  ```cmd
+  ```bash
   Sand-Box2D.exe
   ```
 
