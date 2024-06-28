@@ -155,6 +155,11 @@ elseif(BUILD_VITA)
 		png
 		z
 		freetype
+                opus
+                opusfile
+                modplug
+                bz2
+                xmp
 
 		SceAudio_stub
 		SceAudioIn_stub
@@ -166,6 +171,10 @@ elseif(BUILD_VITA)
 		SceSysmodule_stub
 		SceTouch_stub
 		SceMotion_stub
+
+                m
+                stdc++
+                c
 	)
 
 	if(PYTHON_TEST)
