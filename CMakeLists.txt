@@ -7,6 +7,11 @@ if(LEGACY_INTERSECT)
 	add_definitions(-DLegacy_Intersect)
 endif()
 
+option(USE_VOLUME_INSTEAD "Use Mix_Volume instead of Mix_MasterVolume" OFF)
+if(USE_VOLUME_INSTEAD)
+	add_definitions(-DUse_Volume_Instead)
+endif()
+
 option(BUILD_WINDOWS "Build Windows .exe" ON) # Default
 option(BUILD_LINUX "Build Linux executable" OFF)
 option(BUILD_VITA "Build Vita .vpk" OFF)
