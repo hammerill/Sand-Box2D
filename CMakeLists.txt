@@ -119,7 +119,6 @@ elseif(BUILD_MACOS)
 	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
 
 	include_directories(/opt/homebrew/include)
-	link_directories(/opt/homebrew/lib)
 
 	find_library(CURL_LIBS curl)
 	find_library(BOX2D_LIBS box2d)
@@ -145,11 +144,11 @@ elseif(BUILD_MACOS)
 		${SDL2_LIBS}
 	)
 
-	if(PYTHON_TEST)
-		target_link_libraries(${CMAKE_PROJECT_NAME}
-			python2.7
-		)
-	endif()
+	# if(PYTHON_TEST)
+	# 	target_link_libraries(${CMAKE_PROJECT_NAME}
+	# 		python2.7
+	# 	)
+	# endif()
 
 	file(COPY assets DESTINATION .)
 
