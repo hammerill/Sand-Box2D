@@ -2,3 +2,4 @@
 build
 build*
 !build.yml
+.DS_Store

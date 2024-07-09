@@ -14,6 +14,7 @@ endif()
 
 option(BUILD_WINDOWS "Build Windows .exe" ON) # Default
 option(BUILD_LINUX "Build Linux executable" OFF)
+option(BUILD_MACOS "Build macOS executable" OFF)
 option(BUILD_VITA "Build Vita .vpk" OFF)
 
 set(HEADER_WITH_JSONCPP ON CACHE BOOL "If on, include path for Jsoncpp will be 'jsoncpp/json/json.cpp', otherwise 'json/json.cpp'")
@@ -98,6 +99,50 @@ elseif(BUILD_LINUX)
 		SDL2_ttf
 		SDL2_gfx
 		SDL2
+	)
+
+	if(PYTHON_TEST)
+		target_link_libraries(${CMAKE_PROJECT_NAME}
+			python2.7
+		)
+	endif()
+
+	file(COPY assets DESTINATION .)
+
+elseif(BUILD_MACOS)
+	message(STATUS "Building for macOS")
+	add_definitions(-DMacos)
+
+	project(Sand-Box2D)
+
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -pthread -std=c++17")
+	add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
+
+	include_directories(/opt/homebrew/include)
+	link_directories(/opt/homebrew/lib)
+
+	find_library(CURL_LIBS curl)
+	find_library(BOX2D_LIBS box2d)
+
+	find_library(SDL2_IMAGE_LIBS sdl2_image)
+	find_library(SDL2_MIXER_LIBS sdl2_mixer)
+	find_library(SDL2_TTF_LIBS sdl2_ttf)
+	find_library(SDL2_GFX_LIBS sdl2_gfx)
+	find_library(SDL2_LIBS sdl2)
+
+	find_package(PkgConfig)
+	pkg_search_module(JSONCPP REQUIRED jsoncpp IMPORTED_TARGET GLOBAL)
+
+	target_link_libraries(${CMAKE_PROJECT_NAME}
+		PkgConfig::JSONCPP
+		${CURL_LIBS}
+		${BOX2D_LIBS}
+
+		${SDL2_IMAGE_LIBS}
+		${SDL2_MIXER_LIBS}
+		${SDL2_TTF_LIBS}
+		${SDL2_GFX_LIBS}
+		${SDL2_LIBS}
 	)
 
 	if(PYTHON_TEST)
