@@ -1,3 +1,5 @@
+# ATTENTION: This is legacy code to be rewritten. Please refer to the [new repo](https://github.com/sand-box2d/sand-box2d).
+
 ![Logo](./pics/Logo-wide.jpg)
 <h1 align="center">
   An open source cross-platform game based on Box2D with SDL2
